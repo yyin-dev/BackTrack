@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class PBI(models.Model):
     title = models.CharField(max_length=50)
     detail = models.CharField(max_length=500)
@@ -12,3 +11,11 @@ class PBI(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Sprint(models.Model):
+    no = models.IntegerField()
+    capacity = models.IntegerField(default=10)
+
+    def __str__(self):
+        return self.name

@@ -4,3 +4,6 @@ node_modules/
 
 # virtual environment
 env/
+
+# VS Code setting
+.vscode/
