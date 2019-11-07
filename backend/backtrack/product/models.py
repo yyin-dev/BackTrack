@@ -17,5 +17,8 @@ class Sprint(models.Model):
     no = models.IntegerField()
     capacity = models.IntegerField(default=10)
 
+    class Meta:
+        ordering = ['no']
+
     def __str__(self):
-        return self.name
+        return str(self.no)

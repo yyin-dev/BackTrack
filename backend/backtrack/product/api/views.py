@@ -22,7 +22,7 @@ from rest_framework.generics import (
     RetrieveAPIView,
     UpdateAPIView)
 
-from product.models import PBI
+from product.models import PBI, Sprint
 from .serializers import PBISerializer
 
 
@@ -39,6 +39,27 @@ class PBIDetailView(RetrieveAPIView):
 class PBIUpdateView(UpdateAPIView):
     queryset = PBI.objects.all()
     serializer_class = PBISerializer
+
+
+class moveToSprint(APIView):
+    def post(self, request):
+        id = request.data["id"]
+        cur_pbi = PBI.objects.get(id=id)
+
+        # Try to get current Sprint object
+        print(Sprint.objects.order_by('-no'))
+        latest_sprint = Sprint.objects.order_by('-no').first()
+
+        if not latest_sprint:
+            spr = Sprint.objects.create(no=1)
+            spr.save()
+            cur_pbi.sprint_no = 1
+            cur_pbi.save()
+        else:
+            cur_pbi.sprint_no = latest_sprint.no
+            cur_pbi.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class addPBI(APIView):
@@ -99,3 +120,4 @@ class movePBI(APIView):
         target2.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+

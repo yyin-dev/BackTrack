@@ -2,10 +2,12 @@ from django.urls import path
 
 app_name = "sprint"
 
-from .views import ()
+from .views import (
+    TaskInSprintView
+)
 
 urlpatterns = [
-    # path('', PBIListView.as_view()),
+    path('', TaskInSprintView.as_view()),
     # path('create/', addPBI.as_view()),
     # path('move/', movePBI.as_view()),
     # path('<pk>/', PBIDetailView.as_view()),

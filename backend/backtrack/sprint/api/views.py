@@ -7,9 +7,12 @@ from rest_framework.generics import (
     RetrieveAPIView,
     UpdateAPIView)
 
-from product.models import PBI
-from .serializers import PBISerializer
+from product.models import PBI, Sprint
+from product.api.serializers import PBISerializer
 
 
-
+class TaskInSprintView(ListAPIView):
+    latest_sprint = Sprint.objects.order_by('-no').first()
+    queryset = PBI.objects.filter(sprint_no=latest_sprint.no)
+    serializer_class = PBISerializer
 
