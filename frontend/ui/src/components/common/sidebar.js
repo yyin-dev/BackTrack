@@ -14,11 +14,12 @@ class Sidebar extends React.Component {
             <Sider
                 breakpoint="lg"
                 collapsedWidth="0"
+                theme="light"
             >
                 <div className="logo">
                     <img src={logo} alt="fireSpot" />
                 </div>
-                <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+                <Menu theme="light" mode="inline" defaultSelectedKeys={['1']}>
                     <Menu.Item key="1">
                         <Icon type="home" />
                         <span className="nav-text" >

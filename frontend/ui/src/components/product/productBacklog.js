@@ -80,7 +80,6 @@ class ProductBacklog extends React.Component {
     render() {
         return (
             <Layout style={{ height: "100vh" }}>
-                <Layout>
                     <Header style={{ background: '#fff', padding: 0, textAlign: "center" }}>Product Backlog</Header>
                     <Content style={{ margin: '24px 16px 0' }}>
                         <div >
@@ -108,7 +107,6 @@ class ProductBacklog extends React.Component {
                         />
                     </Content>
                     <Footer style={{ textAlign: "center" }}>Developed by FastDev (Group F)</Footer>
-                </Layout>
             </Layout>
         );
     }
