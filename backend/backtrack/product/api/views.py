@@ -42,6 +42,9 @@ class PBIUpdateView(UpdateAPIView):
 
 
 class moveToSprint(APIView):
+    """
+    Set the sprint_no of the selected PBI to the latest Sprint
+    """
     def post(self, request):
         id = request.data["id"]
         cur_pbi = PBI.objects.get(id=id)

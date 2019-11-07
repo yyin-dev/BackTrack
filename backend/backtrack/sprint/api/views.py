@@ -12,6 +12,9 @@ from product.api.serializers import PBISerializer
 
 
 class TaskInSprintView(ListAPIView):
+    """
+    Returns all PBIs in latest sprint.
+    """
     latest_sprint = Sprint.objects.order_by('-no').first()
     queryset = PBI.objects.filter(sprint_no=latest_sprint.no)
     serializer_class = PBISerializer
