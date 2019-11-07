@@ -1,9 +1,11 @@
 # Dependency directories
 node_modules/
-# jspm_packages/
 
 # virtual environment
 env/
 
 # VS Code setting
 .vscode/
+
+# Python cache
+__pycache__/
