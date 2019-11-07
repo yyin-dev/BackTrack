@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Button, Popconfirm, message } from 'antd';
+import { Button, Popconfirm, message, Tooltip } from 'antd';
 import EditPBIForm from './editPBIForm';
 
 axios.defaults.xsrfHeaderName = "X-CSRFToken"
@@ -53,22 +53,44 @@ class ActionButtons extends React.Component {
         })
     }
 
+    handleMoveToSprint = () => {
+        axios.post("http://127.0.0.1:8000/product/api/movetosprint/", {
+            'id': this.props.pbi.id,
+        })
+            .then(res => {
+                message.success("PBI moved to sprint!", 3)
+                this.props.refresh()
+            })
+    }
+
     render() {
         return (
             <div>
-                <Button icon="up" onClick={() => this.handleMove('up')} />
-                <Button icon="down" onClick={() => this.handleMove('down')} />
-                <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete()}>
-                    <Button icon="delete" />
-                </Popconfirm>
-                <Button icon="edit" onClick={this.handleEdit} />
+                <Tooltip title="Move up">
+                    <Button icon="up" onClick={() => this.handleMove('up')} />
+                </Tooltip>
+                <Tooltip title="Move down">
+                    <Button icon="down" onClick={() => this.handleMove('down')} />
+                </Tooltip>
+                <Tooltip title="Delete">
+                    <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete()}>
+                        <Button icon="delete" />
+                    </Popconfirm>
+                </Tooltip>
+                <Tooltip title="Edit">
+                    <Button icon="edit" onClick={this.handleEdit} />
+                </Tooltip>
                 <EditPBIForm
                     pbi={this.props.pbi}
                     visible={this.state.editing}
                     refresh={this.props.refresh}
                     close={this.handleClose}
                 />
-                <Button icon="forward" />
+                <Tooltip title="Move to sprint">
+                    <Popconfirm title="Move to sprint?" onConfirm={() => this.handleMoveToSprint()}>
+                        <Button icon="forward" />
+                    </Popconfirm>
+                </Tooltip>
             </div >
         )
     }
