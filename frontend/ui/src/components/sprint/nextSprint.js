@@ -39,7 +39,7 @@ class NextSprint extends React.Component {
 
   handleSubmit = e => {
     var i, pbi;
-    for(i = 0; i < this.state.unfinished_pbis.length; ++i) {
+    for (i = 0; i < this.state.unfinished_pbis.length; ++i) {
       pbi = this.state.unfinished_pbis[i]
       if (!pbi.action) {
         pbi.action = "move"
@@ -53,20 +53,39 @@ class NextSprint extends React.Component {
         pbi.newStoryPoint = pbi.story_point
       }
 
-      if (pbi.action == "move") {
+      if (pbi.action === "move") {
         axios.post(`http://127.0.0.1:8000/product/api/${pbi.id}/movetonextsprint/`, {
           id: pbi.id,
           newTitle: pbi.newTitle,
           newStoryPoint: pbi.newStoryPoint
         })
           .then(res => {
+            this.props.refresh()
             message.success("Move succeed!", 3)
           })
           .catch(err => console.log(err))
-      } else if (pbi.action == "back") {
-
-      } else if (pbi.action == "delete") {
-
+      } else if (pbi.action === "back") {
+        axios.post(`http://127.0.0.1:8000/product/api/${pbi.id}/movebackPBIaftersprint/`, {
+          id: pbi.id,
+          newTitle: pbi.newTitle,
+          newStoryPoint: pbi.newStoryPoint
+        })
+          .then(res => {
+            this.props.refresh()
+            message.success("Move back succeed!", 3)
+          })
+          .catch(err => console.log(err))
+      } else if (pbi.action === "delete") {
+        axios.delete(`http://127.0.0.1:8000/product/api/${pbi.id}/delete/`, {
+          data: {
+            id: pbi.id
+          }
+        })
+          .then(res => {
+            this.props.refresh()
+            message.success("PBI deleted!", 3)
+          })
+          .catch(err => console.log(err))
       } else {
         console.log("error")
       }
@@ -140,7 +159,7 @@ class NextSprint extends React.Component {
               className="unfinished-pbi-card"
               title={pbi.title}
             >
-              <div style={{paddingBottom: 10}}>
+              <div style={{ paddingBottom: 10 }}>
                 <FormLabel text="Total Effort" /><span>{pbi.total}</span><br />
                 <FormLabel text="Remaining effort" /><span>{pbi.remaining}</span><br />
                 <FormLabel text="Select an Action" />

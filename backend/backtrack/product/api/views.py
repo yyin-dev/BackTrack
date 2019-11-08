@@ -67,8 +67,6 @@ class moveToSprint(APIView):
 
 class moveToNextSprint(APIView):
     """
-    TODO: testing
-
     Create a new Sprint.
     Set the sprint_no of the selected PBI to the latest Sprint
     """
@@ -135,9 +133,6 @@ class movebackPBI(APIView):
 
     
 class movebackPBIAfterSprint(APIView):
-    """
-    TODO: testing
-    """
     def post(self, request, pk):
         id = request.data["id"]
         newTitle = request.data["newTitle"]

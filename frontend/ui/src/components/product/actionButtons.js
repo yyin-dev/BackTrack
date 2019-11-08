@@ -65,7 +65,7 @@ class ActionButtons extends React.Component {
 
   render() {
     var EditButton;
-    if (this.props.pbi.status == "To Do") {
+    if (this.props.pbi.status === "To Do") {
       EditButton = <Tooltip title="Edit">
         <Button icon="edit" onClick={this.handleEdit} />
       </Tooltip>
@@ -74,7 +74,7 @@ class ActionButtons extends React.Component {
     }
 
     var DeleteButton;
-    if (this.props.pbi.status == "To Do") {
+    if (this.props.pbi.status === "To Do") {
       DeleteButton = <Tooltip title="Delete">
         <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete()}>
           <Button icon="delete" />

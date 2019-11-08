@@ -19,7 +19,6 @@ class TaskInSprintView(ListAPIView):
     The return value is an list containing ONE SINGLE sprint object. The reason
     is that we used ListAPIView and a list is expected.
     """
-
     queryset = Sprint.objects.none()
     sprints = Sprint.objects.order_by('-no')
     latest_sprint = None
