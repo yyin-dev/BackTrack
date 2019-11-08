@@ -17,7 +17,7 @@ class MoveBack extends React.Component {
   handleOk = e => {
     axios.post(`http://127.0.0.1:8000/product/api/${this.props.pbi.id}/movebackPBI/`)
         .then(res => {
-            this.props.refresh();
+            window.location.reload()
         })
         .then(err => console.log(err))
   };
