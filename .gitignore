@@ -8,5 +8,5 @@ env/
 .vscode/
 
 # Python cache
-*.pc
+*.pyc
 __pycache__
