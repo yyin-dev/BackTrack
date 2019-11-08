@@ -38,7 +38,7 @@ class AddTask extends React.Component {
         });
     } 
 
-    postNewTask = () => {
+    handleOk = e => {
         axios.post("http://127.0.0.1:8000/sprint/api/create/", {
             pbi: this.pbi,
             name: this.state.taskName,
@@ -50,11 +50,13 @@ class AddTask extends React.Component {
         .then(res => {
             message.success("New Task Created!", 3)
             this.setState({
+                visible: false,
                 taskName: "",
                 description: "",
                 estimatedTime: 0,
                 pic: ""
             });
+            this.props.refresh()
         })
         .catch(err => {
             alert("Wrong")
@@ -62,16 +64,9 @@ class AddTask extends React.Component {
         })
     }
 
-    handleOk = e => {
-        this.postNewTask()
-        this.setState({
-          visible: false,
-        });
-    };
-
     handleCancel = e => {
         this.setState({
-            visible: false,
+            visible: false
         });
     };
 

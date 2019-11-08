@@ -22,7 +22,8 @@ class TaskInSprintView(ListAPIView):
 
 class addTask(APIView):
     def post(self, request):
-        new_task = Task(pbi=request.data['pbi'],
+        pbi_object = PBI.objects.get(id=request.data['pbi'])
+        new_task = Task(pbi=pbi_object,
                       name=request.data['name'],
                       description=request.data['description'],
                       status=request.data['status'],

@@ -35,7 +35,7 @@ class ViewTask extends React.Component {
 
         return (
             <div>
-            <Tag color="blue" onClick={this.viewDetail}>
+            <Tag color="blue" onClick={this.viewDetail} style={{fontSize: '18px', margin: '5px'}}>
                 {this.task.name}
             </Tag>
             <Modal

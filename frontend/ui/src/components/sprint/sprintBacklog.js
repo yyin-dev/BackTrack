@@ -60,7 +60,7 @@ class SprintBacklog extends React.Component {
                         dataIndex="title"
                         key="pbi"
                         width="10%"
-                        render={title => <span>{title}</span>}
+                        render={title => <h2>{title}</h2>}
                     />
                     <Column
                         dataIndex="id"
@@ -116,8 +116,8 @@ class SprintBacklog extends React.Component {
                         />
                         /> */}
                     </ColumnGroup>
-                    <Column title="Remaining Effort" dataIndex="remaining" key="remaining" width="15%" render={remaining => <span>{remaining}</span>}/>
-                    <Column title="Remaining Effort" dataIndex="total" key="total" width="15%" render={total => <span>{total}</span>}/>
+                    <Column title="Remaining Effort" dataIndex="remaining" key="remaining" width="15%" render={remaining => <h3>{remaining}</h3>}/>
+                    <Column title="Remaining Effort" dataIndex="total" key="total" width="15%" render={total => <h3>{total}</h3>}/>
                 </Table>
             </Layout>
         );
