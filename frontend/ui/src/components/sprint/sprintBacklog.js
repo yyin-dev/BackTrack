@@ -5,7 +5,7 @@ import { PageHeader, Descriptions } from 'antd';
 import ViewTask from './viewTask';
 import NextSprint from './nextSprint';
 import AddTask from './addTask';
-
+import EditTask from './editTask';
 
 const { Column, ColumnGroup } = Table;
 const { Header } = Layout;
@@ -106,8 +106,8 @@ class SprintBacklog extends React.Component {
                                 <span>
                                     {tasks.filter(task => task.status == "To Do")
                                         .map(task => (
-                                            <ViewTask
-                                                task = {task}
+                                            <EditTask
+                                                task = {task} refresh={this.fetch}
                                             />
                                         ))}
                                 </span>
@@ -121,8 +121,8 @@ class SprintBacklog extends React.Component {
                                 <span>
                                     {tasks.filter(task => task.status == "In Progress")
                                         .map(task => (
-                                            <ViewTask
-                                                task = {task}
+                                            <EditTask
+                                                task = {task} refresh={this.fetch}
                                             />
                                         ))}
                                 </span>
@@ -136,8 +136,8 @@ class SprintBacklog extends React.Component {
                                 <span>
                                     {tasks.filter(task => task.status == "Done")
                                         .map(task => (
-                                            <ViewTask
-                                                task = {task}
+                                            <EditTask
+                                                task = {task} refresh={this.fetch}
                                             />
                                         ))}
                                 </span>
