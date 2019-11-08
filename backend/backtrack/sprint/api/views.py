@@ -41,3 +41,10 @@ class addTask(APIView):
         new_task.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class deleteTask(APIView):
+    def delete(self, request, pk):
+        cur_task = Task.objects.get(id=pk)
+        cur_task.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)

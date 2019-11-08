@@ -5,7 +5,7 @@ import { PageHeader, Descriptions } from 'antd';
 import ViewTask from './viewTask';
 import NextSprint from './nextSprint';
 import AddTask from './addTask';
-
+import EditTask from './editTask';
 
 const { Column, ColumnGroup } = Table;
 const { Header } = Layout;
@@ -27,7 +27,7 @@ class SprintBacklog extends React.Component {
     fetch = () => {
         axios.get("http://127.0.0.1:8000/sprint/api/")
             .then(res => {
-                let pbis = res.data;
+                let pbis = res.data[0].pbis;
                 var i, j;
                 let sprint_no = pbis[0].sprint_no;
                 for(i = 0; i < pbis.length; ++i){
@@ -106,8 +106,8 @@ class SprintBacklog extends React.Component {
                                 <span>
                                     {tasks.filter(task => task.status == "To Do")
                                         .map(task => (
-                                            <ViewTask
-                                                task = {task}
+                                            <EditTask
+                                                task = {task} refresh={this.fetch}
                                             />
                                         ))}
                                 </span>
@@ -121,8 +121,8 @@ class SprintBacklog extends React.Component {
                                 <span>
                                     {tasks.filter(task => task.status == "In Progress")
                                         .map(task => (
-                                            <ViewTask
-                                                task = {task}
+                                            <EditTask
+                                                task = {task} refresh={this.fetch}
                                             />
                                         ))}
                                 </span>
@@ -136,8 +136,8 @@ class SprintBacklog extends React.Component {
                                 <span>
                                     {tasks.filter(task => task.status == "Done")
                                         .map(task => (
-                                            <ViewTask
-                                                task = {task}
+                                            <EditTask
+                                                task = {task} refresh={this.fetch}
                                             />
                                         ))}
                                 </span>
