@@ -21,7 +21,7 @@ class Sidebar extends React.Component {
                 <div className="logo">
                     <img src={logo} alt="fireSpot" />
                 </div>
-                <Menu theme="dark" mode="inline" defaultSelectedKeys={['2']}>
+                <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
                     <Menu.Item key="1" to="/">
                         <Icon type="home" />
                             <span className="nav-text" >Home</span>

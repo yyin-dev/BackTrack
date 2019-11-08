@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-import { Layout, Menu, Icon, Table, Select, Radio, Button } from 'antd';
+import { PageHeader, Layout, Table, Descriptions, Radio, Button } from 'antd';
 import ActionButtons from './actionButtons'
 import AddPBIForm from './addPBIForm';
 
@@ -79,35 +79,52 @@ class ProductBacklog extends React.Component {
 
     render() {
         return (
-            <Layout style={{ height: "100vh" }}>
-                    <Header style={{ background: '#fff', padding: 0, textAlign: "center" }}>Product Backlog</Header>
-                    <Content style={{ margin: '24px 16px 0' }}>
-                        <div >
-                            <Radio.Group value={this.state.currentView ? "current" : "full"}
-                                onChange={this.handleViewChange}>
-                                <Radio.Button value="current">Current View</Radio.Button>
-                                <Radio.Button value="full">Full View</Radio.Button>
-                            </Radio.Group>
+          <Layout style={{ height: "100vh" }}>
+            <PageHeader
+              style={{
+                border: "1px solid rgb(235, 237, 240)"
+              }}
+              title="Product Backlog"
+              extra={[
+                <div>
+                  <Radio.Group
+                    style={{ marginRight: 20 }}
+                    value={this.state.currentView ? "current" : "full"}
+                    onChange={this.handleViewChange}
+                  >
+                    <Radio.Button value="current">Current View</Radio.Button>
+                    <Radio.Button value="full">Full View</Radio.Button>
+                  </Radio.Group>
 
-                            <Button icon="plus" onClick={this.showEditForm} />
-                            <AddPBIForm
-                                visible={this.state.adding}
-                                close={this.closeEditForm}
-                                priority_max={this.state.priority_max}
-                                refresh={this.fetch}
-                            />
-                        </div>
-                        <Table
-                            columns={this.columns}
-                            rowKey={pbi => pbi.id.toString()}
-                            pagination={this.state.pagination}
-                            dataSource={this.state.currentView ?
-                                this.state.pbiList.filter(pbi => pbi.status !== "Done")
-                                : this.state.pbiList}
-                        />
-                    </Content>
-                    <Footer style={{ textAlign: "center" }}>Developed by FastDev (Group F)</Footer>
-            </Layout>
+                  <Button icon="plus" onClick={this.showEditForm} />
+                  <AddPBIForm
+                    visible={this.state.adding}
+                    close={this.closeEditForm}
+                    priority_max={this.state.priority_max}
+                    refresh={this.fetch}
+                  />
+                </div>
+              ]}
+            >
+              <Descriptions size="small" column={1}>
+                <Descriptions.Item label="Sprint Number">1</Descriptions.Item>
+              </Descriptions>
+            </PageHeader>
+
+            <Table
+              columns={this.columns}
+              rowKey={pbi => pbi.id.toString()}
+              pagination={this.state.pagination}
+              dataSource={
+                this.state.currentView
+                  ? this.state.pbiList.filter(pbi => pbi.status !== "Done")
+                  : this.state.pbiList
+              }
+            />
+            <Footer style={{ textAlign: "center" }}>
+              Developed by FastDev (Group F)
+            </Footer>
+          </Layout>
         );
     }
 }
