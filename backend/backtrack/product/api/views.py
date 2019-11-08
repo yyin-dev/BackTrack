@@ -23,22 +23,22 @@ from rest_framework.generics import (
     UpdateAPIView)
 
 from product.models import PBI, Sprint
-from .serializers import PBISerializer
+from .serializers import PBISerializerProduct
 
 
 class PBIListView(ListAPIView):
     queryset = PBI.objects.all()
-    serializer_class = PBISerializer
+    serializer_class = PBISerializerProduct
 
 
 class PBIDetailView(RetrieveAPIView):
     queryset = PBI.objects.all()
-    serializer_class = PBISerializer
+    serializer_class = PBISerializerProduct
 
 
 class PBIUpdateView(UpdateAPIView):
     queryset = PBI.objects.all()
-    serializer_class = PBISerializer
+    serializer_class = PBISerializerProduct
 
 
 class moveToSprint(APIView):
