@@ -9,16 +9,25 @@ from rest_framework.generics import (
 
 from product.models import PBI, Sprint
 from sprint.models import Task
-from product.api.serializers import PBISerializer
+from product.api.serializers import PBISerializerSprint, SprintSerializerSprint
 from sprint.api.serializers import TaskSerializer
 
 class TaskInSprintView(ListAPIView):
     """
     Returns all PBIs in latest sprint.
+    
+    The return value is an list containing ONE SINGLE sprint object. The reason
+    is that we used ListAPIView and a list is expected.
     """
-    latest_sprint = Sprint.objects.order_by('-no').first()
-    queryset = PBI.objects.filter(sprint_no=latest_sprint.no)
-    serializer_class = PBISerializer
+
+    queryset = Sprint.objects.none()
+    sprints = Sprint.objects.order_by('-no')
+    latest_sprint = None
+    if sprints:
+        latest_sprint = sprints.first()
+        queryset = Sprint.objects.filter(no=latest_sprint.no)
+
+    serializer_class = SprintSerializerSprint
 
 class addTask(APIView):
     def post(self, request):
