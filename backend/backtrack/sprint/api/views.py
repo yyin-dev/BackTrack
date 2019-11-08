@@ -42,6 +42,18 @@ class addTask(APIView):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class editTask(APIView):
+    def post(self, request):
+        task = Task.objects.get(id=request.data['id'])
+        task.name = request.data['name']
+        task.description = request.data['description']
+        task.status = request.data['status']
+        task.estimated_time = request.data['estimated_time']
+        task.pic = request.data['pic']
+        task.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 class deleteTask(APIView):
     def delete(self, request, pk):
         cur_task = Task.objects.get(id=pk)
