@@ -1,6 +1,7 @@
 import React from "react";
 import axios from 'axios';
 import { Layout, Table, Tag } from "antd";
+import ViewTask from './viewTask';
 
 const { Column, ColumnGroup } = Table;
 const { Header } = Layout;
@@ -69,9 +70,9 @@ class SprintBacklog extends React.Component {
                                 <span>
                                     {tasks.filter(task => task.status == "To Do")
                                         .map(task => (
-                                            <Tag color="blue" key={task}>
-                                                {task.name}
-                                            </Tag>
+                                            <ViewTask
+                                                task = {task}
+                                            />
                                         ))}
                                 </span>
                             )}
@@ -84,9 +85,9 @@ class SprintBacklog extends React.Component {
                                 <span>
                                     {tasks.filter(task => task.status == "In Progress")
                                         .map(task => (
-                                            <Tag color="blue" key={task}>
-                                                {task.name}
-                                            </Tag>
+                                            <ViewTask
+                                                task = {task}
+                                            />
                                         ))}
                                 </span>
                             )}
@@ -99,9 +100,9 @@ class SprintBacklog extends React.Component {
                                 <span>
                                     {tasks.filter(task => task.status == "Done")
                                         .map(task => (
-                                            <Tag color="blue" key={task}>
-                                                {task.name}
-                                            </Tag>
+                                            <ViewTask
+                                                task = {task}
+                                            />
                                         ))}
                                 </span>
                             )}
