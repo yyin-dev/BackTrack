@@ -64,6 +64,26 @@ class ActionButtons extends React.Component {
     }
 
     render() {
+        var EditButton;
+        if (this.props.pbi.status == "To Do") {
+            EditButton = <Tooltip title="Edit">
+                <Button icon="edit" onClick={this.handleEdit} />
+            </Tooltip>
+        } else {
+            EditButton = <Button icon="edit" disabled />
+        }
+
+        var DeleteButton;
+        if (this.props.pbi.status == "To Do") {
+            DeleteButton = <Tooltip title="Delete">
+                <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete()}>
+                    <Button icon="delete" />
+                </Popconfirm>
+            </Tooltip>
+        } else {
+            DeleteButton = <Button icon="delete" disabled />
+        }
+
         return (
             <div>
                 <Tooltip title="Move up">
@@ -72,23 +92,17 @@ class ActionButtons extends React.Component {
                 <Tooltip title="Move down">
                     <Button icon="down" onClick={() => this.handleMove('down')} />
                 </Tooltip>
-                <Tooltip title="Delete">
-                    <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete()}>
-                        <Button icon="delete" />
-                    </Popconfirm>
-                </Tooltip>
-                <Tooltip title="Edit">
-                    <Button icon="edit" onClick={this.handleEdit} />
-                </Tooltip>
+                {DeleteButton}
+                {EditButton}
                 <EditPBIForm
                     pbi={this.props.pbi}
                     visible={this.state.editing}
                     refresh={this.props.refresh}
                     close={this.handleClose}
                 />
-                    <Popconfirm title="Move to sprint?" onConfirm={() => this.handleMoveToSprint()}>
-                        <Button icon="forward" />
-                    </Popconfirm>
+                <Popconfirm title="Move to sprint?" onConfirm={() => this.handleMoveToSprint()}>
+                    <Button icon="forward" />
+                </Popconfirm>
             </div >
         )
     }
