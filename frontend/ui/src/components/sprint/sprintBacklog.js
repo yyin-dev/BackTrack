@@ -1,89 +1,119 @@
 import React from "react";
-import {} from "antd";
-
+import axios from 'axios';
 import { Layout, Table, Tag } from "antd";
 
 const { Column, ColumnGroup } = Table;
 const { Header } = Layout;
 
 class SprintBacklog extends React.Component {
+    constructor(props) {
+        super(props)
 
-  data = [
-    {
-      pbi: "test1",
-      to_do: ["todo1", "todo2", "todo3", "todo4"],
-      in_progress: [
-        "inprogress1",
-        "inprogress2",
-        "inprogress3",
-        "inprogress4",
-        "inprogress5",
-        "inprogress6"
-      ],
-      done: ["done1", "done2", "done3", "done4"],
-      remain_effort: "test1",
-      total_effort: "test1"
+        this.state = {
+            pbis: []
+        }
     }
-  ];
 
-  render() {
-    return (
-      <Layout style={{ height: "100vh" }}>
-        <Header style={{ background: "#fff", padding: 0, textAlign: "center" }}>
-          Sprint Backlog
-        </Header>
-        <Table dataSource={this.data}>
-          <Column title="PBI" dataIndex="pbi" key="pbi" width="15%" />
-          <ColumnGroup title="Task">
-            <Column
-              title="To Do"
-              dataIndex="to_do"
-              key="to_do"
-              render={tags => (
-                <span>
-                  {tags.map(tag => (
-                    <Tag color="blue" key={tag}>
-                      {tag}
-                    </Tag>
-                  ))}
-                </span>
-              )}
-            />
-            <Column
-              title="In Progress"
-              dataIndex="in_progress"
-              key="in_progress"
-              render={tags => (
-                <span>
-                  {tags.map(tag => (
-                    <Tag color="blue" key={tag}>
-                      {tag}
-                    </Tag>
-                  ))}
-                </span>
-              )}
-            />
-            <Column
-              title="Done"
-              dataIndex="done"
-              key="done"
-              render={tags => (
-                <span>
-                  {tags.map(tag => (
-                    <Tag color="blue" key={tag}>
-                      {tag}
-                    </Tag>
-                  ))}
-                </span>
-              )}
-            />
-          </ColumnGroup>
-          <Column title="Remaining Effort" dataIndex="remain_effort" key="remain_effort" width="15%" />
-          <Column title="Total Effort" dataIndex="total_effort" key="total_effort" width="15%" />
-        </Table>
-      </Layout>
-    );
-  }
+    componentDidMount() {
+        this.fetch()
+    }
+
+    fetch = () => {
+        axios.get("http://127.0.0.1:8000/sprint/api/")
+            .then(res => {
+                let pbis = res.data;
+                var i, j;
+                for(i = 0; i < pbis.length; ++i){
+                    let tasks = pbis[i].tasks
+                    var remaining = 0, total= 0;
+                    for(j = 0; j < tasks.length; ++j) {
+                        total = total + tasks[j].estimated_time;
+                        if (tasks[j].status != "Done") {
+                            remaining = remaining + tasks[j].estimated_time;
+                        }
+                    }
+                    pbis[i].total = total;
+                    pbis[i].remaining = remaining;
+                }
+
+
+                this.setState({
+                    pbis: pbis
+                })
+
+                console.log(this.state.pbis)
+            })
+            .catch(err => console.log(err))
+    }
+
+    render() {
+        return (
+            <Layout style={{ height: "100vh" }}>
+                <Header style={{ background: "#fff", padding: 0, textAlign: "center" }}>
+                    Sprint Backlog
+                </Header>
+                <Table dataSource={this.state.pbis} >
+                    <Column
+                        title="PBI"
+                        dataIndex="title"
+                        key="pbi"
+                        width="15%"
+                        render={title => <span>{title}</span>}
+                    />
+                    <ColumnGroup title="Task">
+                        <Column
+                            title="To Do"
+                            dataIndex="tasks"
+                            key="to_do"
+                            render={tasks => (
+                                <span>
+                                    {tasks.filter(task => task.status == "To Do")
+                                        .map(task => (
+                                            <Tag color="blue" key={task}>
+                                                {task.name}
+                                            </Tag>
+                                        ))}
+                                </span>
+                            )}
+                        />
+                        <Column
+                            title="In Progress"
+                            dataIndex="tasks"
+                            key="in_progress"
+                            render={tasks => (
+                                <span>
+                                    {tasks.filter(task => task.status == "In Progress")
+                                        .map(task => (
+                                            <Tag color="blue" key={task}>
+                                                {task.name}
+                                            </Tag>
+                                        ))}
+                                </span>
+                            )}
+                        />
+                        <Column
+                            title="Done"
+                            dataIndex="tasks"
+                            key="done"
+                            render={tasks => (
+                                <span>
+                                    {tasks.filter(task => task.status == "Done")
+                                        .map(task => (
+                                            <Tag color="blue" key={task}>
+                                                {task.name}
+                                            </Tag>
+                                        ))}
+                                </span>
+                            )}
+                        />
+                        /> */}
+                    </ColumnGroup>
+                    <Column title="Remaining Effort" dataIndex="remaining" key="remaining" width="15%" render={remaining => <span>{remaining}</span>}/>
+                    <Column title="Remaining Effort" dataIndex="total" key="total" width="15%" render={total => <span>{total}</span>}/>
+                </Table>
+            </Layout>
+        );
+    }
 }
 
 export default SprintBacklog;

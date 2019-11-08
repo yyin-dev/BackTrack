@@ -11,7 +11,7 @@ class Task(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=500)
     status = models.CharField(max_length=20)
-    estimated_time = models.CharField(max_length=50)
+    estimated_time = models.IntegerField(max_length=50)
     pic = models.CharField(max_length=50)
 
     def __str__(self):
