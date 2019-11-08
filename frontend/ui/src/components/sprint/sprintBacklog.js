@@ -72,6 +72,7 @@ class SprintBacklog extends React.Component {
                   <NextSprint
                     sprint_no={this.state.sprint_no}
                     refresh={this.fetch}
+                    pbis={this.state.pbis}
                   />
                 ]}
               >
