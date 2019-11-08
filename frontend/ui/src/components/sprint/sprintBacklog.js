@@ -19,6 +19,8 @@ class SprintBacklog extends React.Component {
             pbis: [],
             sprint_no: -1,
             capacity: -1,
+            total_effort: -1,
+            remain_effort: -1,
         }
     }
 
@@ -33,6 +35,8 @@ class SprintBacklog extends React.Component {
                 var i, j;
                 let sprint_no = res.data[0].no;
                 let capacity = res.data[0].capacity;
+                let total_effort = 0;
+                let remain_effort = 0;
                 for(i = 0; i < pbis.length; ++i){
                     let tasks = pbis[i].tasks
                     var remaining = 0, total= 0;
@@ -43,7 +47,9 @@ class SprintBacklog extends React.Component {
                         }
                     }
                     pbis[i].total = total;
+                    total_effort += total;
                     pbis[i].remaining = remaining;
+                    remain_effort += remaining;
                 }
 
 
@@ -51,6 +57,8 @@ class SprintBacklog extends React.Component {
                     pbis: pbis,
                     sprint_no: sprint_no,
                     capacity: capacity,
+                    total_effort: total_effort,
+                    remain_effort: remain_effort,
                 })
 
                 console.log(this.state.pbis, this.state.sprint_no)
@@ -60,6 +68,11 @@ class SprintBacklog extends React.Component {
 
 
     render() {
+
+    var disable_add = false;
+      if (this.state.total_effort >= this.state.capacity) {
+        disable_add = true;
+      }
         return (
           <Layout style={{ height: "100vh" }}>
             <div>
@@ -76,7 +89,7 @@ class SprintBacklog extends React.Component {
                   />
                 ]}
               >
-                <Descriptions size="small" column={2}>
+                <Descriptions size="small" column={4}>
                   <Descriptions.Item label="Sprint Number">
                     {this.state.sprint_no}
                   </Descriptions.Item>
@@ -84,6 +97,15 @@ class SprintBacklog extends React.Component {
                   <Descriptions.Item label="Max Capacity">
                     {this.state.capacity}
                   </Descriptions.Item>
+
+                  <Descriptions.Item label="Sprint Total Effort">
+                    {this.state.total_effort}
+                  </Descriptions.Item>
+
+                  <Descriptions.Item label="Sprint Remaining Effort">
+                    {this.state.remain_effort}
+                  </Descriptions.Item>
+
                 </Descriptions>
               </PageHeader>
             </div>
@@ -99,7 +121,7 @@ class SprintBacklog extends React.Component {
                 dataIndex="id"
                 key="add_pbi"
                 width="2%"                
-                render={id => <AddTask id={id} refresh={this.fetch} />}
+                render={id => <AddTask id={id} refresh={this.fetch} disableAdd={disable_add} />}
               />
               <Column
                 dataIndex="tasks"

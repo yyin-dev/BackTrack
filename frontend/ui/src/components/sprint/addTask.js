@@ -14,6 +14,7 @@ class AddTask extends React.Component {
             estimatedTime: 0,
             pic: ""
         };
+        this.disableAdd = this.props.disableAdd
     }
 
     handleTaskName = (e) => {
@@ -84,7 +85,7 @@ class AddTask extends React.Component {
 
         return (
             <div>
-            <Button icon="plus" onClick={this.viewDetail} />
+            <Button icon="plus" onClick={this.viewDetail} disabled={this.disableAdd} />
             <Modal
                 title="View Task"
                 visible={this.state.visible}

@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-import { Modal, Tag, Button, message, Form, Input, InputNumber } from 'antd';
+import { Modal, Tag, Button, message, Form, Input, InputNumber, Tooltip } from 'antd';
 
 class EditTask extends React.Component {
     constructor(props) {
@@ -66,7 +66,7 @@ class EditTask extends React.Component {
             this.setState({
                 visible: false
             });
-            this.props.refresh()
+            window.location.reload()
         })
         .catch(err => {
             alert("Wrong")
@@ -126,7 +126,7 @@ class EditTask extends React.Component {
             <Tag color="blue" onClick={this.viewDetail} style={{fontSize: '18px', margin: '5px'}}>
                 {this.task.name}
             </Tag>
-            <Button icon="caret-right" onClick={this.changeStatus} />
+            <Tooltip title="Start Task"><Button icon="caret-right" onClick={this.changeStatus} /></Tooltip>
             <Modal
                 title="View Task"
                 visible={this.state.visible}
