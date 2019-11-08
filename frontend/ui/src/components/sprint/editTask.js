@@ -52,10 +52,26 @@ class EditTask extends React.Component {
     }
 
     handleOk = e => {
-        console.log(e);
-        this.setState({
-          visible: false,
-        });
+        axios.post("http://127.0.0.1:8000/sprint/api/edit/", {
+            pbi: this.task.pbi,
+            id: this.task.id,
+            name: this.state.taskName,
+            status: "To Do",
+            description: this.state.description,
+            estimated_time: this.state.estimatedTime,
+            pic: this.state.pic
+        })
+        .then(res => {
+            message.success("Task Edited!", 3)
+            this.setState({
+                visible: false
+            });
+            this.props.refresh()
+        })
+        .catch(err => {
+            alert("Wrong")
+            console.log(err)
+        })
     };
 
     handleCancel = e => {
@@ -67,6 +83,29 @@ class EditTask extends React.Component {
             estimatedTime: this.task.estimated_time,
             pic: this.task.pic
         });
+    };
+
+    changeStatus = e => {
+        axios.post("http://127.0.0.1:8000/sprint/api/edit/", {
+            pbi: this.task.pbi,
+            id: this.task.id,
+            name: this.task.name,
+            status: "In Progress",
+            description: this.task.description,
+            estimated_time: this.task.estimated_time,
+            pic: this.task.pic
+        })
+        .then(res => {
+            message.success("Task Started!", 3)
+            this.setState({
+                visible: false
+            });
+            this.props.refresh()
+        })
+        .catch(err => {
+            alert("Wrong")
+            console.log(err)
+        })
     };
 
     render() {
@@ -87,6 +126,7 @@ class EditTask extends React.Component {
             <Tag color="blue" onClick={this.viewDetail} style={{fontSize: '18px', margin: '5px'}}>
                 {this.task.name}
             </Tag>
+            <Button icon="caret-right" onClick={this.changeStatus} />
             <Modal
                 title="View Task"
                 visible={this.state.visible}

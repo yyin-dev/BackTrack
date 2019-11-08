@@ -130,7 +130,7 @@ class SprintBacklog extends React.Component {
                       {tasks
                         .filter(task => task.status == "In Progress")
                         .map(task => (
-                          <EditTask task={task} refresh={this.fetch} />
+                          <ViewTask task={task} refresh={this.fetch}/>
                         ))}
                     </span>
                   )}
@@ -144,7 +144,7 @@ class SprintBacklog extends React.Component {
                       {tasks
                         .filter(task => task.status == "Done")
                         .map(task => (
-                          <EditTask task={task} refresh={this.fetch} />
+                            <ViewTask task={task} refresh={this.fetch}/>
                         ))}
                     </span>
                   )}
