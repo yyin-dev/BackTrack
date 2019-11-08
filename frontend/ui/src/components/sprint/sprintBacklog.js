@@ -1,9 +1,11 @@
 import React from "react";
 import axios from 'axios';
-import { Layout, Table, Tag } from "antd";
+import { Layout, Table, Tag, Button } from "antd";
 import { PageHeader, Descriptions } from 'antd';
 import ViewTask from './viewTask';
 import NextSprint from './nextSprint';
+import AddTask from './addTask';
+
 
 const { Column, ColumnGroup } = Table;
 const { Header } = Layout;
@@ -58,99 +60,95 @@ class SprintBacklog extends React.Component {
 
     render() {
         return (
-          <Layout style={{ height: "100vh" }}>
-            <div>
-              <PageHeader
-                style={{
-                  border: "1px solid rgb(235, 237, 240)"
-                }}
-                title="Sprint Backlog"
-                extra={[
-                  <NextSprint
-                    sprint_no={this.state.sprint_no}
-                    refresh={this.fetch}
-                  />
-                ]}
-              >
-                <Descriptions size="small" column={2}>
-                  <Descriptions.Item label="Sprint Number">
-                    {this.state.sprint_no}
-                  </Descriptions.Item>
+            <Layout style={{ height: "100vh" }}>
+                <div>
+                  <PageHeader
+                    style={{
+                      border: "1px solid rgb(235, 237, 240)"
+                    }}
+                    title="Sprint Backlog"
+                    extra={[
+                      <NextSprint
+                        sprint_no={this.state.sprint_no}
+                        refresh={this.fetch}
+                      />
+                    ]}
+                  >
+                    <Descriptions size="small" column={2}>
+                      <Descriptions.Item label="Sprint Number">
+                        {this.state.sprint_no}
+                      </Descriptions.Item>
 
-                  <Descriptions.Item label="Max Capacity">10</Descriptions.Item>
-                </Descriptions>
-              </PageHeader>
-            </div>
-
-            <Table dataSource={this.state.pbis}>
-              <Column
-                title="PBI"
-                dataIndex="title"
-                key="pbi"
-                width="15%"
-                render={title => <span>{title}</span>}
-              />
-              <ColumnGroup title="Task">
-                <Column
-                  title="To Do"
-                  dataIndex="tasks"
-                  key="to_do"
-                  render={tasks => (
-                    <span>
-                      {tasks
-                        .filter(task => task.status == "To Do")
-                        .map(task => (
-                          <ViewTask task={task} />
-                        ))}
-                    </span>
-                  )}
-                />
-                <Column
-                  title="In Progress"
-                  dataIndex="tasks"
-                  key="in_progress"
-                  render={tasks => (
-                    <span>
-                      {tasks
-                        .filter(task => task.status == "In Progress")
-                        .map(task => (
-                          <ViewTask task={task} />
-                        ))}
-                    </span>
-                  )}
-                />
-                <Column
-                  title="Done"
-                  dataIndex="tasks"
-                  key="done"
-                  render={tasks => (
-                    <span>
-                      {tasks
-                        .filter(task => task.status == "Done")
-                        .map(task => (
-                          <ViewTask task={task} />
-                        ))}
-                    </span>
-                  )}
-                />
-                /> */}
-              </ColumnGroup>
-              <Column
-                title="Remaining Effort"
-                dataIndex="remaining"
-                key="remaining"
-                width="15%"
-                render={remaining => <span>{remaining}</span>}
-              />
-              <Column
-                title="Total Effort"
-                dataIndex="total"
-                key="total"
-                width="15%"
-                render={total => <span>{total}</span>}
-              />
-            </Table>
-          </Layout>
+                      <Descriptions.Item label="Max Capacity">10</Descriptions.Item>
+                    </Descriptions>
+                  </PageHeader>
+                </div>
+                <Table dataSource={this.state.pbis} >
+                    <Column
+                        title="PBI"
+                        dataIndex="title"
+                        key="pbi"
+                        width="10%"
+                        render={title => <h2>{title}</h2>}
+                    />
+                    <Column
+                        dataIndex="id"
+                        key="add_pbi"
+                        width="5%"
+                        render={id => <AddTask id={id} />}
+                    />
+                    <ColumnGroup title="Task">
+                        <Column
+                            title="To Do"
+                            dataIndex="tasks"
+                            key="to_do"
+                            render={tasks => (
+                                <span>
+                                    {tasks.filter(task => task.status == "To Do")
+                                        .map(task => (
+                                            <ViewTask
+                                                task = {task}
+                                            />
+                                        ))}
+                                </span>
+                            )}
+                        />
+                        <Column
+                            title="In Progress"
+                            dataIndex="tasks"
+                            key="in_progress"
+                            render={tasks => (
+                                <span>
+                                    {tasks.filter(task => task.status == "In Progress")
+                                        .map(task => (
+                                            <ViewTask
+                                                task = {task}
+                                            />
+                                        ))}
+                                </span>
+                            )}
+                        />
+                        <Column
+                            title="Done"
+                            dataIndex="tasks"
+                            key="done"
+                            render={tasks => (
+                                <span>
+                                    {tasks.filter(task => task.status == "Done")
+                                        .map(task => (
+                                            <ViewTask
+                                                task = {task}
+                                            />
+                                        ))}
+                                </span>
+                            )}
+                        />
+                        /> */}
+                    </ColumnGroup>
+                    <Column title="Remaining Effort" dataIndex="remaining" key="remaining" width="15%" render={remaining => <h3>{remaining}</h3>}/>
+                    <Column title="Remaining Effort" dataIndex="total" key="total" width="15%" render={total => <h3>{total}</h3>}/>
+                </Table>
+            </Layout>
         );
     }
 }
