@@ -15,7 +15,11 @@ class MoveBack extends React.Component {
   }
 
   handleOk = e => {
-      this.setState({ status: "To Do" })
+    axios.post(`http://127.0.0.1:8000/product/api/${this.props.pbi.id}/movebackPBI/`)
+        .then(res => {
+            this.props.refresh();
+        })
+        .then(err => console.log(err))
   };
 
   handleCancel = e => {

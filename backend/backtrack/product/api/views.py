@@ -99,6 +99,14 @@ class deletePBI(APIView):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class movebackPBI(APIView):
+    def post(self, request, pk):
+        cur_pbi = PBI.objects.get(id=pk)
+        cur_pbi.status = "To Do"
+        cur_pbi.sprint = None
+        cur_pbi.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class movePBI(APIView):
     def post(self, request):

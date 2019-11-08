@@ -164,7 +164,7 @@ class SprintBacklog extends React.Component {
                 render={remaining => <h3>{remaining}</h3>}
               />
               <Column
-                title="Remaining Effort"
+                title="Total Effort"
                 dataIndex="total"
                 key="total"
                 width="15%"
