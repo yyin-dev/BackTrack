@@ -23,23 +23,22 @@ class EditPBIForm extends React.Component {
         this.setState({ detail: e.target.value })
     }
 
-    handleStoryPointInput = (e) => {
-        this.setState({ story_point: e.target.value })
+    handleStoryPointInput = (v) => {
+        this.setState({ story_point: v })
     }
 
-    handleStatusInput = (e) => {
-        this.setState({ status: e.target.value })
+    handleStatusInput = (v) => {
+        this.setState({ status: v })
     }
 
     handleSubmit = () => {
-        axios.put(`http://127.0.0.1:8000/product/api/${this.props.pbi.id}/update/`, {
+        // Use "PATCH" instead of "PUT" for partial update
+        // https://stackoverflow.com/questions/41110742/django-rest-framework-partial-update
+        axios.patch(`http://127.0.0.1:8000/product/api/${this.props.pbi.id}/update/`, {
             title: this.state.title,
             detail: this.state.detail,
-            status: this.state.status,
-            sprintNo: this.props.pbi.sprint_no,
-            start_date: this.props.pbi.start_date,
             story_point: this.state.story_point,
-            priority: this.props.pbi.priority,
+            status: this.state.status,
         })
             .then(res => {
                 this.props.refresh();
@@ -72,7 +71,7 @@ class EditPBIForm extends React.Component {
                         <Input value={this.state.title} onChange={this.handleTitleInput} />
                     </Form.Item>
                     <Form.Item label="Status">
-                        <Select defaultValue={this.state.status} style={{ width: 120 }}>
+                        <Select defaultValue={this.state.status} style={{ width: 120 }} onChange={this.handleStatusInput}> 
                             <Option value="To Do">To Do</Option>
                             <Option value="In Progress">In Progress</Option>
                             <Option value="Done">Done</Option>

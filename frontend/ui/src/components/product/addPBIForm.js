@@ -29,11 +29,7 @@ class AddPBIForm extends React.Component {
         axios.post("http://127.0.0.1:8000/product/api/create/", {
             title: this.state.title,
             detail: this.state.detail,
-            status: "To Do",
-            sprint_no: 0,
             story_point: this.state.story_point,
-            start_date: "2019-01-01",
-            priority: this.props.priority_max + 1
         })
             .then(res => {
                 message.success("New PBI created!", 3)

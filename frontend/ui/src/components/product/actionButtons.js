@@ -86,11 +86,9 @@ class ActionButtons extends React.Component {
                     refresh={this.props.refresh}
                     close={this.handleClose}
                 />
-                <Tooltip title="Move to sprint">
                     <Popconfirm title="Move to sprint?" onConfirm={() => this.handleMoveToSprint()}>
                         <Button icon="forward" />
                     </Popconfirm>
-                </Tooltip>
             </div >
         )
     }

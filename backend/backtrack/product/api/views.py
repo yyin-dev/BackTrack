@@ -59,7 +59,8 @@ class moveToSprint(APIView):
             cur_pbi.sprint_no = 1
             cur_pbi.save()
         else:
-            cur_pbi.sprint_no = latest_sprint.no
+            cur_pbi.sprint = latest_sprint
+            cur_pbi.status = "In Progress"
             cur_pbi.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -69,10 +70,11 @@ class addPBI(APIView):
     def post(self, request):
         new_pbi = PBI(title=request.data['title'],
                       detail=request.data['detail'],
-                      status=request.data['status'],
                       story_point=request.data['story_point'],
-                      sprint_no=request.data['sprint_no'],
-                      start_date=request.data['start_date'],
+
+                      # Default values
+                      status="To Do",
+                      start_date="2019-01-01",
                       priority=0)
         new_pbi.save()
 

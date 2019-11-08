@@ -12,7 +12,7 @@ class Sprint(models.Model):
 
 
 class PBI(models.Model):
-    sprint = models.ForeignKey(Sprint, related_name="pbis", on_delete=models.CASCADE, default=-1)
+    sprint = models.ForeignKey(Sprint, related_name="pbis", on_delete=models.CASCADE, null=True)
 
     title = models.CharField(max_length=50)
     detail = models.CharField(max_length=500)
