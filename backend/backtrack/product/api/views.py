@@ -65,6 +65,31 @@ class moveToSprint(APIView):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class moveToNextSprint(APIView):
+    """
+    TODO: testing
+
+    Create a new Sprint.
+    Set the sprint_no of the selected PBI to the latest Sprint
+    """
+    def post(self, request, pk):
+        id = request.data["id"]
+        newTitle = request.data["newTitle"]
+        newStoryPoint = request.data["newStoryPoint"]
+
+        cur_pbi = PBI.objects.get(id=id)
+        cur_pbi.title = newTitle
+        cur_pbi.story_point = newStoryPoint
+        cur_pbi.status = "To Do"
+
+        newSprintNo = cur_pbi.sprint.no + 1
+        newSprint = Sprint.objects.create(no=newSprintNo)
+        newSprint.save()
+        cur_pbi.sprint = newSprint
+        cur_pbi.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class addPBI(APIView):
     def post(self, request):
@@ -99,10 +124,30 @@ class deletePBI(APIView):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 class movebackPBI(APIView):
     def post(self, request, pk):
         cur_pbi = PBI.objects.get(id=pk)
         cur_pbi.status = "To Do"
+        cur_pbi.sprint = None
+        cur_pbi.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    
+class movebackPBIAfterSprint(APIView):
+    """
+    TODO: testing
+    """
+    def post(self, request, pk):
+        id = request.data["id"]
+        newTitle = request.data["newTitle"]
+        newStoryPoint = request.data["newStoryPoint"]
+
+        cur_pbi = PBI.objects.get(id=id)
+        cur_pbi.title = newTitle
+        cur_pbi.story_point = newStoryPoint
+        cur_pbi.status = "To Do"
+
         cur_pbi.sprint = None
         cur_pbi.save()
         return Response(status=status.HTTP_204_NO_CONTENT)

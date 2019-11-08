@@ -10,7 +10,9 @@ from .views import (
     deletePBI,
     movePBI,
     moveToSprint,
-    movebackPBI)
+    movebackPBI,
+    moveToNextSprint,
+    movebackPBIAfterSprint)
 
 urlpatterns = [
     path('', PBIListView.as_view()),
@@ -21,4 +23,7 @@ urlpatterns = [
     path('<pk>/update/', PBIUpdateView.as_view()),
     path('<pk>/delete/', deletePBI.as_view()),
     path('<pk>/movebackPBI/', movebackPBI.as_view()),
+
+    path('<pk>/movetonextsprint/', moveToNextSprint.as_view()),
+    path('<pk>/movebackPBIaftersprint/', movebackPBIAfterSprint.as_view()),
 ]

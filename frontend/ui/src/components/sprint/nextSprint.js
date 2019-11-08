@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { Modal, Button, Form, InputNumber, Card, Select, Input } from 'antd';
+import { Modal, Button, Form, InputNumber, Card, Select, Input, message } from 'antd';
 import './nextSprint.css'
+import axios from 'axios';
 const { Option } = Select;
 
 class NextSprint extends React.Component {
@@ -36,7 +37,41 @@ class NextSprint extends React.Component {
     }
   };
 
-  handleOk = e => {
+  handleSubmit = e => {
+    var i, pbi;
+    for(i = 0; i < this.state.unfinished_pbis.length; ++i) {
+      pbi = this.state.unfinished_pbis[i]
+      if (!pbi.action) {
+        pbi.action = "move"
+      }
+
+      if (!pbi.newTitle) {
+        pbi.newTitle = pbi.title
+      }
+
+      if (!pbi.newStoryPoint) {
+        pbi.newStoryPoint = pbi.story_point
+      }
+
+      if (pbi.action == "move") {
+        axios.post(`http://127.0.0.1:8000/product/api/${pbi.id}/movetonextsprint/`, {
+          id: pbi.id,
+          newTitle: pbi.newTitle,
+          newStoryPoint: pbi.newStoryPoint
+        })
+          .then(res => {
+            message.success("Move succeed!", 3)
+          })
+          .catch(err => console.log(err))
+      } else if (pbi.action == "back") {
+
+      } else if (pbi.action == "delete") {
+
+      } else {
+        console.log("error")
+      }
+    }
+
     this.setState({
       visible: false
     });
@@ -97,7 +132,7 @@ class NextSprint extends React.Component {
         <Modal
           title="Next Sprint"
           visible={this.state.visible}
-          onOk={this.handleOk}
+          onOk={this.handleSubmit}
           onCancel={this.handleCancel}
         >
           {this.state.unfinished_pbis.map((pbi, index) =>
@@ -105,36 +140,40 @@ class NextSprint extends React.Component {
               className="unfinished-pbi-card"
               title={pbi.title}
             >
-              <span>Total effort: {pbi.total}</span><br />
-              <span>Remaining effort: {pbi.remaining}</span><br />
-              <span>Select an action:
+              <div style={{paddingBottom: 10}}>
+                <FormLabel text="Total Effort" /><span>{pbi.total}</span><br />
+                <FormLabel text="Remaining effort" /><span>{pbi.remaining}</span><br />
+                <FormLabel text="Select an Action" />
                 <Select
                   defaultValue="next"
-                  style={{ width: 200, paddingLeft: 10 }}
+                  style={{ width: 200 }}
                   onChange={v => this.handleActionChange(v, index)}
                 >
                   <Option value="next">Move to next sprint</Option>
                   <Option value="back">Back to product backlog</Option>
+                  <Option value="delete">Delete this PBI</Option>
                 </Select>
-              </span><br />
-              <span>Specify new info</span><br />
-              <span>New PBI Title:
-                <Input 
-                  style={{ width: 'auto' }} 
-                  defaultValue={pbi.title} 
-                  onChange={v => this.handleNewTitleChange(v, index)}
-                />
-              </span><br />
-              <span>New PBI Story Point:
+              </div>
+
+              <div>
+                <FormLabel text="Specify new info" /><br />
+                <FormLabel text="New PBI Title" />
+                <Input
+                  style={{ width: 'auto' }}
+                  defaultValue={pbi.title}
+                  onChange={e => this.handleNewTitleChange(e.target.value, index)}
+                /><br />
+                <FormLabel text="New PBI Story Point" />
                 <InputNumber
                   min={1}
                   defaultValue={pbi.story_point}
-                  onChange={v => this.handleNewStoryPointChange(v, index)} 
+                  onChange={v => this.handleNewStoryPointChange(v, index)}
                 />
-              </span><br />
+              </div>
+
             </Card>))}
 
-          <Form {...formItemLayout}>
+          {/* <Form {...formItemLayout}>
             <Form.Item label="Sprint Number">
               <InputNumber
                 disabled={true}
@@ -148,11 +187,15 @@ class NextSprint extends React.Component {
                 onChange={this.handleMaxCapacityInput}
               />
             </Form.Item>
-          </Form>
+          </Form> */}
         </Modal>
       </div>
     );
   }
+}
+
+function FormLabel(props) {
+  return (<span style={{ display: "inline-block", minWidth: '200px' }}><b>{props.text}</b></span>)
 }
 
 export default NextSprint;
