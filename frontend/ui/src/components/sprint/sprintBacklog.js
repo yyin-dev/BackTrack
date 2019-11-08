@@ -1,7 +1,8 @@
 import React from "react";
 import axios from 'axios';
-import { Layout, Table, Tag } from "antd";
+import { Layout, Table, Tag, Button } from "antd";
 import ViewTask from './viewTask';
+import AddTask from './addTask';
 
 const { Column, ColumnGroup } = Table;
 const { Header } = Layout;
@@ -58,8 +59,14 @@ class SprintBacklog extends React.Component {
                         title="PBI"
                         dataIndex="title"
                         key="pbi"
-                        width="15%"
+                        width="10%"
                         render={title => <span>{title}</span>}
+                    />
+                    <Column
+                        dataIndex="id"
+                        key="add_pbi"
+                        width="5%"
+                        render={id => <AddTask id={id} />}
                     />
                     <ColumnGroup title="Task">
                         <Column
