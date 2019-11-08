@@ -95,7 +95,7 @@ class SprintBacklog extends React.Component {
                         dataIndex="id"
                         key="add_pbi"
                         width="5%"
-                        render={id => <AddTask id={id} />}
+                        render={id => <AddTask id={id} refresh={this.fetch}/>}
                     />
                     <ColumnGroup title="Task">
                         <Column
