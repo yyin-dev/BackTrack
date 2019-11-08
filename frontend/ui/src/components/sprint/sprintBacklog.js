@@ -27,7 +27,7 @@ class SprintBacklog extends React.Component {
     fetch = () => {
         axios.get("http://127.0.0.1:8000/sprint/api/")
             .then(res => {
-                let pbis = res.data;
+                let pbis = res.data[0].pbis;
                 var i, j;
                 let sprint_no = pbis[0].sprint_no;
                 for(i = 0; i < pbis.length; ++i){
