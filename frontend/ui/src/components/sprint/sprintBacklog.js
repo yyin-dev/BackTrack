@@ -69,9 +69,10 @@ class SprintBacklog extends React.Component {
                 }}
                 title="Sprint Backlog"
                 extra={[
-                  <NextSprint
+                  <NextSprint key="dummy-key"
                     sprint_no={this.state.sprint_no}
                     refresh={this.fetch}
+                    pbis={this.state.pbis}
                   />
                 ]}
               >
@@ -101,10 +102,12 @@ class SprintBacklog extends React.Component {
                 render={id => <AddTask id={id} refresh={this.fetch} />}
               />
               <Column
-                dataIndex="id"
+                dataIndex="tasks"
                 key="move_back"
-                width="2%"                
-                render={id => <MoveBack id={id} refresh={this.fetch} />}
+                width="2%"
+                refresh={this.fetch} 
+                render={(_, pbi) => <MoveBack pbi={pbi} refresh={this.fetch}/>}
+                />}
               />
               <ColumnGroup title="Task">
                 <Column
@@ -116,7 +119,7 @@ class SprintBacklog extends React.Component {
                       {tasks
                         .filter(task => task.status == "To Do")
                         .map(task => (
-                          <EditTask task={task} refresh={this.fetch} />
+                          <EditTask key={task.name} task={task} refresh={this.fetch} />
                         ))}
                     </span>
                   )}
@@ -131,6 +134,7 @@ class SprintBacklog extends React.Component {
                         .filter(task => task.status == "In Progress")
                         .map(task => (
                           <ViewTask task={task} refresh={this.fetch}/>
+
                         ))}
                     </span>
                   )}
@@ -145,6 +149,7 @@ class SprintBacklog extends React.Component {
                         .filter(task => task.status == "Done")
                         .map(task => (
                             <ViewTask task={task} refresh={this.fetch}/>
+
                         ))}
                     </span>
                   )}
