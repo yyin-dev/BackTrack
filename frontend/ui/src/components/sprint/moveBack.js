@@ -16,10 +16,10 @@ class MoveBack extends React.Component {
 
   handleOk = e => {
     axios.post(`http://127.0.0.1:8000/product/api/${this.props.pbi.id}/movebackPBI/`)
-        .then(res => {
-            window.location.reload()
-        })
-        .then(err => console.log(err))
+      .then(res => {
+        window.location.reload()
+      })
+      .then(err => console.log(err))
   };
 
   handleCancel = e => {
@@ -30,16 +30,13 @@ class MoveBack extends React.Component {
 
   render() {
     var BackwardButton;
-    var pbiNotStart = true;
+    var pbiNotStart = false;
     var tasks = this.props.pbi.tasks;
-    
-    for (var i = 0; i < tasks.length; i++) {
-         if (tasks[i].status !== "To Do") {
-             pbiNotStart = false;
-             break;
-         }
-     }
-    
+
+    if (tasks.length === 0) {
+      pbiNotStart = true;
+    }
+
     if (pbiNotStart) {
       BackwardButton = (
         <Tooltip title="Move Back">
