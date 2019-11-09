@@ -19,6 +19,7 @@ class ProductBacklog extends React.Component {
       pagination: {},
       adding: false,
       priority_max: -1,
+      isLoaded: false
     }
   }
 
@@ -44,6 +45,7 @@ class ProductBacklog extends React.Component {
         this.setState({
           pbiList: sorted,
           priority_max: sorted[sorted.length - 1].priority,
+          isLoaded: true
         })
 
       })
@@ -81,53 +83,58 @@ class ProductBacklog extends React.Component {
   ];
 
   render() {
-    return (
-      <Layout style={{ height: "100vh" }}>
-        <PageHeader
-          style={{
-            border: "1px solid rgb(235, 237, 240)"
-          }}
-          title="Product Backlog"
-          extra={[
-            <div key="dummy-key-to-suppress-warning">
-              <Radio.Group
-                style={{ marginRight: 20 }}
-                value={this.state.currentView ? "current" : "full"}
-                onChange={this.handleViewChange}
-              >
-                <Radio.Button value="current">Current View</Radio.Button>
-                <Radio.Button value="full">Full View</Radio.Button>
-              </Radio.Group>
+    const { isLoaded } = this.state;
+    if (!isLoaded) {
+      return <div style={{ margin: "auto" }}>Loading...</div>;
+    } else {
+      return (
+        <Layout style={{ height: "100vh" }}>
+          <PageHeader
+            style={{
+              border: "1px solid rgb(235, 237, 240)"
+            }}
+            title="Product Backlog"
+            extra={[
+              <div key="dummy-key-to-suppress-warning">
+                <Radio.Group
+                  style={{ marginRight: 20 }}
+                  value={this.state.currentView ? "current" : "full"}
+                  onChange={this.handleViewChange}
+                >
+                  <Radio.Button value="current">Current View</Radio.Button>
+                  <Radio.Button value="full">Full View</Radio.Button>
+                </Radio.Group>
 
-              <Button icon="plus" onClick={this.showEditForm} />
-              <AddPBIForm
-                visible={this.state.adding}
-                close={this.closeEditForm}
-                refresh={this.fetch}
-              />
-            </div>
-          ]}
-        >
-          <Descriptions size="small" column={1}>
-            <Descriptions.Item label="Sprint Number">1</Descriptions.Item>
-          </Descriptions>
-        </PageHeader>
+                <Button icon="plus" onClick={this.showEditForm} />
+                <AddPBIForm
+                  visible={this.state.adding}
+                  close={this.closeEditForm}
+                  refresh={this.fetch}
+                />
+              </div>
+            ]}
+          >
+            <Descriptions size="small" column={1}>
+              <Descriptions.Item label="Sprint Number">1</Descriptions.Item>
+            </Descriptions>
+          </PageHeader>
 
-        <Table
-          columns={this.columns}
-          rowKey={pbi => pbi.id.toString()}
-          pagination={this.state.pagination}
-          dataSource={
-            this.state.currentView
-              ? this.state.pbiList.filter(pbi => pbi.status !== "Done")
-              : this.state.pbiList
-          }
-        />
-        <Footer style={{ textAlign: "center" }}>
-          Developed by FastDev (Group F)
-            </Footer>
-      </Layout>
-    );
+          <Table
+            columns={this.columns}
+            rowKey={pbi => pbi.id.toString()}
+            pagination={this.state.pagination}
+            dataSource={
+              this.state.currentView
+                ? this.state.pbiList.filter(pbi => pbi.status !== "Done")
+                : this.state.pbiList
+            }
+          />
+          <Footer style={{ textAlign: "center" }}>
+            Developed by FastDev (Group F)
+              </Footer>
+        </Layout>
+      );
+    }
   }
 }
 

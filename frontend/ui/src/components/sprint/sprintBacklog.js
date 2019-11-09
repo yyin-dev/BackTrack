@@ -21,6 +21,7 @@ class SprintBacklog extends React.Component {
       capacity: -1,
       total_effort: -1,
       remain_effort: -1,
+      isLoaded: false,
     }
   }
 
@@ -71,6 +72,7 @@ class SprintBacklog extends React.Component {
           capacity: capacity,
           total_effort: total_effort,
           remain_effort: remain_effort,
+          isLoaded: true
         })
       })
       .catch(err => console.log(err))
@@ -78,132 +80,137 @@ class SprintBacklog extends React.Component {
 
 
   render() {
-
-    var disable_add = false;
-    if (this.state.total_effort >= this.state.capacity) {
-      disable_add = true;
+    const {isLoaded} = this.state;
+    if (!isLoaded) {
+      return <div style={{margin: "auto"}}>Loading...</div>;
     }
-    return (
-      <Layout style={{ height: "100vh" }}>
-        <div>
-          <PageHeader
-            style={{
-              border: "1px solid rgb(235, 237, 240)"
-            }}
-            title="Sprint Backlog"
-            extra={[
-              <NextSprint key="dummy-key"
-                sprint_no={this.state.sprint_no}
-                refresh={this.fetch}
-                pbis={this.state.pbis}
+    else {
+      var disable_add = false;
+      if (this.state.total_effort >= this.state.capacity) {
+        disable_add = true;
+      }
+      return (
+        <Layout style={{ height: "100vh" }}>
+          <div>
+            <PageHeader
+              style={{
+                border: "1px solid rgb(235, 237, 240)"
+              }}
+              title="Sprint Backlog"
+              extra={[
+                <NextSprint key="dummy-key"
+                  sprint_no={this.state.sprint_no}
+                  refresh={this.fetch}
+                  pbis={this.state.pbis}
+                />
+              ]}
+            >
+              <Descriptions size="small" column={4}>
+                <Descriptions.Item label="Sprint Number">
+                  {this.state.sprint_no}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Max Capacity">
+                  {this.state.capacity}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Sprint Total Effort">
+                  {this.state.total_effort}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Sprint Remaining Effort">
+                  {this.state.remain_effort}
+                </Descriptions.Item>
+
+              </Descriptions>
+            </PageHeader>
+          </div>
+          <Table dataSource={this.state.pbis} rowKey={pbi => pbi.title.toString()}>
+            <Column
+              title="PBI"
+              dataIndex="title"
+              key="pbi"
+              width="10%"
+              render={(_, pbi) => <ViewPBI pbi={pbi} refresh={this.fetch} />}
+            />
+            <Column
+              dataIndex="id"
+              key="add_pbi"
+              width="1%"
+              render={id => <AddTask id={id} refresh={this.fetch} disableAdd={disable_add} />}
+            />
+            <Column
+              dataIndex="tasks"
+              key="move_back"
+              width="1%"
+              render={(_, pbi) => <MoveBack pbi={pbi} refresh={this.fetch} />}
+            />}
+          />
+                <ColumnGroup title="Task">
+              <Column
+                title="To Do"
+                dataIndex="tasks"
+                key="to_do"
+                render={tasks => (
+                  <span>
+                    {tasks
+                      .filter(task => task.status === "To Do")
+                      .map(task => (
+                        <EditTask key={task.name} task={task} refresh={this.fetch} />
+                      ))}
+                  </span>
+                )}
               />
-            ]}
-          >
-            <Descriptions size="small" column={4}>
-              <Descriptions.Item label="Sprint Number">
-                {this.state.sprint_no}
-              </Descriptions.Item>
+              <Column
+                title="In Progress"
+                dataIndex="tasks"
+                key="in_progress"
+                render={tasks => (
+                  <span>
+                    {tasks
+                      .filter(task => task.status === "In Progress")
+                      .map(task => (
+                        <ViewTask key={task.name} task={task} refresh={this.fetch} />
 
-              <Descriptions.Item label="Max Capacity">
-                {this.state.capacity}
-              </Descriptions.Item>
+                      ))}
+                  </span>
+                )}
+              />
+              <Column
+                title="Done"
+                dataIndex="tasks"
+                key="done"
+                render={tasks => (
+                  <span>
+                    {tasks
+                      .filter(task => task.status === "Done")
+                      .map(task => (
+                        <ViewTask key={task.name} task={task} refresh={this.fetch} />
 
-              <Descriptions.Item label="Sprint Total Effort">
-                {this.state.total_effort}
-              </Descriptions.Item>
-
-              <Descriptions.Item label="Sprint Remaining Effort">
-                {this.state.remain_effort}
-              </Descriptions.Item>
-
-            </Descriptions>
-          </PageHeader>
-        </div>
-        <Table dataSource={this.state.pbis} rowKey={pbi => pbi.title.toString()}>
-          <Column
-            title="PBI"
-            dataIndex="title"
-            key="pbi"
-            width="10%"
-            render={(_, pbi) => <ViewPBI pbi={pbi} refresh={this.fetch} />}
-          />
-          <Column
-            dataIndex="id"
-            key="add_pbi"
-            width="1%"
-            render={id => <AddTask id={id} refresh={this.fetch} disableAdd={disable_add} />}
-          />
-          <Column
-            dataIndex="tasks"
-            key="move_back"
-            width="1%"
-            render={(_, pbi) => <MoveBack pbi={pbi} refresh={this.fetch} />}
-          />}
-        />
-              <ColumnGroup title="Task">
+                      ))}
+                  </span>
+                )}
+              />
+              /> */}
+                </ColumnGroup>
             <Column
-              title="To Do"
-              dataIndex="tasks"
-              key="to_do"
-              render={tasks => (
-                <span>
-                  {tasks
-                    .filter(task => task.status === "To Do")
-                    .map(task => (
-                      <EditTask key={task.name} task={task} refresh={this.fetch} />
-                    ))}
-                </span>
-              )}
+              title="Remaining Effort"
+              dataIndex="remaining"
+              key="remaining"
+              width="15%"
+              render={remaining => <h3>{remaining}</h3>}
             />
             <Column
-              title="In Progress"
-              dataIndex="tasks"
-              key="in_progress"
-              render={tasks => (
-                <span>
-                  {tasks
-                    .filter(task => task.status === "In Progress")
-                    .map(task => (
-                      <ViewTask key={task.name} task={task} refresh={this.fetch} />
-
-                    ))}
-                </span>
-              )}
+              title="Total Effort"
+              dataIndex="total"
+              key="total"
+              width="15%"
+              render={total => <h3>{total}</h3>}
             />
-            <Column
-              title="Done"
-              dataIndex="tasks"
-              key="done"
-              render={tasks => (
-                <span>
-                  {tasks
-                    .filter(task => task.status === "Done")
-                    .map(task => (
-                      <ViewTask key={task.name} task={task} refresh={this.fetch} />
-
-                    ))}
-                </span>
-              )}
-            />
-            /> */}
-              </ColumnGroup>
-          <Column
-            title="Remaining Effort"
-            dataIndex="remaining"
-            key="remaining"
-            width="15%"
-            render={remaining => <h3>{remaining}</h3>}
-          />
-          <Column
-            title="Total Effort"
-            dataIndex="total"
-            key="total"
-            width="15%"
-            render={total => <h3>{total}</h3>}
-          />
-        </Table>
-      </Layout>
-    );
+          </Table>
+        </Layout>
+      );
+    }
   }
 }
 
