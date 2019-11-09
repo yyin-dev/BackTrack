@@ -13,6 +13,7 @@ class NextSprint extends React.Component {
     this.state = {
       visible: false,
       unfinished_pbis: [],
+      finished_pbis: [],
       new_sprint_capacity: default_capacity,
     };
   }
@@ -36,6 +37,15 @@ class NextSprint extends React.Component {
           })
           break;
         }
+
+        if (j === this.props.pbis[i].tasks.length-1) {
+          let curr = this.state.finished_pbis
+          curr.push(this.props.pbis[i])
+          this.setState({
+            finished_pbis: curr
+          })
+        }
+
       }
     }
   };
@@ -72,7 +82,8 @@ class NextSprint extends React.Component {
         axios.post(`http://127.0.0.1:8000/product/api/${pbi.id}/movebackPBIaftersprint/`, {
           id: pbi.id,
           newTitle: pbi.newTitle,
-          newStoryPoint: pbi.newStoryPoint
+          newStoryPoint: pbi.newStoryPoint,
+          newStatus: "To Do"
         })
           .then(res => {
             this.props.refresh()
@@ -93,6 +104,22 @@ class NextSprint extends React.Component {
       } else {
         console.log("error")
       }
+    }
+
+    alert(this.state.finished_pbis.length)
+    for (var j=0; j<this.state.finished_pbis.length; j++) {
+      pbi = this.state.finished_pbis[j]
+      axios.post(`http://127.0.0.1:8000/product/api/${pbi.id}/movebackPBIaftersprint/`, {
+          id: pbi.id,
+          newTitle: pbi.title,
+          newStoryPoint: pbi.story_point,
+          newStatus: "Done"
+        })
+          .then(res => {
+            this.props.refresh()
+            message.success("PBI Done!", 3)
+          })
+          .catch(err => console.log(err))
     }
 
     this.setState({

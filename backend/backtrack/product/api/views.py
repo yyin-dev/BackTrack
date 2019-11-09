@@ -137,11 +137,12 @@ class movebackPBIAfterSprint(APIView):
         id = request.data["id"]
         newTitle = request.data["newTitle"]
         newStoryPoint = request.data["newStoryPoint"]
+        newStatus = request.data["newStatus"]
 
         cur_pbi = PBI.objects.get(id=id)
         cur_pbi.title = newTitle
         cur_pbi.story_point = newStoryPoint
-        cur_pbi.status = "To Do"
+        cur_pbi.status = newStatus
 
         cur_pbi.sprint = None
         cur_pbi.save()
