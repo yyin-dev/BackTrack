@@ -23,3 +23,11 @@ https://www.django-rest-framework.org/
 https://reactjs.org/
 https://github.com/adamchainz/django-cors-headers
 https://ant.design/
+
+
+### TO DO
+- nav bar  
+- PBI to "Done" after sprint
+- Product Backlog Sprint No.
+- Next Sprint Modal Next Sprint No.
+  
