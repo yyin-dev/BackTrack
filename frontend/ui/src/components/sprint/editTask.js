@@ -126,7 +126,9 @@ class EditTask extends React.Component {
             <Tag color="blue" onClick={this.viewDetail} style={{fontSize: '18px', margin: '5px'}}>
                 {this.task.name}
             </Tag>
-            <Tooltip title="Start Task"><Button icon="caret-right" onClick={this.changeStatus} /></Tooltip>
+            <Tooltip title="Start Task">
+                <Button icon="caret-right" onClick={this.changeStatus} disabled={this.props.disabled}/>
+            </Tooltip>
             <Modal
                 title="View Task"
                 visible={this.state.visible}
