@@ -83,6 +83,7 @@ class moveToNextSprint(APIView):
         newSprintNo = cur_pbi.sprint.no + 1
         newSprint = Sprint.objects.create(no=newSprintNo)
         newSprint.save()
+        print(newSprint)
         cur_pbi.sprint = newSprint
         cur_pbi.save()
 

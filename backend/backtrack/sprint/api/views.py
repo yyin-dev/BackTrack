@@ -18,15 +18,23 @@ class TaskInSprintView(ListAPIView):
     
     The return value is an list containing ONE SINGLE sprint object. The reason
     is that we used ListAPIView and a list is expected.
-    """
-    queryset = Sprint.objects.none()
-    sprints = Sprint.objects.order_by('-no')
-    latest_sprint = None
-    if sprints:
-        latest_sprint = sprints.first()
-        queryset = Sprint.objects.filter(no=latest_sprint.no)
 
+    Problem of caching for queryset:
+    https://stackoverflow.com/questions/47479080/problems-with-cache-queryset-django-rest-framework
+    https://www.django-rest-framework.org/api-guide/generic-views/
+    https://www.django-rest-framework.org/api-guide/filtering/#filtering
+    """
     serializer_class = SprintSerializerSprint
+
+    def get_queryset(self):
+        if len(Sprint.objects.all()) == 0:
+            s = Sprint.objects.create(no=1)
+            s.save()
+
+        sprints = Sprint.objects.order_by('-no')
+        latest_sprint = sprints.first()
+        return Sprint.objects.filter(no=latest_sprint.no)
+
 
 class addTask(APIView):
     def post(self, request):
