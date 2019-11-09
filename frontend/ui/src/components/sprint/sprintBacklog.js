@@ -7,6 +7,7 @@ import NextSprint from './nextSprint';
 import AddTask from './addTask';
 import EditTask from './editTask';
 import MoveBack from './moveBack';
+import ViewPBI from './viewPBI';
 
 const { Column, ColumnGroup } = Table;
 const { Header } = Layout;
@@ -50,6 +51,17 @@ class SprintBacklog extends React.Component {
                     total_effort += total;
                     pbis[i].remaining = remaining;
                     remain_effort += remaining;
+
+                    var pbiInfo = {
+                      id: pbis[i].id,
+                      title: pbis[i].title,
+                      detail: pbis[i].detail,
+                      status: pbis[i].status,
+                      start_date: pbis[i].start_date,
+                      story_point: pbis[i].story_point,
+                      priority: pbis[i].priority,
+                    };
+                    pbis[i].pbiInfo = pbiInfo
                 }
 
 
@@ -112,10 +124,14 @@ class SprintBacklog extends React.Component {
             <Table dataSource={this.state.pbis}>
               <Column
                 title="PBI"
-                dataIndex="title"
+                dataIndex="pbiInfo"
                 key="pbi"
                 width="10%"
-                render={title => <h2>{title}</h2>}
+                render={ pbiInfo =>
+                  <ViewPBI
+                    pbiInfo={pbiInfo}
+                    refresh={this.fetch}
+                  />}
               />
               <Column
                 dataIndex="id"
@@ -127,7 +143,7 @@ class SprintBacklog extends React.Component {
                 dataIndex="tasks"
                 key="move_back"
                 width="2%"
-                refresh={this.fetch} 
+                refresh={this.fetch}
                 render={(_, pbi) => <MoveBack pbi={pbi} refresh={this.fetch}/>}
                 />}
               />

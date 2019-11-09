@@ -149,6 +149,16 @@ class movebackPBIAfterSprint(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class getPBIInfo(APIView):
+        def post(self, request, pk):
+            # print(request.data)
+
+            queryset = PBI.objects.get(title=pk)
+            serializer_class = PBISerializerProduct
+            # return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(queryset)
+
+
 class movePBI(APIView):
     def post(self, request):
         print(request.data)
@@ -174,4 +184,3 @@ class movePBI(APIView):
         target2.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
-
