@@ -1,16 +1,19 @@
 import React from 'react';
 
-import { Modal, Button, InputNumber, Card, Select, Input, message } from 'antd';
+import { Modal, Button, InputNumber, Card, Select, Input, message, Form } from 'antd';
 import './nextSprint.css'
 import axios from 'axios';
 const { Option } = Select;
+
+const default_capacity = 10
 
 class NextSprint extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       visible: false,
-      unfinished_pbis: []
+      unfinished_pbis: [],
+      new_sprint_capacity: default_capacity,
     };
   }
 
@@ -57,7 +60,8 @@ class NextSprint extends React.Component {
         axios.post(`http://127.0.0.1:8000/product/api/${pbi.id}/movetonextsprint/`, {
           id: pbi.id,
           newTitle: pbi.newTitle,
-          newStoryPoint: pbi.newStoryPoint
+          newStoryPoint: pbi.newStoryPoint,
+          sprintCapacity: this.state.new_sprint_capacity
         })
           .then(res => {
             this.props.refresh()
@@ -102,7 +106,11 @@ class NextSprint extends React.Component {
     });
   };
 
-  handleMaxCapacityInput = (e) => { }
+  handleMaxCapacityInput = (v) => { 
+    this.setState({
+      new_sprint_capacity: v
+    })
+  }
 
   handleActionChange = (v, index) => {
     let newState = this.state.unfinished_pbis
@@ -110,7 +118,6 @@ class NextSprint extends React.Component {
     this.setState({
       unfinished_pbis: newState
     })
-    console.log(this.state.unfinished_pbis)
   }
 
   handleNewTitleChange = (v, index) => {
@@ -131,7 +138,19 @@ class NextSprint extends React.Component {
     console.log(this.state.unfinished_pbis)
   }
 
+
+
   render() {
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 8 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 },
+      },
+    };
     return (
       <div>
         <Button type="primary" onClick={this.showModal}>
@@ -181,7 +200,7 @@ class NextSprint extends React.Component {
 
             </Card>))}
 
-          {/* <Form {...formItemLayout}>
+          <Form {...formItemLayout}>
             <Form.Item label="Sprint Number">
               <InputNumber
                 disabled={true}
@@ -191,11 +210,11 @@ class NextSprint extends React.Component {
             <Form.Item label="Max Capacity">
               <InputNumber
                 min={0}
-                value={10}
+                value={this.state.new_sprint_capacity}
                 onChange={this.handleMaxCapacityInput}
               />
             </Form.Item>
-          </Form> */}
+          </Form>
         </Modal>
       </div>
     );

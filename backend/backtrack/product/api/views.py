@@ -74,6 +74,7 @@ class moveToNextSprint(APIView):
         id = request.data["id"]
         newTitle = request.data["newTitle"]
         newStoryPoint = request.data["newStoryPoint"]
+        newCapacity = request.data["sprintCapacity"]
 
         cur_pbi = PBI.objects.get(id=id)
         cur_pbi.title = newTitle
@@ -81,9 +82,8 @@ class moveToNextSprint(APIView):
         cur_pbi.status = "To Do"
 
         newSprintNo = cur_pbi.sprint.no + 1
-        newSprint = Sprint.objects.create(no=newSprintNo)
+        newSprint = Sprint.objects.create(no=newSprintNo, capacity=newCapacity)
         newSprint.save()
-        print(newSprint)
         cur_pbi.sprint = newSprint
         cur_pbi.save()
 
