@@ -26,8 +26,11 @@ https://ant.design/
 
 
 ### TO DO
-- nav bar  
-- PBI to "Done" after sprint
-- Product Backlog Sprint No.
-- Next Sprint Modal Next Sprint No.
+- nav bar --hqy [react-router]
+- PBI to "Done" after sprint --wtk
+- Product Backlog Sprint No. --cgy
+- Next Sprint Modal Next Sprint No. --yy
+- PBI move back all time --lc
+- Two sprints interval --yy
+
   
