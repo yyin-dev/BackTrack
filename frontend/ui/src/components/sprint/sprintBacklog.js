@@ -1,9 +1,9 @@
 import React from "react";
 import axios from 'axios';
-import { Layout, Table } from "antd";
-import { PageHeader, Descriptions } from 'antd';
+import { Layout, Table, Button, PageHeader, Descriptions, Popconfirm, message } from 'antd';
 import ViewTask from './viewTask';
-import NextSprint from './nextSprint';
+import StartSprint from './startSprint';
+import EndSprint from './endSprint';
 import AddTask from './addTask';
 import EditTask from './editTask';
 import MoveBack from './moveBack';
@@ -16,8 +16,11 @@ class SprintBacklog extends React.Component {
     super(props)
 
     this.state = {
-      pbis: [],
+      sprint_started: false,
       sprint_no: -1,
+      sprint_pk: -1,
+
+      pbis: [],
       capacity: -1,
       total_effort: -1,
       remain_effort: -1,
@@ -49,55 +52,58 @@ class SprintBacklog extends React.Component {
           }
           pbis[i].total = total;
           total_effort += total;
+
           pbis[i].remaining = remaining;
           remain_effort += remaining;
-
-          // var pbiInfo = {
-          //   id: pbis[i].id,
-          //   title: pbis[i].title,
-          //   detail: pbis[i].detail,
-          //   status: pbis[i].status,
-          //   start_date: pbis[i].start_date,
-          //   story_point: pbis[i].story_point,
-          //   priority: pbis[i].priority,
-          // };
-          // pbis[i].pbiInfo = pbiInfo
         }
 
-
         this.setState({
-          pbis: pbis,
           sprint_no: sprint_no,
+          sprint_started: res.data[0].status === "Started",
+          sprint_pk: res.data[0].id,
+
+          pbis: pbis,
           capacity: capacity,
           total_effort: total_effort,
           remain_effort: remain_effort,
         })
 
-        console.log(this.state.pbis, this.state.sprint_no)
       })
       .catch(err => console.log(err))
   }
 
+  handleStartSprint = () => {
+    axios.post(`http://127.0.0.1:8000/product/api/${this.state.sprint_pk}/startsprint/`, {})
+      .then(res => {
+        message.success("Sprint started!", 3)
+        this.fetch()
+      })
+  }
 
   render() {
-
     var disable_add = false;
     if (this.state.total_effort >= this.state.capacity) {
       disable_add = true;
     }
+    
     return (
       <Layout style={{ height: "100vh" }}>
         <div>
           <PageHeader
-            style={{
-              border: "1px solid rgb(235, 237, 240)"
-            }}
-            title="Sprint Backlog"
+            style={{ border: "1px solid rgb(235, 237, 240)" }}
+            title={"Sprint Backlog: ".concat((this.state.sprint_started ? "" : "NOT"), " in progress")}
             extra={[
-              <NextSprint key="dummy-key"
+              <StartSprint
+                disabled={this.state.sprint_started}
+                onConfirm={this.handleStartSprint}
+                key="start-sprint"
+              />,
+              <EndSprint
                 sprint_no={this.state.sprint_no}
                 refresh={this.fetch}
                 pbis={this.state.pbis}
+                disabled={!this.state.sprint_started}
+                key="end-sprint"
               />
             ]}
           >
@@ -141,9 +147,8 @@ class SprintBacklog extends React.Component {
             width="2%"
             refresh={this.fetch}
             render={(_, pbi) => <MoveBack pbi={pbi} refresh={this.fetch} />}
-          />}
-        />
-              <ColumnGroup title="Task">
+          />
+          <ColumnGroup title="Task">
             <Column
               title="To Do"
               dataIndex="tasks"
@@ -168,7 +173,6 @@ class SprintBacklog extends React.Component {
                     .filter(task => task.status === "In Progress")
                     .map(task => (
                       <ViewTask task={task} refresh={this.fetch} />
-
                     ))}
                 </span>
               )}
@@ -183,7 +187,6 @@ class SprintBacklog extends React.Component {
                     .filter(task => task.status === "Done")
                     .map(task => (
                       <ViewTask task={task} refresh={this.fetch} />
-
                     ))}
                 </span>
               )}

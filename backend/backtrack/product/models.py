@@ -3,6 +3,7 @@ from django.db import models
 class Sprint(models.Model):
     no = models.IntegerField()
     capacity = models.IntegerField(default=10)
+    status = models.CharField(max_length=10, default="Created") # "Created", "Started", "Done"
 
     class Meta:
         ordering = ['no']

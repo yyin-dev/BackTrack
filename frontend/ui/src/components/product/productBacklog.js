@@ -72,11 +72,11 @@ class ProductBacklog extends React.Component {
       title: 'Sprint No', dataIndex: 'sprint', width: '10%',
       render: (sprint) => sprint ? <span>{sprint.no}</span> : <span></span>
     },
-    { title: 'Status', dataIndex: 'status', width: '10%' },
+    { title: 'Status', dataIndex: 'status', width: '15%' },
     { title: 'Detail', dataIndex: 'detail', width: '15%' },
     { title: 'Story Point', dataIndex: 'story_point', width: '10%' },
     { title: 'Accumulated Story Point', dataIndex: 'acc', width: '10%' },
-    { title: 'Priority', dataIndex: 'priority', width: '10%' },
+    // { title: 'Priority', dataIndex: 'priority', width: '10%' },
     { title: 'Actions', render: (pbi) => <ActionButtons pbi={pbi} refresh={this.fetch} /> }
   ];
 

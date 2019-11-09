@@ -10,8 +10,6 @@ class MoveBack extends React.Component {
       visible: true,
       status: this.props.pbi.status
     };
-
-    console.log(this.props.pbi)
   }
 
   handleOk = e => {

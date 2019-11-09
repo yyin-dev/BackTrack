@@ -44,4 +44,4 @@ class SprintSerializerSprint(serializers.ModelSerializer):
 
     class Meta:
         model = Sprint
-        fields = ["id", "no", "capacity", "pbis"]
+        fields = ["id", "no", "capacity", "pbis", "status"]
