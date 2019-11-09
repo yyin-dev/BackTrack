@@ -28,9 +28,10 @@ class Sidebar extends React.Component {
 
     componentDidMount() {
       setInterval(() => {
-        const { match, location, history } = this.props;
+        // const { match, location, history } = this.props;
+        const { location } = this.props;
         var selectedMenuItemKey;
-        if (location.pathname == ("/")){
+        if (location.pathname === "/"){
           selectedMenuItemKey = "1";
         } else if (location.pathname.startsWith("/product")) {
           selectedMenuItemKey = "2"
@@ -48,7 +49,6 @@ class Sidebar extends React.Component {
     }
 
     render() {
-      const { match, location, history } = this.props;
 
         return (
             <Sider
