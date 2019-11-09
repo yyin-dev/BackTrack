@@ -50,18 +50,17 @@ class moveToSprint(APIView):
         cur_pbi = PBI.objects.get(id=id)
 
         # Try to get current Sprint object
-        print(Sprint.objects.order_by('-no'))
         latest_sprint = Sprint.objects.order_by('-no').first()
 
         if not latest_sprint:
             spr = Sprint.objects.create(no=1)
             spr.save()
-            cur_pbi.sprint_no = 1
-            cur_pbi.save()
+            cur_pbi.sprint = spr
         else:
             cur_pbi.sprint = latest_sprint
-            cur_pbi.status = "In Progress"
-            cur_pbi.save()
+
+        cur_pbi.status = "In Progress"
+        cur_pbi.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
