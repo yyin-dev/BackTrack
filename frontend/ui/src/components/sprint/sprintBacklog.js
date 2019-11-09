@@ -1,6 +1,6 @@
 import React from "react";
 import axios from 'axios';
-import { Layout, Table, Button, PageHeader, Descriptions, Popconfirm, message } from 'antd';
+import { Layout, Table, PageHeader, Descriptions, message } from 'antd';
 import ViewTask from './viewTask';
 import StartSprint from './startSprint';
 import EndSprint from './endSprint';
