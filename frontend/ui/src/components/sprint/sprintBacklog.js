@@ -72,8 +72,6 @@ class SprintBacklog extends React.Component {
           total_effort: total_effort,
           remain_effort: remain_effort,
         })
-
-        console.log(this.state.pbis, this.state.sprint_no)
       })
       .catch(err => console.log(err))
   }
@@ -121,7 +119,7 @@ class SprintBacklog extends React.Component {
             </Descriptions>
           </PageHeader>
         </div>
-        <Table dataSource={this.state.pbis}>
+        <Table dataSource={this.state.pbis} rowKey={pbi => pbi.title.toString()}>
           <Column
             title="PBI"
             dataIndex="title"
@@ -166,7 +164,7 @@ class SprintBacklog extends React.Component {
                   {tasks
                     .filter(task => task.status === "In Progress")
                     .map(task => (
-                      <ViewTask task={task} refresh={this.fetch} />
+                      <ViewTask key={task.name} task={task} refresh={this.fetch} />
 
                     ))}
                 </span>
@@ -181,7 +179,7 @@ class SprintBacklog extends React.Component {
                   {tasks
                     .filter(task => task.status === "Done")
                     .map(task => (
-                      <ViewTask task={task} refresh={this.fetch} />
+                      <ViewTask key={task.name} task={task} refresh={this.fetch} />
 
                     ))}
                 </span>
