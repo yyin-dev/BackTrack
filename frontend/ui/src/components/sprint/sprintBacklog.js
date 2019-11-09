@@ -132,14 +132,13 @@ class SprintBacklog extends React.Component {
           <Column
             dataIndex="id"
             key="add_pbi"
-            width="2%"
+            width="1%"
             render={id => <AddTask id={id} refresh={this.fetch} disableAdd={disable_add} />}
           />
           <Column
             dataIndex="tasks"
             key="move_back"
-            width="2%"
-            refresh={this.fetch}
+            width="1%"
             render={(_, pbi) => <MoveBack pbi={pbi} refresh={this.fetch} />}
           />}
         />

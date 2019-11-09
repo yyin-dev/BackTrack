@@ -12,8 +12,7 @@ from .views import (
     moveToSprint,
     movebackPBI,
     moveToNextSprint,
-    movebackPBIAfterSprint,
-    getPBIInfo,)
+    movebackPBIAfterSprint)
 
 urlpatterns = [
     path('', PBIListView.as_view()),
