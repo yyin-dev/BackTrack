@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import './sidebar.css';
 
 
-import logo from '../../assets/logo.svg'
+import logo from '../../assets/f.png'
 const { Sider } = Layout;
 
 class Sidebar extends React.Component {
@@ -19,7 +19,7 @@ class Sidebar extends React.Component {
                 theme="dark"
             >
                 <div className="logo">
-                    <img src={logo} alt="fireSpot" />
+                    <img src={logo} style={{width: "100%"}} alt="fireSpot" />
                 </div>
                 <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
                     <Menu.Item key="1" to="/">
