@@ -1,10 +1,11 @@
 import React from 'react';
 import { Layout } from 'antd';
-
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+
 import Sidebar from './components/common/sidebar';
 import ProductBacklog from './components/product/productBacklog'
 import SprintBacklog from './components/sprint/sprintBacklog'
+import Home from './components/home/Home'
 
 class App extends React.Component {
     render() {
@@ -30,8 +31,5 @@ function UserCenter() {
     return <h1>User Center</h1>
 }
 
-function Home() {
-    return <h2>Home</h2>;
-}
 
 export default App;
