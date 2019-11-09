@@ -52,16 +52,16 @@ class SprintBacklog extends React.Component {
           pbis[i].remaining = remaining;
           remain_effort += remaining;
 
-          var pbiInfo = {
-            id: pbis[i].id,
-            title: pbis[i].title,
-            detail: pbis[i].detail,
-            status: pbis[i].status,
-            start_date: pbis[i].start_date,
-            story_point: pbis[i].story_point,
-            priority: pbis[i].priority,
-          };
-          pbis[i].pbiInfo = pbiInfo
+          // var pbiInfo = {
+          //   id: pbis[i].id,
+          //   title: pbis[i].title,
+          //   detail: pbis[i].detail,
+          //   status: pbis[i].status,
+          //   start_date: pbis[i].start_date,
+          //   story_point: pbis[i].story_point,
+          //   priority: pbis[i].priority,
+          // };
+          // pbis[i].pbiInfo = pbiInfo
         }
 
 
@@ -124,14 +124,10 @@ class SprintBacklog extends React.Component {
         <Table dataSource={this.state.pbis}>
           <Column
             title="PBI"
-            dataIndex="pbiInfo"
+            dataIndex="title"
             key="pbi"
             width="10%"
-            render={pbiInfo =>
-              <ViewPBI
-                pbiInfo={pbiInfo}
-                refresh={this.fetch}
-              />}
+            render={(_, pbi) => <ViewPBI pbi={pbi} refresh={this.fetch} />}
           />
           <Column
             dataIndex="id"

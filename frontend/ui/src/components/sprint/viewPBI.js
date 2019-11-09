@@ -32,7 +32,7 @@ class ViewPBI extends React.Component {
 
         return (
             <div>
-                <p onClick={this.viewDetail} style={{fontSize: '18px', margin: '5px', cursor: "pointer",}}>{this.props.pbiInfo.title}</p>
+                <p onClick={this.viewDetail} style={{fontSize: '18px', margin: '5px', cursor: "pointer",}}>{this.props.pbi.title}</p>
 
                 <Modal
                     title="View PBI"
@@ -40,13 +40,13 @@ class ViewPBI extends React.Component {
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
                 >
-                    <p>PBI_id: {this.props.pbiInfo.id}</p>
-                    <p>PBI_Title: {this.props.pbiInfo.title}</p>
-                    <p>Description: {this.props.pbiInfo.detail}</p>
-                    <p>Status: {this.props.pbiInfo.status}</p>
-                    <p>StartDate: {this.props.pbiInfo.start_date}</p>
-                    <p>StoryPoint: {this.props.pbiInfo.story_point}</p>
-                    <p>Priority: {this.props.pbiInfo.priority}</p>
+                    <p>PBI_id: {this.props.pbi.id}</p>
+                    <p>PBI_Title: {this.props.pbi.title}</p>
+                    <p>Description: {this.props.pbi.detail}</p>
+                    <p>Status: {this.props.pbi.status}</p>
+                    <p>StartDate: {this.props.pbi.start_date}</p>
+                    <p>StoryPoint: {this.props.pbi.story_point}</p>
+                    <p>Priority: {this.props.pbi.priority}</p>
                 </Modal>
             </div>
         )
