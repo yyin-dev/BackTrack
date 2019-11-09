@@ -5,11 +5,10 @@ import { PageHeader, Layout, Table, Descriptions, Radio, Button } from 'antd';
 import ActionButtons from './actionButtons'
 import AddPBIForm from './addPBIForm';
 
-import logo from '../../assets/logo.svg'
 import './productBacklog.css';
 import 'antd/dist/antd.css';
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Footer } = Layout;
 
 class ProductBacklog extends React.Component {
   constructor(props) {

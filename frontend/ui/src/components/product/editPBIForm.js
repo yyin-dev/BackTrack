@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-import { Modal, Form, Input, InputNumber, message, Select } from 'antd';
+import { Modal, Form, Input, InputNumber, Select } from 'antd';
 const { Option } = Select;
 
 class EditPBIForm extends React.Component {

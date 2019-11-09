@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Modal, Button, Form, InputNumber, Card, Select, Input, message } from 'antd';
+import { Modal, Button, InputNumber, Card, Select, Input, message } from 'antd';
 import './nextSprint.css'
 import axios from 'axios';
 const { Option } = Select;
@@ -25,7 +25,7 @@ class NextSprint extends React.Component {
     var i, j;
     for (i = 0; i < this.props.pbis.length; ++i) {
       for (j = 0; j < this.props.pbis[i].tasks.length; ++j) {
-        if (this.props.pbis[i].tasks[j].status != "Done") {
+        if (this.props.pbis[i].tasks[j].status !== "Done") {
           let curr = this.state.unfinished_pbis
           curr.push(this.props.pbis[i])
           this.setState({
@@ -132,17 +132,6 @@ class NextSprint extends React.Component {
   }
 
   render() {
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 20 },
-        sm: { span: 8 },
-      },
-      wrapperCol: {
-        xs: { span: 20 },
-        sm: { span: 16 },
-      },
-    };
-
     return (
       <div>
         <Button type="primary" onClick={this.showModal}>

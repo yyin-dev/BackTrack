@@ -1,7 +1,6 @@
 import React from 'react';
-import axios from 'axios';
 
-import { Modal, Tag, Button, message } from 'antd';
+import { Modal } from 'antd';
 
 class ViewPBI extends React.Component {
     constructor(props) {
