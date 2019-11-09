@@ -40,7 +40,6 @@ class PBIUpdateView(UpdateAPIView):
     queryset = PBI.objects.all()
     serializer_class = PBISerializerProduct
 
-
 class moveToSprint(APIView):
     """
     Set the sprint_no of the selected PBI to the latest Sprint
@@ -131,7 +130,7 @@ class movebackPBI(APIView):
         cur_pbi.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    
+
 class movebackPBIAfterSprint(APIView):
     def post(self, request, pk):
         id = request.data["id"]
