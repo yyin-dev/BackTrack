@@ -26,5 +26,4 @@ urlpatterns = [
     path('<pk>/movebackPBI/', movebackPBI.as_view()),
     path('<pk>/movetonextsprint/', moveToNextSprint.as_view()),
     path('<pk>/movebackPBIaftersprint/', movebackPBIAfterSprint.as_view()),
-    path('<pk>/getPBIInfo/', getPBIInfo.as_view()),
 ]

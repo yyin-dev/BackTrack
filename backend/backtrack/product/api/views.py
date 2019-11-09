@@ -143,19 +143,12 @@ class movebackPBIAfterSprint(APIView):
         cur_pbi.story_point = newStoryPoint
         cur_pbi.status = newStatus
 
-        cur_pbi.sprint = None
+        # newStatus == "Unfinished": unfinished task, set Sprint to null
+        # newStatus == "Done"      : finished task, Sprint unchanged 
+        if newStatus == "Unfinished":
+            cur_pbi.sprint = None
         cur_pbi.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class getPBIInfo(APIView):
-        def post(self, request, pk):
-            # print(request.data)
-
-            queryset = PBI.objects.get(title=pk)
-            serializer_class = PBISerializerProduct
-            # return Response(status=status.HTTP_204_NO_CONTENT)
-            return Response(queryset)
 
 
 class movePBI(APIView):

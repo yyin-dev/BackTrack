@@ -7,6 +7,17 @@ const { Option } = Select;
 
 const default_capacity = 10
 
+/*
+ * Logic for ending sprint
+ * 1. PBI with unfinished task:
+ *  a. Back to product backlog: Sprint -> null, status -> "Unfinished"
+ *  b. Move to next sprint: Sprint -> nextSprint, status -> "Unfinished", its
+ *     status should be automatically changed to "In progress" when next sprint
+ *     is started. 
+ * 2. PBI with all tasks finished:
+ *  Back to product backlog: Sprint unchanged, status -> "Done" 
+ */
+
 class NextSprint extends React.Component {
   constructor(props) {
     super(props);
@@ -18,6 +29,7 @@ class NextSprint extends React.Component {
     };
   }
 
+  // Wait for setState to finish
   // https://stackoverflow.com/a/53964245/9057530
   showModal = async () => {
     await this.setState({
@@ -25,7 +37,8 @@ class NextSprint extends React.Component {
       visible: true
     });
 
-    // Get PBI(s) with unfinished tasks
+    // PBI with unfinished task     -> this.state.unfinished_pbis
+    // PBI with all tasks finished  -> this.state.finished_pbis 
     var i, j;
     for (i = 0; i < this.props.pbis.length; ++i) {
       for (j = 0; j < this.props.pbis[i].tasks.length; ++j) {
@@ -38,20 +51,49 @@ class NextSprint extends React.Component {
           break;
         }
 
-        if (j === this.props.pbis[i].tasks.length-1) {
+        if (j === this.props.pbis[i].tasks.length - 1) {
           let curr = this.state.finished_pbis
           curr.push(this.props.pbis[i])
           this.setState({
             finished_pbis: curr
           })
         }
-
       }
     }
   };
 
-  handleSubmit = e => {
+  handleMoveToNextSprint = (pbi) => {
+    axios.post(`http://127.0.0.1:8000/product/api/${pbi.id}/movetonextsprint/`, {
+      id: pbi.id,
+      newTitle: pbi.newTitle,
+      newStoryPoint: pbi.newStoryPoint,
+      sprintCapacity: this.state.new_sprint_capacity
+    })
+      .then(res => {
+        this.props.refresh()
+        message.success("Move succeed!", 3)
+      })
+      .catch(err => console.log(err))
+  }
+
+  handleMoveBackToProductBacklog = (pbi, newStatus) => {
+    axios.post(`http://127.0.0.1:8000/product/api/${pbi.id}/movebackPBIaftersprint/`, {
+      id: pbi.id,
+      newTitle: pbi.newTitle,
+      newStoryPoint: pbi.newStoryPoint,
+      newStatus: newStatus
+    })
+      .then(res => {
+        this.props.refresh()
+        message.success("Move back succeed!", 3)
+      })
+      .catch(err => console.log(err))
+  }
+
+  handleSubmit = (e) => {
     var i, pbi;
+
+    // Handle unfinished pbis
     for (i = 0; i < this.state.unfinished_pbis.length; ++i) {
       pbi = this.state.unfinished_pbis[i]
       if (!pbi.action) {
@@ -67,59 +109,16 @@ class NextSprint extends React.Component {
       }
 
       if (pbi.action === "move") {
-        axios.post(`http://127.0.0.1:8000/product/api/${pbi.id}/movetonextsprint/`, {
-          id: pbi.id,
-          newTitle: pbi.newTitle,
-          newStoryPoint: pbi.newStoryPoint,
-          sprintCapacity: this.state.new_sprint_capacity
-        })
-          .then(res => {
-            this.props.refresh()
-            message.success("Move succeed!", 3)
-          })
-          .catch(err => console.log(err))
+        this.handleMoveToNextSprint(pbi)
       } else if (pbi.action === "back") {
-        axios.post(`http://127.0.0.1:8000/product/api/${pbi.id}/movebackPBIaftersprint/`, {
-          id: pbi.id,
-          newTitle: pbi.newTitle,
-          newStoryPoint: pbi.newStoryPoint,
-          newStatus: "To Do"
-        })
-          .then(res => {
-            this.props.refresh()
-            message.success("Move back succeed!", 3)
-          })
-          .catch(err => console.log(err))
-      } else if (pbi.action === "delete") {
-        axios.delete(`http://127.0.0.1:8000/product/api/${pbi.id}/delete/`, {
-          data: {
-            id: pbi.id
-          }
-        })
-          .then(res => {
-            this.props.refresh()
-            message.success("PBI deleted!", 3)
-          })
-          .catch(err => console.log(err))
-      } else {
-        console.log("error")
+        this.handleMoveBackToProductBacklog(pbi, "Unfinished")
       }
     }
 
-    alert(this.state.finished_pbis.length)
-    for (var j=0; j<this.state.finished_pbis.length; j++) {
+    // Handle finished pbis
+    for (var j = 0; j < this.state.finished_pbis.length; j++) {
       pbi = this.state.finished_pbis[j]
-      axios.post(`http://127.0.0.1:8000/product/api/${pbi.id}/movebackPBIaftersprint/`, {
-          id: pbi.id,
-          newTitle: pbi.title,
-          newStoryPoint: pbi.story_point,
-          newStatus: "Done"
-        })
-          .then(res => {
-            this.props.refresh()
-            message.success("PBI Done!", 3)
-          })
-          .catch(err => console.log(err))
+      this.handleMoveBackToProductBacklog(pbi, "Done")
     }
 
     this.setState({
@@ -127,13 +126,13 @@ class NextSprint extends React.Component {
     });
   };
 
-  handleCancel = e => {
+  handleCancel = (e) => {
     this.setState({
       visible: false
     });
   };
 
-  handleMaxCapacityInput = (v) => { 
+  handleMaxCapacityInput = (v) => {
     this.setState({
       new_sprint_capacity: v
     })
@@ -205,7 +204,6 @@ class NextSprint extends React.Component {
                 >
                   <Option value="next">Move to next sprint</Option>
                   <Option value="back">Back to product backlog</Option>
-                  <Option value="delete">Delete this PBI</Option>
                 </Select>
               </div>
 
