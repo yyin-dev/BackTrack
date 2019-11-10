@@ -39,7 +39,10 @@ class SprintSerializerProduct(serializers.ModelSerializer):
 class SprintSerializerSprint(serializers.ModelSerializer):
     """
     Sprint serializer used in Product Backlog page.
+    https://www.django-rest-framework.org/api-guide/relations/#nested-relationships
     """
+    
+    # PBIs belong to this sprint would also be serialized.
     pbis = PBISerializerSprint(many=True, read_only=True)
 
     class Meta:
