@@ -135,10 +135,10 @@ class EditTask extends React.Component {
                 onOk={this.handleOk}
                 onCancel={this.handleCancel}
                 footer={[
-                    <Button key="back" onClick={this.handleDelete}>
+                    <Button key="delete" onClick={this.handleDelete}>
                         Delete
                     </Button>,
-                    <Button key="back" onClick={this.handleCancel}>
+                    <Button key="cancel" onClick={this.handleCancel}>
                         Cancel
                     </Button>,
                     <Button key="submit" type="primary" onClick={this.handleOk}>

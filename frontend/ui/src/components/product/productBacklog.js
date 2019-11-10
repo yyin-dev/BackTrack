@@ -20,6 +20,7 @@ class ProductBacklog extends React.Component {
       adding: false,
       priority_max: -1,
       sprint_no: 1,
+      isLoaded: false
     }
   }
 
@@ -37,10 +38,10 @@ class ProductBacklog extends React.Component {
         // Calculate accumulated story point for each PBI
         let acc = 0
         var i;
-        let sprint_number = 1;
+        var sprint_number = 1;
         for (i = 0; i < sorted.length; ++i) {
           if (sorted[i].sprint !== null){
-            sprint_number = Math.max(sorted[i].sprint.no,sprint_number);
+            sprint_number = Math.max(sorted[i].sprint.no, sprint_number);
           }
           acc += sorted[i].story_point;
           sorted[i].acc = acc;
@@ -50,6 +51,7 @@ class ProductBacklog extends React.Component {
           pbiList: sorted,
           priority_max: sorted[sorted.length - 1].priority,
           sprint_no: sprint_number,
+          isLoaded: true
         })
 
       })
@@ -87,55 +89,60 @@ class ProductBacklog extends React.Component {
   ];
 
   render() {
-    return (
-      <Layout style={{ height: "100vh" }}>
-        <PageHeader
-          style={{
-            border: "1px solid rgb(235, 237, 240)"
-          }}
-          title="Product Backlog"
-          extra={[
-            <div key="dummy-key-to-suppress-warning">
-              <Radio.Group
-                style={{ marginRight: 20 }}
-                value={this.state.currentView ? "current" : "full"}
-                onChange={this.handleViewChange}
-              >
-                <Radio.Button value="current">Current View</Radio.Button>
-                <Radio.Button value="full">Full View</Radio.Button>
-              </Radio.Group>
+    const { isLoaded } = this.state;
+    if (!isLoaded) {
+      return <div style={{ margin: "auto" }}>Loading...</div>;
+    } else {
+      return (
+        <Layout style={{ height: "100vh" }}>
+          <PageHeader
+            style={{
+              border: "1px solid rgb(235, 237, 240)"
+            }}
+            title="Product Backlog"
+            extra={[
+              <div key="dummy-key-to-suppress-warning">
+                <Radio.Group
+                  style={{ marginRight: 20 }}
+                  value={this.state.currentView ? "current" : "full"}
+                  onChange={this.handleViewChange}
+                >
+                  <Radio.Button value="current">Current View</Radio.Button>
+                  <Radio.Button value="full">Full View</Radio.Button>
+                </Radio.Group>
 
-              <Button icon="plus" onClick={this.showEditForm} />
-              <AddPBIForm
-                visible={this.state.adding}
-                close={this.closeEditForm}
-                refresh={this.fetch}
-              />
-            </div>
-          ]}
-        >
-          <Descriptions size="small" column={1}>
-            <Descriptions.Item label="Sprint Number">
-            {this.state.sprint_no}
-            </Descriptions.Item>
-          </Descriptions>
-        </PageHeader>
+                <Button icon="plus" onClick={this.showEditForm} />
+                <AddPBIForm
+                  visible={this.state.adding}
+                  close={this.closeEditForm}
+                  refresh={this.fetch}
+                />
+              </div>
+            ]}
+          >
+            <Descriptions size="small" column={1}>
+              <Descriptions.Item label="Sprint Number">
+                {this.state.sprint_no}
+              </Descriptions.Item>
+            </Descriptions>
+          </PageHeader>
 
-        <Table
-          columns={this.columns}
-          rowKey={pbi => pbi.id.toString()}
-          pagination={this.state.pagination}
-          dataSource={
-            this.state.currentView
-              ? this.state.pbiList.filter(pbi => pbi.status !== "Done")
-              : this.state.pbiList
-          }
-        />
-        <Footer style={{ textAlign: "center" }}>
-          Developed by FastDev (Group F)
-            </Footer>
-      </Layout>
-    );
+          <Table
+            columns={this.columns}
+            rowKey={pbi => pbi.id.toString()}
+            pagination={this.state.pagination}
+            dataSource={
+              this.state.currentView
+                ? this.state.pbiList.filter(pbi => pbi.status !== "Done")
+                : this.state.pbiList
+            }
+          />
+          <Footer style={{ textAlign: "center" }}>
+            Developed by FastDev (Group F)
+              </Footer>
+        </Layout>
+      );
+    }
   }
 }
 

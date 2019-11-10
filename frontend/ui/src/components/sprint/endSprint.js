@@ -11,8 +11,8 @@ const default_capacity = 10
  * Logic for ending sprint
  * 1. PBI with unfinished task:
  *  a. Back to product backlog: Sprint -> null, status -> "Unfinished"
- *  b. Move to next sprint: Sprint -> nextSprint, status -> "Unfinished", its
- *     status should be automatically changed to "In progress" when next sprint
+ *  b. Move to next sprint: Sprint -> nextSprint, status -> "Unfinished", 
+ *  TODO: its status should be automatically changed to "In progress" when next sprint
  *     is started. 
  * 2. PBI with all tasks finished:
  *  Back to product backlog: Sprint unchanged, status -> "Done" 

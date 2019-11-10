@@ -4,53 +4,49 @@ import axios from "axios";
 import { Button, Popconfirm, Tooltip } from "antd";
 
 class MoveBack extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      visible: true,
-      status: this.props.pbi.status
+    constructor(props) {
+        super(props);
+        this.state = {
+            visible: true
+        };
+    }
+
+    handleOk = () => {
+        const tasks = this.props.pbi.tasks;
+        let newStatus = tasks.length === 0 ? "To Do" : "Unfinished";
+        axios
+            .post(
+                `http://127.0.0.1:8000/product/api/${this.props.pbi.id}/movebackPBI/`,
+                {
+                    newStatus: newStatus
+                }
+            )
+            .then(res => {
+                window.location.reload();
+            })
+            .then(err => console.log(err));
     };
-  }
 
-  handleOk = e => {
-    axios.post(`http://127.0.0.1:8000/product/api/${this.props.pbi.id}/movebackPBI/`)
-      .then(res => {
-        window.location.reload()
-      })
-      .then(err => console.log(err))
-  };
+    handleCancel = e => {
+        this.setState({
+            visible: false
+        });
+    };
 
-  handleCancel = e => {
-    this.setState({
-      visible: false
-    });
-  };
-
-  render() {
-    var BackwardButton;
-    var pbiNotStart = false;
-    var tasks = this.props.pbi.tasks;
-
-    if (tasks.length === 0) {
-      pbiNotStart = true;
+    render() {
+        return (
+            <div>
+                <Tooltip title="Move Back">
+                    <Popconfirm
+                        title="Sure to move back PBI?"
+                        onConfirm={() => this.handleOk()}
+                    >
+                        <Button icon="backward" />
+                    </Popconfirm>
+                </Tooltip>
+            </div>
+        );
     }
-
-    if (pbiNotStart) {
-      BackwardButton = (
-        <Tooltip title="Move Back">
-          <Popconfirm
-            title="Sure to move back PBI?"
-            onConfirm={() => this.handleOk()}
-          >
-            <Button icon="backward" />
-          </Popconfirm>
-        </Tooltip>
-      );
-    } else {
-      BackwardButton = <Button icon="backward" disabled />;
-    }
-    return <div>{BackwardButton}</div>;
-  }
 }
 
 export default MoveBack;
