@@ -19,6 +19,7 @@ class ProductBacklog extends React.Component {
       pagination: {},
       adding: false,
       priority_max: -1,
+      sprint_no: 1,
     }
   }
 
@@ -36,7 +37,11 @@ class ProductBacklog extends React.Component {
         // Calculate accumulated story point for each PBI
         let acc = 0
         var i;
+        let sprint_number = 1;
         for (i = 0; i < sorted.length; ++i) {
+          if (sorted[i].sprint !== null){
+            sprint_number = Math.max(sorted[i].sprint.no,sprint_number);
+          }
           acc += sorted[i].story_point;
           sorted[i].acc = acc;
         }
@@ -44,6 +49,7 @@ class ProductBacklog extends React.Component {
         this.setState({
           pbiList: sorted,
           priority_max: sorted[sorted.length - 1].priority,
+          sprint_no: sprint_number,
         })
 
       })
@@ -109,7 +115,9 @@ class ProductBacklog extends React.Component {
           ]}
         >
           <Descriptions size="small" column={1}>
-            <Descriptions.Item label="Sprint Number">1</Descriptions.Item>
+            <Descriptions.Item label="Sprint Number">
+            {this.state.sprint_no}
+            </Descriptions.Item>
           </Descriptions>
         </PageHeader>
 
