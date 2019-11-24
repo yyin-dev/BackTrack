@@ -1,5 +1,5 @@
 import React from 'react'
-import { message, notification, Button, Form, Input, Select } from 'antd'
+import { message, Button, Form, Input, Select } from 'antd'
 import axios from 'axios';
 
 const { Option } = Select;
@@ -13,14 +13,14 @@ class RegistrationForm extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     let values = this.props.form.getFieldsValue()
-    console.log(values)
-    axios.post(`http://127.0.0.1:8000/user/api/create/`, {
+    axios.post(`http://127.0.0.1:8000/user/api/signup/`, {
       username: values.username,
       password: values.password,
       role: values.role
     })
       .then(res => {
-        console.log(res)
+        message.success("You have signed up!", 3)
+
       })
       .catch(err => {
         console.log(err)

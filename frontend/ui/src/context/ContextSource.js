@@ -1,33 +1,39 @@
 import React from 'react';
 
-export const UserContext = React.createContext()
+export const Context = React.createContext()
 
-export class UserContextProvider extends React.Component {
+export class ContextProvider extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      user: "pending",
+      user: null,
       authModalVisibility: true,
     }
   }
 
+  // AuthModal related
   setAuthModalVisibility = (v) => {
     this.setState({
       authModalVisibility: v
     })
   }
-
   showAuthModal = () => { this.setAuthModalVisibility(true) }
   closeAuthModal = () => { this.setAuthModalVisibility(false) }
 
+  // User related
+  setUser = (user) => {
+    this.setState({ user: user })
+  }
+
   render() {
-    return (<UserContext.Provider value={{
+    return (<Context.Provider value={{
       user: this.state.user,
       authModalVisibility: this.state.authModalVisibility,
       showAuthModal: this.showAuthModal,
       closeAuthModal: this.closeAuthModal,
+      setUser: this.setUser
     }}>
       {this.props.children}
-    </UserContext.Provider>)
+    </Context.Provider>)
   }
 }

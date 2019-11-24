@@ -8,12 +8,12 @@ import SprintBacklog from './components/sprint/sprintBacklog'
 import Home from './components/home/Home'
 import AuthModal from './components/authModal/AuthModal'
 
-import { UserContextProvider } from './context/ContextSource'
+import { ContextProvider } from './context/ContextSource'
 
 class App extends React.Component {
   render() {
     return (
-      <UserContextProvider >
+      <ContextProvider >
         <AuthModal />
         <BrowserRouter>
           <Layout style={{ height: "100vh" }}>
@@ -28,7 +28,7 @@ class App extends React.Component {
             </Layout>
           </Layout>
         </BrowserRouter>
-      </UserContextProvider>
+      </ContextProvider>
     )
   }
 }

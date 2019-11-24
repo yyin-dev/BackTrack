@@ -3,14 +3,14 @@ import { message, Modal, Tabs } from 'antd';
 import LoginTab from './LoginTab'
 import SignupTab from './SignupTab'
 
-import { UserContext } from '../../context/ContextSource'
+import { Context } from '../../context/ContextSource'
 
 import './AuthModal.css'
 
 const { TabPane } = Tabs
 
 class AuthModal extends React.Component {
-  static contextType = UserContext
+  static contextType = Context
 
   constructor(props) {
     super(props)
@@ -20,13 +20,16 @@ class AuthModal extends React.Component {
   }
 
   render() {
-    console.log(this.context)
     return (
       <Modal
         className="auth-modal"
         visible={this.context.authModalVisibility}
-        onCancel={this.context.closeAuthModal}
         footer={null}
+        onCancel={e => {
+          this.context.user === null ?
+          message.warning("You have to log in to use BackTrack!", 3) :
+          this.context.closeAuthModal()
+        }}
       >
         <Tabs
           defaultActiveKey="login"
