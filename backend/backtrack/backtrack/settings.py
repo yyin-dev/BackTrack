@@ -31,6 +31,7 @@ INSTALLED_APPS = [
 
     'product',
     'sprint',
+    'user',
 ]
 
 MIDDLEWARE = [
