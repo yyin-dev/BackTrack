@@ -1,10 +1,11 @@
 import React from 'react'
 import { message, Modal, Tabs } from 'antd';
-import { withRouter } from 'react-router-dom'
 import LoginTab from './LoginTab'
 import SignupTab from './SignupTab'
 
 import { UserContext } from '../../context/ContextSource'
+
+import './AuthModal.css'
 
 const { TabPane } = Tabs
 
@@ -22,11 +23,17 @@ class AuthModal extends React.Component {
     console.log(this.context)
     return (
       <Modal
+        className="auth-modal"
         visible={this.context.authModalVisibility}
         onCancel={this.context.closeAuthModal}
         footer={null}
       >
-        <Tabs defaultActiveKey="login" onChange={t => this.setState({activeTab: t})} activeKey={this.state.activeTab} size="default">
+        <Tabs
+          defaultActiveKey="login"
+          onChange={t => this.setState({ activeTab: t })}
+          activeKey={this.state.activeTab}
+          size="default"
+        >
           <TabPane tab="Log in" key="login">
             <LoginTab />
           </TabPane>

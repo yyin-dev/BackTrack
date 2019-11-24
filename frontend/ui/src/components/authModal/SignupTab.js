@@ -1,5 +1,6 @@
 import React from 'react'
 import { message, notification, Button, Form, Input, Select } from 'antd'
+import axios from 'axios';
 
 const { Option } = Select;
 
@@ -11,28 +12,19 @@ class RegistrationForm extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    // this.props.form.validateFieldsAndScroll((err, values) => {
-    //   if (!err) {
-    //     this.setState({ loading: true })
-    //     createUser(values.email, values.password, values.year)
-    //       .then(() => {
-    //         this.setState({ loading: false })
-    //         this.props.form.resetFields();
-    //         notification['success']({
-    //           message: '注册成功',
-    //           description: '验证邮件发送成功！点击邮件激活后即可登录！',
-    //           duration: null,
-    //         })
-    //         this.props.switchToLogin()
-    //       })
-    //       .catch((error) => {
-    //         this.props.shake()
-    //         this.setState({ loading: false })
-    //         message.error(error.message)
-    //       })
-    //   }
-    // });
-    console.log(this.props.form.getFieldsValue())
+    let values = this.props.form.getFieldsValue()
+    console.log(values)
+    axios.post(`http://127.0.0.1:8000/user/api/create/`, {
+      username: values.username,
+      password: values.password,
+      role: values.role
+    })
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 
   compareToFirstPassword = (rule, value, callback) => {
@@ -68,31 +60,27 @@ class RegistrationForm extends React.Component {
       <Form onSubmit={this.handleSubmit} {...formItemLayout}>
         <Form.Item label="Username" >
           {getFieldDecorator('username', {
-            rules: [{
-              required: true, message: 'Enter username!',
-            }, {
-              whitespace: true, message: 'Enter username!'
-            }],
+            rules: [
+              { required: true, message: 'Enter username!' },
+              { whitespace: true, message: 'Enter username!' },
+            ],
           })(<Input />)}
         </Form.Item>
         <Form.Item label="Password">
           {getFieldDecorator('password', {
-            rules: [{
-              required: true, message: 'Enter password!',
-            }, {
-              validator: this.validateToNextPassword,
-            }, {
-              whitespace: true, message: 'Enter password!'
-            }],
+            rules: [
+              { required: true, message: 'Enter password!', },
+              { validator: this.validateToNextPassword, },
+              { whitespace: true, message: 'Enter password!' }
+            ],
           })(<Input type="password" />)}
         </Form.Item>
         <Form.Item label="Confirm password" >
           {getFieldDecorator('confirm', {
-            rules: [{
-              required: true, message: 'Enter password!',
-            }, {
-              validator: this.compareToFirstPassword,
-            }],
+            rules: [
+              { required: true, message: 'Enter password!', },
+              { validator: this.compareToFirstPassword, }
+            ],
           })(<Input type="password" />)}
         </Form.Item>
 

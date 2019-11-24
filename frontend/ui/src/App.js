@@ -14,7 +14,7 @@ class App extends React.Component {
   render() {
     return (
       <UserContextProvider >
-        <AuthModal></AuthModal>
+        <AuthModal />
         <BrowserRouter>
           <Layout style={{ height: "100vh" }}>
             <Sidebar />

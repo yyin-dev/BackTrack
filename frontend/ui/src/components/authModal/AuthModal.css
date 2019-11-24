@@ -1,0 +1,9 @@
+.auth-modal .ant-tabs-nav {
+  width: 100%;
+}
+
+.auth-modal .ant-tabs-tab {
+  width: 50%;
+  margin-right: 0px !important;
+  text-align: center;
+}
