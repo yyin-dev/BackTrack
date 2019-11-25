@@ -26,19 +26,22 @@ from user.models import User
 from .serializers import PBISerializerProduct, ProjectSerializer
 
 
-class ProjectOfUser(APIView):
+class UserProjects(APIView):
     def get(self, request, userid):
         user = User.objects.get(id=userid)
-        print(user)
         projects = user.projects.all()
         serialized = ProjectSerializer(projects, many=True).data
 
         return Response(data=serialized, status=status.HTTP_202_ACCEPTED)
 
 
-class PBIListView(ListAPIView):
-    queryset = PBI.objects.all()
-    serializer_class = PBISerializerProduct
+class ProjectPBIS(APIView):
+    def get(self, request, projectid):
+        project = Project.objects.get(id=projectid)
+        pbis = project.pbis.all()
+        serialized = PBISerializerProduct(pbis, many=True).data
+
+        return Response(data=serialized, status=status.HTTP_202_ACCEPTED)
 
 
 class PBIDetailView(RetrieveAPIView):

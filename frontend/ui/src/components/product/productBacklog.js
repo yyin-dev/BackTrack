@@ -14,57 +14,67 @@ class ProductBacklog extends React.Component {
     super(props)
     this.state = {
       currentView: true,
-      pbiList: null,
       pagination: {},
       adding: false,
+      isCreatingProject: false,
+
+      pbiList: [],
       priority_max: -1,
       sprint_no: 1,
-      isCreatingProject: false,
     }
   }
 
   static contextType = Context
 
-  componentDidMount() {
+  componentWillMount() {
+    console.log("mount!")
     this.fetch();
   }
 
   fetch = () => {
-    // axios.get("http://127.0.0.1:8000/product/api/")
-    //   .then(res => {
-    //     if (res.data.length === 0) {
-    //       return
-    //     }
+    var project_id;
 
-    //     // Fetch PBI list from backend
-    //     let sorted = res.data
-    //     sorted.sort((a, b) => (a.priority < b.priority) ? -1 : 1)
-
-    //     // Calculate accumulated story point for each PBI
-    //     let acc = 0
-    //     var i;
-    //     var sprint_number = 1;
-    //     for (i = 0; i < sorted.length; ++i) {
-    //       if (sorted[i].sprint !== null) {
-    //         sprint_number = Math.max(sorted[i].sprint.no, sprint_number);
-    //       }
-    //       acc += sorted[i].story_point;
-    //       sorted[i].acc = acc;
-    //     }
-
-    //     this.setState({
-    //       pbiList: sorted,
-    //       priority_max: sorted[sorted.length - 1].priority,
-    //       sprint_no: sprint_number,
-    //     })
-
-    //   })
-    //   .catch(error => console.log(error))
-    console.log("called!")
+    // Get projects of the user
     if (this.context.user) {
       axios.get(`http://127.0.0.1:8000/product/api/projectofuser/${this.context.user.id}`)
         .then(res => {
-          console.log(res)
+          let projects = res.data
+          project_id = projects[0].id
+
+          // Only handle the first project. This is not desired functionality
+          // for scrum master.
+          // TODO: handle multiple projects of scrum master. 
+          axios.get(`http://127.0.0.1:8000/product/api/projectpbis/${project_id}`)
+            .then(res => {
+              if (res.data.length === 0) {
+                return
+              }
+
+              this.context.setUserInProject()
+
+              // Fetch PBI list from backend
+              let sorted = res.data
+              sorted.sort((a, b) => (a.priority < b.priority) ? -1 : 1)
+
+              // Calculate accumulated story point for each PBI
+              let acc = 0
+              var i;
+              var sprint_number = 1;
+              for (i = 0; i < sorted.length; ++i) {
+                if (sorted[i].sprint !== null) {
+                  sprint_number = Math.max(sorted[i].sprint.no, sprint_number);
+                }
+                acc += sorted[i].story_point;
+                sorted[i].acc = acc;
+              }
+
+              this.setState({
+                pbiList: sorted,
+                priority_max: sorted[sorted.length - 1].priority,
+                sprint_no: sprint_number,
+              })
+            })
+            .catch(error => console.log(error))
         })
     }
   }
@@ -105,7 +115,7 @@ class ProductBacklog extends React.Component {
   }
 
   render() {
-    if (!this.state.pbiList) {
+    if (this.state.pbiList === [] && !this.context.userInProject) {
       return (<div className="create-project-wrapper">
         <Empty
           description={

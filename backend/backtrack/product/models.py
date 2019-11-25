@@ -26,8 +26,7 @@ class PBI(models.Model):
 
     title = models.CharField(max_length=50)
     detail = models.CharField(max_length=500)
-    status = models.CharField(max_length=500)
-    sprint_no = models.IntegerField(default=0)
+    status = models.CharField(max_length=20) # "To Do", "In Progress", "Done"
     start_date = models.DateField()
     story_point = models.PositiveIntegerField(default=0)
     priority = models.IntegerField(default=1)
