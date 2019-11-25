@@ -1,11 +1,14 @@
 import React from 'react';
-import { Layout, Menu, Icon } from 'antd';
+import { Layout, Menu, Icon, Avatar } from 'antd';
 import { Link } from "react-router-dom";
 import './sidebar.css';
 import { withRouter } from "react-router";
 import PropTypes from "prop-types";
 import logo from '../../assets/f.png'
+import { Context } from '../../context/ContextSource'
+
 const { Sider } = Layout;
+
 
 class Sidebar extends React.Component {
 
@@ -15,6 +18,8 @@ class Sidebar extends React.Component {
     history: PropTypes.object.isRequired
   };
 
+  static contextType = Context
+
   constructor(props) {
     super(props);
     this.state = {
@@ -22,9 +27,7 @@ class Sidebar extends React.Component {
     };
   }
 
-  detectUrlChange() {
-
-  }
+  detectUrlChange() { }
 
   componentDidMount() {
     setInterval(() => {
@@ -37,8 +40,6 @@ class Sidebar extends React.Component {
         selectedMenuItemKey = "2"
       } else if (location.pathname.startsWith("/sprint")) {
         selectedMenuItemKey = "3"
-      } else if (location.pathname.startsWith("/user")) {
-        selectedMenuItemKey = "4"
       }
       this.setState({
         selectedMenuItem: [selectedMenuItemKey]
@@ -58,25 +59,28 @@ class Sidebar extends React.Component {
           <img src={logo} style={{ width: "100%" }} alt="fireSpot" />
         </div>
         <Menu theme="dark" mode="inline" selectedKeys={this.state.selectedMenuItem} >
+          <Menu.Item key="0" >
+            <div className="sidebar-username-wrapper">
+              <span >
+                <Icon type="user" />
+                {this.context.user ? this.context.user.username : ""}
+              </span>
+            </div>
+          </Menu.Item>
           <Menu.Item key="1" to="/"  >
             <Icon type="home" />
             <span className="nav-text" >Home</span>
             <Link to="/" />
           </Menu.Item>
           <Menu.Item key="2"  >
-            <Icon type="user" />
+            <Icon type="clock-circle" />
             <span className="nav-text" >Product Backlog</span>
             <Link to="/product"></Link>
           </Menu.Item>
           <Menu.Item key="3"  >
-            <Icon type="video-camera" />
+            <Icon type="code" />
             <span className="nav-text" >Sprint Backlog</span>
             <Link to="/sprint"></Link>
-          </Menu.Item>
-          <Menu.Item key="4"  >
-            <Icon type="user" />
-            <span className="nav-text" >User Center</span>
-            <Link to="/user"></Link>
           </Menu.Item>
         </Menu>
       </Sider>

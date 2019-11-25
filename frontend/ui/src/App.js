@@ -22,7 +22,6 @@ class App extends React.Component {
               <Switch>
                 <Route path="/product" component={ProductBacklog} />
                 <Route path="/sprint" component={SprintBacklog} />
-                <Route path="/user" component={UserCenter} />
                 <Route path="/" component={Home} />
               </Switch>
             </Layout>
@@ -31,10 +30,6 @@ class App extends React.Component {
       </ContextProvider>
     )
   }
-}
-
-function UserCenter() {
-  return <h1>User Center</h1>
 }
 
 
