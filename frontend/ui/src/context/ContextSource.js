@@ -7,7 +7,6 @@ export class ContextProvider extends React.Component {
     super(props)
     this.state = {
       user: null,
-      userInProject: false,
       authModalVisibility: true,
     }
   }
@@ -26,14 +25,10 @@ export class ContextProvider extends React.Component {
     this.setState({ user: user })
   }
 
-  setUserInProject = () => { this.setState({ userInProject: true }) }
-
   render() {
     return (<Context.Provider value={{
       user: this.state.user,
       setUser: this.setUser,
-      userInProject: this.state.userInProject,
-      setUserInProject: this.setUserInProject,
 
       authModalVisibility: this.state.authModalVisibility,
       showAuthModal: this.showAuthModal,

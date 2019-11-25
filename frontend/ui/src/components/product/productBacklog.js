@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-import { PageHeader, Layout, Table, Descriptions, Radio, Button, Empty } from 'antd';
+import { PageHeader, Layout, Table, Descriptions, Radio, Button, Empty, message } from 'antd';
 import ActionButtons from './actionButtons'
 import AddPBIForm from './addPBIForm';
 import CreateProjectModal from './createProjectModal'
@@ -18,7 +18,7 @@ class ProductBacklog extends React.Component {
       adding: false,
       isCreatingProject: false,
 
-      pbiList: [],
+      pbiList: null,  // null: not in project; []: in project but no PBIs.
       priority_max: -1,
       sprint_no: 1,
     }
@@ -27,7 +27,6 @@ class ProductBacklog extends React.Component {
   static contextType = Context
 
   componentWillMount() {
-    console.log("mount!")
     this.fetch();
   }
 
@@ -39,18 +38,24 @@ class ProductBacklog extends React.Component {
       axios.get(`http://127.0.0.1:8000/product/api/projectofuser/${this.context.user.id}`)
         .then(res => {
           let projects = res.data
+          if (projects.length === 0) {  // Not in project
+            return
+          }
+          
           project_id = projects[0].id
 
-          // Only handle the first project. This is not desired functionality
-          // for scrum master.
-          // TODO: handle multiple projects of scrum master. 
+          // TODO: handle multiple project issue for scrum master
+          if (this.context.user.role === "Developer/Product Owner" && projects.length > 1) {
+            message.error("Developer/Product Owner in multiple project!!!")
+          }
           axios.get(`http://127.0.0.1:8000/product/api/projectpbis/${project_id}`)
             .then(res => {
-              if (res.data.length === 0) {
+              if (res.data.length === 0) {  // No PBIs yet
+                this.setState({
+                  pbiList: [],
+                })
                 return
               }
-
-              this.context.setUserInProject()
 
               // Fetch PBI list from backend
               let sorted = res.data
@@ -115,7 +120,7 @@ class ProductBacklog extends React.Component {
   }
 
   render() {
-    if (this.state.pbiList === [] && !this.context.userInProject) {
+    if (this.state.pbiList === null) {
       return (<div className="create-project-wrapper">
         <Empty
           description={
