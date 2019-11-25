@@ -48,6 +48,7 @@ class Sidebar extends React.Component {
   }
 
   render() {
+    const { user } = this.context
 
     return (
       <Sider
@@ -61,10 +62,9 @@ class Sidebar extends React.Component {
         <Menu theme="dark" mode="inline" selectedKeys={this.state.selectedMenuItem} >
           <Menu.Item key="0" >
             <div className="sidebar-username-wrapper">
-              <span >
-                <Icon type="user" />
-                {this.context.user ? this.context.user.username : ""}
-              </span>
+              <Icon type="user" style={{fontSize: "2em"}}/>
+              <span>{user ? user.username: ""}</span>
+              <span>{user ? `, ${user.role}` : ""}</span>
             </div>
           </Menu.Item>
           <Menu.Item key="1" to="/"  >

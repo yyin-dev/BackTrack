@@ -219,15 +219,16 @@ class CreateSprint(APIView):
 
 class CreateProject(APIView):
     def post(self, request):
-        user_data = request.data['user']
         name = request.data['project_name']
         desc = request.data['project_description']
-
-        user = User.objects.get(username=user_data['username'])
         newProject = Project.objects.create(name=name, description=desc)
 
-        newProject.save()
+        user_data = request.data['user']
+        user = User.objects.get(username=user_data['username'])
+        user.role = "Product Owner"
         user.projects.add(newProject)
+
+        newProject.save()
         user.save()
 
         return Response(status=status.HTTP_201_CREATED)

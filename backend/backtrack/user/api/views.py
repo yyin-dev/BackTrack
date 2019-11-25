@@ -16,10 +16,18 @@ class UserListView(ListAPIView):
     serializer_class = UserSerializer
 
 
-class UserCreateView(CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
+class UserSignup(APIView):
+    def post(self, request):
+        new_user = User.objects.create()
+        new_user.username = request.data['username']
+        new_user.password = request.data['password']
+        if request.data['role'] == "Scrum Master":
+            new_user.role = "Scrum Master"
+        else:
+            new_user.role = "Developer"
+ 
+        new_user.save()
+        return Response(status = status.HTTP_201_CREATED)
 
 class UserLoginView(APIView):
     def post(self, request):

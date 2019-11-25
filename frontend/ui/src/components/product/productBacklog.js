@@ -140,6 +140,7 @@ class ProductBacklog extends React.Component {
         <CreateProjectModal
           visible={this.state.isCreatingProject}
           close={this.toggleCreatingProject}
+          refresh={this.fetch}
         />
       </div>)
     } else {

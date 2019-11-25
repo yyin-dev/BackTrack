@@ -21,11 +21,13 @@ class CreateProjectModal extends React.Component {
         })
           .then(res => {
             console.log(res)
+            message.success("Project created!", 3)
+            this.props.refresh()
           })
           .catch(err => {
             console.log(err)
           })
-        message.success("Project created!", 3)
+
       }
     })
   }
@@ -54,14 +56,14 @@ class CreateProjectModal extends React.Component {
         <Form {...formItemLayout}>
           <Form.Item label="Name">
             {getFieldDecorator('name', {
-              rules: [{required: true, message: "Enter project name!"}]
+              rules: [{ required: true, message: "Enter project name!" }]
             })(
               <Input placeholder="Enter title" />
             )}
           </Form.Item>
           <Form.Item label="Description">
             {getFieldDecorator('description', {
-              rules: [{required: true, message: "Enter project description!"}]
+              rules: [{ required: true, message: "Enter project description!" }]
             })(
               <Input.TextArea rows={4} placeholder="Enter description" />
             )}

@@ -19,6 +19,10 @@ class AuthModal extends React.Component {
     }
   }
 
+  switchToLogin = () => {
+    this.setState({ activeTab: "login" })
+  }
+
   render() {
     return (
       <Modal
@@ -27,8 +31,8 @@ class AuthModal extends React.Component {
         footer={null}
         onCancel={e => {
           this.context.user === null ?
-          message.warning("You have to log in to use BackTrack!", 3) :
-          this.context.closeAuthModal()
+            message.warning("You have to log in to use BackTrack!", 3) :
+            this.context.closeAuthModal()
         }}
       >
         <Tabs
@@ -41,7 +45,7 @@ class AuthModal extends React.Component {
             <LoginTab />
           </TabPane>
           <TabPane tab="Sign up" key="signup">
-            <SignupTab />
+            <SignupTab switchToLogin={this.switchToLogin} />
           </TabPane>
         </Tabs>
       </Modal>

@@ -19,8 +19,8 @@ class RegistrationForm extends React.Component {
       role: values.role
     })
       .then(res => {
-        message.success("You have signed up!", 3)
-
+        message.success("You have signed up! Please log in!", 3)
+        this.props.switchToLogin()
       })
       .catch(err => {
         console.log(err)
