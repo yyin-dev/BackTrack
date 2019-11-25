@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, Menu, Icon, Avatar } from 'antd';
+import { Layout, Menu, Icon } from 'antd';
 import { Link } from "react-router-dom";
 import './sidebar.css';
 import { withRouter } from "react-router";

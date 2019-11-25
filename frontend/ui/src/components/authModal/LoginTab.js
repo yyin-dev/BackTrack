@@ -26,6 +26,7 @@ class LoginForm extends React.Component {
           message.success("Welcome!")
           this.context.setUser(res.data)
           this.context.closeAuthModal()
+          console.log(this.context.user)
         } else if (res.status === 401) {
           message.error("Username/Password incorrect!")
         }

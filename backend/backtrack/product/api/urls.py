@@ -12,7 +12,9 @@ from .views import (
     MoveToNextSprint,
     MovebackPBIAfterSprint,
     StartSprint,
-    CreateSprint,)
+    CreateSprint,
+    CreateProject,
+    ProjectOfUser)
 
 urlpatterns = [
     path('', PBIListView.as_view()),
@@ -20,6 +22,10 @@ urlpatterns = [
     path('move/', MovePBI.as_view()),
     path('movetosprint/', MoveToSprint.as_view()),
     path('createsprint/', CreateSprint.as_view()),
+    path('createproject/', CreateProject.as_view()),
+
+
+    path('projectofuser/<userid>/', ProjectOfUser.as_view()),
 
     # Note that <pk> url should be put lower than urls above
     path('<pk>/', PBIDetailView.as_view()),

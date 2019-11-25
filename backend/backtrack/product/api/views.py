@@ -21,8 +21,19 @@ from rest_framework.generics import (
     RetrieveAPIView,
     UpdateAPIView,)
 
-from product.models import PBI, Sprint
-from .serializers import PBISerializerProduct
+from product.models import PBI, Sprint, Project
+from user.models import User
+from .serializers import PBISerializerProduct, ProjectSerializer
+
+
+class ProjectOfUser(APIView):
+    def get(self, request, userid):
+        user = User.objects.get(id=userid)
+        print(user)
+        projects = user.projects.all()
+        serialized = ProjectSerializer(projects, many=True).data
+
+        return Response(data=serialized, status=status.HTTP_202_ACCEPTED)
 
 
 class PBIListView(ListAPIView):
@@ -61,7 +72,7 @@ class MoveToSprint(APIView):
         cur_pbi.status = "In Progress"
         cur_pbi.save()
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_202_ACCEPTED)
 
 
 class MovePBI(APIView):
@@ -87,7 +98,7 @@ class MovePBI(APIView):
         target1.save()
         target2.save()
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_202_ACCEPTED)
 
 
 class AddPBI(APIView):
@@ -107,7 +118,7 @@ class AddPBI(APIView):
             pbi.priority += 1
             pbi.save()
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_201_CREATED)
 
 
 class DeletePBI(APIView):
@@ -121,7 +132,7 @@ class DeletePBI(APIView):
             pbi.priority -= 1
             pbi.save()
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_202_ACCEPTED)
 
 
 class MovebackPBI(APIView):
@@ -133,7 +144,7 @@ class MovebackPBI(APIView):
         cur_pbi.sprint = None
         
         cur_pbi.save()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_202_ACCEPTED)
 
 
 class MoveToNextSprint(APIView):
@@ -158,7 +169,7 @@ class MoveToNextSprint(APIView):
         cur_pbi.sprint = new_sprint
         cur_pbi.save()
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_202_ACCEPTED)
 
 
 class MovebackPBIAfterSprint(APIView):
@@ -179,7 +190,7 @@ class MovebackPBIAfterSprint(APIView):
         if newStatus == "Unfinished":
             cur_pbi.sprint = None
         cur_pbi.save()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_202_ACCEPTED)
 
 
 class StartSprint(APIView):
@@ -200,5 +211,20 @@ class CreateSprint(APIView):
         newSprint = Sprint.objects.create(no=currNo+1, capacity=cap, status="Created")   
         newSprint.save()
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_201_CREATED)
 
+
+class CreateProject(APIView):
+    def post(self, request):
+        user_data = request.data['user']
+        name = request.data['project_name']
+        desc = request.data['project_description']
+
+        user = User.objects.get(username=user_data['username'])
+        newProject = Project.objects.create(name=name, description=desc)
+
+        newProject.save()
+        user.projects.add(newProject)
+        user.save()
+
+        return Response(status=status.HTTP_201_CREATED)
