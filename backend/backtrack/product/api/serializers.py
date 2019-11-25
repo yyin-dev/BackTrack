@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from product.models import PBI, Sprint
+from product.models import PBI, Sprint, Project
 from sprint.api.serializers import TaskSerializer
 
 class PBISerializerSprint(serializers.ModelSerializer):
@@ -48,3 +48,9 @@ class SprintSerializerSprint(serializers.ModelSerializer):
     class Meta:
         model = Sprint
         fields = ["id", "no", "capacity", "pbis", "status"]
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ["id", "name", "description"]

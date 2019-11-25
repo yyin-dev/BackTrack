@@ -1,61 +1,87 @@
 import React from 'react';
 import axios from 'axios';
 
-import { PageHeader, Layout, Table, Descriptions, Radio, Button } from 'antd';
+import { PageHeader, Layout, Table, Descriptions, Radio, Button, Empty, message } from 'antd';
 import ActionButtons from './actionButtons'
 import AddPBIForm from './addPBIForm';
+import CreateProjectModal from './createProjectModal'
 
 import './productBacklog.css';
-import 'antd/dist/antd.css';
-
-const { Footer } = Layout;
+import { Context } from '../../context/ContextSource'
 
 class ProductBacklog extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       currentView: true,
-      pbiList: [],
       pagination: {},
       adding: false,
+      isCreatingProject: false,
+
+      pbiList: null,  // null: not in project; []: in project but no PBIs.
       priority_max: -1,
       sprint_no: 1,
-      isLoaded: false
     }
   }
 
-  componentDidMount() {
+  static contextType = Context
+
+  componentWillMount() {
     this.fetch();
   }
 
   fetch = () => {
-    axios.get("http://127.0.0.1:8000/product/api/")
-      .then(res => {
-        // Fetch PBI list from backend
-        let sorted = res.data
-        sorted.sort((a, b) => (a.priority < b.priority) ? -1 : 1)
+    var project_id;
 
-        // Calculate accumulated story point for each PBI
-        let acc = 0
-        var i;
-        var sprint_number = 1;
-        for (i = 0; i < sorted.length; ++i) {
-          if (sorted[i].sprint !== null){
-            sprint_number = Math.max(sorted[i].sprint.no, sprint_number);
+    // Get projects of the user
+    if (this.context.user) {
+      axios.get(`http://127.0.0.1:8000/product/api/projectofuser/${this.context.user.id}`)
+        .then(res => {
+          let projects = res.data
+          if (projects.length === 0) {  // Not in project
+            return
           }
-          acc += sorted[i].story_point;
-          sorted[i].acc = acc;
-        }
+          
+          project_id = projects[0].id
 
-        this.setState({
-          pbiList: sorted,
-          priority_max: sorted[sorted.length - 1].priority,
-          sprint_no: sprint_number,
-          isLoaded: true
+          // TODO: handle multiple project issue for scrum master
+          if (this.context.user.role === "Developer/Product Owner" && projects.length > 1) {
+            message.error("Developer/Product Owner in multiple project!!!")
+          }
+          axios.get(`http://127.0.0.1:8000/product/api/projectpbis/${project_id}`)
+            .then(res => {
+              if (res.data.length === 0) {  // No PBIs yet
+                this.setState({
+                  pbiList: [],
+                })
+                return
+              }
+
+              // Fetch PBI list from backend
+              let sorted = res.data
+              sorted.sort((a, b) => (a.priority < b.priority) ? -1 : 1)
+
+              // Calculate accumulated story point for each PBI
+              let acc = 0
+              var i;
+              var sprint_number = 1;
+              for (i = 0; i < sorted.length; ++i) {
+                if (sorted[i].sprint !== null) {
+                  sprint_number = Math.max(sorted[i].sprint.no, sprint_number);
+                }
+                acc += sorted[i].story_point;
+                sorted[i].acc = acc;
+              }
+
+              this.setState({
+                pbiList: sorted,
+                priority_max: sorted[sorted.length - 1].priority,
+                sprint_no: sprint_number,
+              })
+            })
+            .catch(error => console.log(error))
         })
-
-      })
-      .catch(error => console.log(error))
+    }
   }
 
   handleViewChange = e => {
@@ -84,14 +110,39 @@ class ProductBacklog extends React.Component {
     { title: 'Detail', dataIndex: 'detail', width: '15%' },
     { title: 'Story Point', dataIndex: 'story_point', width: '10%' },
     { title: 'Accumulated Story Point', dataIndex: 'acc', width: '10%' },
-    // { title: 'Priority', dataIndex: 'priority', width: '10%' },
     { title: 'Actions', render: (pbi) => <ActionButtons pbi={pbi} refresh={this.fetch} /> }
   ];
 
+  toggleCreatingProject = () => {
+    this.setState({
+      isCreatingProject: !this.state.isCreatingProject
+    })
+  }
+
   render() {
-    const { isLoaded } = this.state;
-    if (!isLoaded) {
-      return <div style={{ margin: "auto" }}>Loading...</div>;
+    if (this.state.pbiList === null) {
+      return (<div className="create-project-wrapper">
+        <Empty
+          description={
+            <span>
+              You are not in any project. <br />
+              Wait for an invitation or create one!
+            </span>
+          }
+        >
+          <Button
+            type="primary"
+            onClick={this.toggleCreatingProject}
+          >
+            Create Project
+          </Button>
+        </Empty>
+        <CreateProjectModal
+          visible={this.state.isCreatingProject}
+          close={this.toggleCreatingProject}
+          refresh={this.fetch}
+        />
+      </div>)
     } else {
       return (
         <Layout style={{ height: "100vh" }}>
@@ -137,9 +188,6 @@ class ProductBacklog extends React.Component {
                 : this.state.pbiList
             }
           />
-          <Footer style={{ textAlign: "center" }}>
-            Developed by FastDev (Group F)
-              </Footer>
         </Layout>
       );
     }

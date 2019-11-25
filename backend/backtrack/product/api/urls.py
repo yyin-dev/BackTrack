@@ -1,7 +1,6 @@
 from django.urls import path
 
 from .views import (
-    PBIListView,
     PBIDetailView,
     PBIUpdateView,
     AddPBI,
@@ -12,14 +11,20 @@ from .views import (
     MoveToNextSprint,
     MovebackPBIAfterSprint,
     StartSprint,
-    CreateSprint,)
+    CreateSprint,
+    CreateProject,
+    UserProjects,
+    ProjectPBIS)
 
 urlpatterns = [
-    path('', PBIListView.as_view()),
     path('create/', AddPBI.as_view()),
     path('move/', MovePBI.as_view()),
     path('movetosprint/', MoveToSprint.as_view()),
     path('createsprint/', CreateSprint.as_view()),
+    path('createproject/', CreateProject.as_view()),
+
+    path('projectofuser/<userid>/', UserProjects.as_view()),
+    path('projectpbis/<projectid>/', ProjectPBIS.as_view()),
 
     # Note that <pk> url should be put lower than urls above
     path('<pk>/', PBIDetailView.as_view()),
