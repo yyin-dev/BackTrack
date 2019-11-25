@@ -5,7 +5,7 @@ import { PageHeader, Layout, Table, Descriptions, Radio, Button, Empty, message 
 import ActionButtons from './actionButtons'
 import AddPBIForm from './addPBIForm';
 import CreateProjectModal from './createProjectModal'
-
+import InviteMembers from './inviteMembers'
 import './productBacklog.css';
 import { Context } from '../../context/ContextSource'
 
@@ -13,6 +13,7 @@ class ProductBacklog extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      project_name: null,
       currentView: true,
       pagination: {},
       adding: false,
@@ -22,12 +23,19 @@ class ProductBacklog extends React.Component {
       priority_max: -1,
       sprint_no: 1,
     }
+    this.updateProjectName = this.updateProjectName.bind(this);
   }
 
   static contextType = Context
 
   componentWillMount() {
     this.fetch();
+  }
+
+  updateProjectName(name) {
+    this.setState({
+      project_name: name
+    })
   }
 
   fetch = () => {
@@ -120,7 +128,7 @@ class ProductBacklog extends React.Component {
   }
 
   render() {
-    if (this.state.pbiList === null) {
+    if (!this.state.project_name) {
       return (<div className="create-project-wrapper">
         <Empty
           description={
@@ -140,7 +148,16 @@ class ProductBacklog extends React.Component {
         <CreateProjectModal
           visible={this.state.isCreatingProject}
           close={this.toggleCreatingProject}
-          refresh={this.fetch}
+          updateProjectName = {this.updateProjectName}
+        />
+      </div>)
+    }
+    else if (this.state.pbiList === null) {
+      return (<div className="create-project-wrapper">
+        <InviteMembers
+          project_name={this.state.project_name}
+          visible={true}
+          // close={this.toggleCreatingProject}
         />
       </div>)
     } else {

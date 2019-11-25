@@ -24,7 +24,12 @@ from rest_framework.generics import (
 from product.models import PBI, Sprint, Project
 from user.models import User
 from .serializers import PBISerializerProduct, ProjectSerializer
+from user.api.serializers import UserSerializer
 
+class InviteMembers(APIView):
+    def get(self, request):
+        queryset = User.objects.all()
+        serializer_class = UserSerializer
 
 class UserProjects(APIView):
     def get(self, request, userid):

@@ -14,7 +14,8 @@ from .views import (
     CreateSprint,
     CreateProject,
     UserProjects,
-    ProjectPBIS)
+    ProjectPBIS,
+    InviteMembers)
 
 urlpatterns = [
     path('create/', AddPBI.as_view()),
@@ -34,4 +35,5 @@ urlpatterns = [
     path('<pk>/movetonextsprint/', MoveToNextSprint.as_view()),
     path('<pk>/movebackPBIaftersprint/', MovebackPBIAfterSprint.as_view()),
     path('<pk>/startsprint/', StartSprint.as_view()),
+    path('invitemembers/', InviteMembers.as_view()),
 ]
