@@ -42,7 +42,7 @@ class AuthModal extends React.Component {
           size="default"
         >
           <TabPane tab="Log in" key="login">
-            <LoginTab />
+            <LoginTab isLoggedIn={this.props.isLoggedIn} setLoggedIn = {this.props.setLoggedIn} />
           </TabPane>
           <TabPane tab="Sign up" key="signup">
             <SignupTab switchToLogin={this.switchToLogin} />

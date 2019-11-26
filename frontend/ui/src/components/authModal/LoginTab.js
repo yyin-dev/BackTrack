@@ -23,6 +23,7 @@ class LoginForm extends React.Component {
     })
       .then(res => {
         if (res.status === 202) {
+          this.props.setLoggedIn()
           message.success("Welcome!")
           this.context.setUser(res.data)
           this.context.closeAuthModal()

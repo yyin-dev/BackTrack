@@ -31,6 +31,14 @@ class InviteMembers(APIView):
         queryset = User.objects.all()
         serializer_class = UserSerializer
 
+class CancelMember(APIView):
+    def post(self, request):
+        userid = request.data['user_id']
+        user = User.objects.get(id=userid)
+        user.projects.clear()
+        user.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+        
 class UserProjects(APIView):
     def get(self, request, userid):
         user = User.objects.get(id=userid)
@@ -236,4 +244,11 @@ class CreateProject(APIView):
         newProject.save()
         user.save()
 
+        return Response(status=status.HTTP_201_CREATED)
+
+class StartProject(APIView):
+    def post(self, request):
+        project = Project.objects.get(name=request.data['project_name'])
+        project.started = True
+        project.save()
         return Response(status=status.HTTP_201_CREATED)

@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 
-import { Modal, Form, Input, Button, Select, message } from "antd";
+import { Modal, Form, Input, Button, message } from "antd";
 import { Context } from '../../context/ContextSource'
 
 class AddMemberForm extends React.Component {
@@ -32,15 +32,26 @@ class AddMemberForm extends React.Component {
       message.error("You cannot invite yourself");
       return;
     }
+
     const result = this.props.users.find( ({ username }) => username === this.state.newMemberName );
     if (!result) {
       message.error("No user founded");
       return;
     }
 
-    console.log(this.props.project);
-    console.log(this.props.users)
-    console.log(result)
+    if (result.role === "Scrum Master" && this.props.hasScrumMaster) {
+      message.error("Cannot invite multiple Scrum Master for a project.");
+      return;
+    }
+    
+    if (result.role !== "Scurm Master" && result.projects.length !== 0 ){
+      message.error("The invited developer is occupied by another project.");
+      return;
+    }
+
+    // update information for the project
+    if (result.role === "Scrum Master") this.props.setScrumMaster();
+    else this.props.addDeveloper();
 
     axios
       .post("http://127.0.0.1:8000/user/api/addusertoproject/", {
@@ -50,11 +61,12 @@ class AddMemberForm extends React.Component {
       .then(res => {
         const newMemberRole = result.role === "Scrum Master" ? "Scrum Master" : "Developer"
         const successMessage = "New team member added: " + result.username + " as your " + newMemberRole
-        message.success(successMessage, 3);
         this.setState({
           visible: false,
           newMemberName: "",
         });
+        this.props.refresh()
+        message.success(successMessage, 3);
       })
       .catch(err => {
         alert("Wrong");
@@ -79,9 +91,10 @@ class AddMemberForm extends React.Component {
         sm: { span: 16 }
       }
     };
+    const disableButton = this.context.user.role !== "Product Owner"
     return (
-      <div>
-        <Button onClick={this.viewDetail} />
+      <div style={{ display: "inline" }}>
+        <Button onClick={this.viewDetail} disabled={disableButton}>Add New Member</Button>
         <Modal
           title="Invite Member"
           visible={this.state.visible}
