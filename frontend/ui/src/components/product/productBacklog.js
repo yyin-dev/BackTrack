@@ -1,41 +1,49 @@
-import React from 'react';
-import axios from 'axios';
+import React from "react";
+import axios from "axios";
 
-import { PageHeader, Layout, Table, Descriptions, Radio, Button, Empty, message } from 'antd';
-import ActionButtons from './actionButtons'
-import AddPBIForm from './addPBIForm';
-import CreateProjectModal from './createProjectModal'
-import InviteMembers from './inviteMembers'
-import './productBacklog.css';
-import { Context } from '../../context/ContextSource'
+import {
+  PageHeader,
+  Layout,
+  Table,
+  Descriptions,
+  Radio,
+  Button,
+  Empty,
+  message
+} from "antd";
+import ActionButtons from "./actionButtons";
+import AddPBIForm from "./addPBIForm";
+import CreateProjectModal from "./createProjectModal";
+import InviteMembers from "./inviteMembers";
+import "./productBacklog.css";
+import { Context } from "../../context/ContextSource";
 
 class ProductBacklog extends React.Component {
+  _isMounted = false;
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      project_name: null,
+      project: null,
       currentView: true,
       pagination: {},
       adding: false,
       isCreatingProject: false,
 
-      pbiList: null,  // null: not in project; []: in project but no PBIs.
+      pbiList: null, // null: not in project; []: in project but no PBIs.
       priority_max: -1,
-      sprint_no: 1,
-    }
-    this.updateProjectName = this.updateProjectName.bind(this);
+      sprint_no: 1
+    };
   }
 
-  static contextType = Context
+  static contextType = Context;
 
-  componentWillMount() {
+  componentDidMount() {
+    this._isMounted = true;
     this.fetch();
   }
 
-  updateProjectName(name) {
-    this.setState({
-      project_name: name
-    })
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   fetch = () => {
@@ -43,124 +51,139 @@ class ProductBacklog extends React.Component {
 
     // Get projects of the user
     if (this.context.user) {
-      axios.get(`http://127.0.0.1:8000/product/api/projectofuser/${this.context.user.id}`)
+      axios
+        .get(
+          `http://127.0.0.1:8000/product/api/projectofuser/${this.context.user.id}`
+        )
         .then(res => {
-          let projects = res.data
-          if (projects.length === 0) {  // Not in project
-            return
+          let projects = res.data;
+          if (projects.length === 0) {
+            // Not in project
+            return;
+          } else if (this._isMounted) {
+            this.setState({
+              project: projects[0]
+            });
           }
-          
-          project_id = projects[0].id
 
+          project_id = projects[0].id;
+          
           // TODO: handle multiple project issue for scrum master
-          if (this.context.user.role === "Developer/Product Owner" && projects.length > 1) {
-            message.error("Developer/Product Owner in multiple project!!!")
+          if (
+            this.context.user.role === "Developer/Product Owner" &&
+            projects.length > 1
+          ) {
+            message.error("Developer/Product Owner in multiple project!!!");
           }
-          axios.get(`http://127.0.0.1:8000/product/api/projectpbis/${project_id}`)
+          axios
+            .get(`http://127.0.0.1:8000/product/api/projectpbis/${project_id}`)
             .then(res => {
-              if (res.data.length === 0) {  // No PBIs yet
+              if (res.data.length === 0) {
+                // No PBIs yet
                 this.setState({
                   pbiList: [],
-                })
-                return
-              }
+                });
+              } else {
+                // Fetch PBI list from backend
+                let sorted = res.data;
+                sorted.sort((a, b) => (a.priority < b.priority ? -1 : 1));
 
-              // Fetch PBI list from backend
-              let sorted = res.data
-              sorted.sort((a, b) => (a.priority < b.priority) ? -1 : 1)
-
-              // Calculate accumulated story point for each PBI
-              let acc = 0
-              var i;
-              var sprint_number = 1;
-              for (i = 0; i < sorted.length; ++i) {
-                if (sorted[i].sprint !== null) {
-                  sprint_number = Math.max(sorted[i].sprint.no, sprint_number);
+                // Calculate accumulated story point for each PBI
+                let acc = 0;
+                var i;
+                var sprint_number = 1;
+                for (i = 0; i < sorted.length; ++i) {
+                  if (sorted[i].sprint !== null) {
+                    sprint_number = Math.max(
+                      sorted[i].sprint.no,
+                      sprint_number
+                    );
+                  }
+                  acc += sorted[i].story_point;
+                  sorted[i].acc = acc;
                 }
-                acc += sorted[i].story_point;
-                sorted[i].acc = acc;
-              }
 
-              this.setState({
-                pbiList: sorted,
-                priority_max: sorted[sorted.length - 1].priority,
-                sprint_no: sprint_number,
-              })
+                this.setState({
+                  pbiList: sorted,
+                  priority_max: sorted[sorted.length - 1].priority,
+                  sprint_no: sprint_number,
+                });
+              }
             })
-            .catch(error => console.log(error))
-        })
+            .catch(error => console.log(error));
+        });
     }
-  }
+  };
 
   handleViewChange = e => {
-    this.setState({ currentView: !this.state.currentView })
-  }
+    this.setState({ currentView: !this.state.currentView });
+  };
 
   showEditForm = () => {
     this.setState({
       adding: true
-    })
-  }
+    });
+  };
 
   closeEditForm = () => {
     this.setState({
       adding: false
-    })
-  }
+    });
+  };
 
   columns = [
-    { title: 'Title', dataIndex: 'title', width: '10%' },
+    { title: "Title", dataIndex: "title", width: "10%" },
     {
-      title: 'Sprint No', dataIndex: 'sprint', width: '10%',
-      render: (sprint) => sprint ? <span>{sprint.no}</span> : <span></span>
+      title: "Sprint No",
+      dataIndex: "sprint",
+      width: "10%",
+      render: sprint => (sprint ? <span>{sprint.no}</span> : <span></span>)
     },
-    { title: 'Status', dataIndex: 'status', width: '15%' },
-    { title: 'Detail', dataIndex: 'detail', width: '15%' },
-    { title: 'Story Point', dataIndex: 'story_point', width: '10%' },
-    { title: 'Accumulated Story Point', dataIndex: 'acc', width: '10%' },
-    { title: 'Actions', render: (pbi) => <ActionButtons pbi={pbi} refresh={this.fetch} /> }
+    { title: "Status", dataIndex: "status", width: "15%" },
+    { title: "Detail", dataIndex: "detail", width: "15%" },
+    { title: "Story Point", dataIndex: "story_point", width: "10%" },
+    { title: "Accumulated Story Point", dataIndex: "acc", width: "10%" },
+    {
+      title: "Actions",
+      render: pbi => <ActionButtons pbi={pbi} refresh={this.fetch} />
+    }
   ];
 
   toggleCreatingProject = () => {
     this.setState({
       isCreatingProject: !this.state.isCreatingProject
-    })
-  }
+    });
+  };
 
   render() {
-    if (!this.state.project_name) {
-      return (<div className="create-project-wrapper">
-        <Empty
-          description={
-            <span>
-              You are not in any project. <br />
-              Wait for an invitation or create one!
-            </span>
-          }
-        >
-          <Button
-            type="primary"
-            onClick={this.toggleCreatingProject}
+    if (!this.state.project) {
+      return (
+        <div className="create-project-wrapper">
+          <Empty
+            description={
+              <span>
+                You are not in any project. <br />
+                Wait for an invitation or create one!
+              </span>
+            }
           >
-            Create Project
-          </Button>
-        </Empty>
-        <CreateProjectModal
-          visible={this.state.isCreatingProject}
-          close={this.toggleCreatingProject}
-          updateProjectName = {this.updateProjectName}
-        />
-      </div>)
-    }
-    else if (this.state.pbiList === null) {
-      return (<div className="create-project-wrapper">
-        <InviteMembers
-          project_name={this.state.project_name}
-          visible={true}
-          // close={this.toggleCreatingProject}
-        />
-      </div>)
+            <Button type="primary" onClick={this.toggleCreatingProject}>
+              Create Project
+            </Button>
+          </Empty>
+          <CreateProjectModal
+            visible={this.state.isCreatingProject}
+            close={this.toggleCreatingProject}
+            refresh={this.fetch}
+          />
+        </div>
+      );
+    } else if (this.state.pbiList === null || this.state.pbiList.length === 0) {
+      return (
+          <InviteMembers project={this.state.project} visible={true} />
+      );
     } else {
+      console.log(this.state.pbiList);
       return (
         <Layout style={{ height: "100vh" }}>
           <PageHeader

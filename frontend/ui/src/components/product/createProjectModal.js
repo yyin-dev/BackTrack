@@ -12,7 +12,6 @@ class CreateProjectModal extends React.Component {
       if (!err) {
         this.props.close()
         this.props.form.resetFields()
-        this.props.updateProjectName(values.name)
 
         console.log(values)
         axios.post("http://127.0.0.1:8000/product/api/createproject/", {
@@ -23,6 +22,7 @@ class CreateProjectModal extends React.Component {
           .then(res => {
             console.log(res)
             message.success("Project created!", 3)
+            this.props.refresh();
           })
           .catch(err => {
             console.log(err)

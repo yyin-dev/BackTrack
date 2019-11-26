@@ -1,17 +1,19 @@
 import React from "react";
-import { Modal, Form, Input, Button, Select } from "antd";
+import axios from "axios";
 
-const { Option } = Select;
+import { Modal, Form, Input, Button, Select, message } from "antd";
+import { Context } from '../../context/ContextSource'
 
 class AddMemberForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       visible: false,
-      userName: "",
-      role: ""
+      newMemberName: "",
     };
   }
+
+  static contextType = Context;
 
   viewDetail = e => {
     this.setState({
@@ -19,26 +21,46 @@ class AddMemberForm extends React.Component {
     });
   };
 
-  handleUserName = (e) => {
-    this.setState({ userName: e.target.value })
-  }
+  handleNewMember = e => {
+    this.setState({ newMemberName: e.target.value });
+  };
 
-  handleSubmit = (e) => {
-    // e.preventDefault();
-    // let values = this.props.form.getFieldsValue()
-    // axios.post(`http://127.0.0.1:8000/user/api/signup/`, {
-    //   username: values.username,
-    //   password: values.password,
-    //   role: values.role
-    // })
-    //   .then(res => {
-    //     message.success("You have signed up! Please log in!", 3)
-    //     this.props.switchToLogin()
-    //   })
-    //   .catch(err => {
-    //     console.log(err)
-    //   })
-  }
+  handleSubmit = e => {
+
+    // PO cannot invite himself
+    if (this.state.newMemberName === this.context.user.username) {
+      message.error("You cannot invite yourself");
+      return;
+    }
+    const result = this.props.users.find( ({ username }) => username === this.state.newMemberName );
+    if (!result) {
+      message.error("No user founded");
+      return;
+    }
+
+    console.log(this.props.project);
+    console.log(this.props.users)
+    console.log(result)
+
+    axios
+      .post("http://127.0.0.1:8000/user/api/addusertoproject/", {
+        new_member_name: this.state.newMemberName,
+        project_name: this.props.project.name
+      })
+      .then(res => {
+        const newMemberRole = result.role === "Scrum Master" ? "Scrum Master" : "Developer"
+        const successMessage = "New team member added: " + result.username + " as your " + newMemberRole
+        message.success(successMessage, 3);
+        this.setState({
+          visible: false,
+          newMemberName: "",
+        });
+      })
+      .catch(err => {
+        alert("Wrong");
+        console.log(err);
+      });
+  };
 
   handleCancel = e => {
     this.setState({
@@ -47,7 +69,6 @@ class AddMemberForm extends React.Component {
   };
 
   render() {
-
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -59,33 +80,25 @@ class AddMemberForm extends React.Component {
       }
     };
     return (
-      <Button onClick={this.viewDetail}>
+      <div>
+        <Button onClick={this.viewDetail} />
         <Modal
-          title="Invite User"
+          title="Invite Member"
           visible={this.state.visible}
-          onOk={this.handleOk}
+          onOk={this.handleSubmit}
           onCancel={this.handleCancel}
         >
-          <Form {...formItemLayout} onSubmit={this.handleSubmit} >
-            <Form.Item label="User Name">
+          <Form {...formItemLayout}>
+            <Form.Item label="New Member Name">
               <Input
-                value={this.state.userName}
-                onChange={this.handleUserName}
-                placeholder="Enter User Name"
+                value={this.state.newMemberName}
+                onChange={this.handleNewMember}
+                placeholder="Enter New Member Name"
               />
-            </Form.Item>
-
-            <Form.Item label="Role">
-                <Select>
-                  <Option value="Scrum Master">Scrum Master</Option>
-                  <Option value="Developer/Product Owner">
-                    Developer/Product Owner
-                  </Option>
-                </Select>
             </Form.Item>
           </Form>
         </Modal>
-      </Button>
+      </div>
     );
   }
 }

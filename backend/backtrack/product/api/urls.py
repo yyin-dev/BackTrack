@@ -27,6 +27,8 @@ urlpatterns = [
     path('projectofuser/<userid>/', UserProjects.as_view()),
     path('projectpbis/<projectid>/', ProjectPBIS.as_view()),
 
+    path('invitemembers/', InviteMembers.as_view()),
+
     # Note that <pk> url should be put lower than urls above
     path('<pk>/', PBIDetailView.as_view()),
     path('<pk>/update/', PBIUpdateView.as_view()),
@@ -35,5 +37,4 @@ urlpatterns = [
     path('<pk>/movetonextsprint/', MoveToNextSprint.as_view()),
     path('<pk>/movebackPBIaftersprint/', MovebackPBIAfterSprint.as_view()),
     path('<pk>/startsprint/', StartSprint.as_view()),
-    path('invitemembers/', InviteMembers.as_view()),
 ]

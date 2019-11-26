@@ -8,6 +8,7 @@ from rest_framework.generics import (
     CreateAPIView)
 
 from user.models import User
+from product.models import Project
 from .serializers import UserSerializer
 
 
@@ -45,5 +46,11 @@ class UserLoginView(APIView):
         
         return Response(status = status.HTTP_401_UNAUTHORIZED)
 
+class AddUserToProject(APIView):
+    def post(self, request):
+        user = User.objects.get(username=request.data['new_member_name'])
+        project = Project.objects.get(name=request.data['project_name'])
+        user.projects.add(project)
+        user.save()
 
-
+        return Response(status=status.HTTP_204_NO_CONTENT)
