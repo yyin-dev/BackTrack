@@ -14,8 +14,10 @@ from .views import (
     CreateSprint,
     CreateProject,
     UserProjects,
+    StartProject,
     ProjectPBIS,
-    InviteMembers)
+    InviteMembers,
+    CancelMember)
 
 urlpatterns = [
     path('create/', AddPBI.as_view()),
@@ -28,6 +30,9 @@ urlpatterns = [
     path('projectpbis/<projectid>/', ProjectPBIS.as_view()),
 
     path('invitemembers/', InviteMembers.as_view()),
+    path('cancelmember/', CancelMember.as_view()),
+    path('startproject/', StartProject.as_view()),
+
 
     # Note that <pk> url should be put lower than urls above
     path('<pk>/', PBIDetailView.as_view()),

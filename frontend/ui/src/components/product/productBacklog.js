@@ -61,7 +61,7 @@ class ProductBacklog extends React.Component {
           }
 
           project_id = projects[0].id;
-          
+
           // TODO: handle multiple project issue for scrum master
           if (
             this.context.user.role === "Developer/Product Owner" &&
@@ -75,7 +75,7 @@ class ProductBacklog extends React.Component {
               if (res.data.length === 0) {
                 // No PBIs yet
                 this.setState({
-                  pbiList: [],
+                  pbiList: []
                 });
               } else {
                 // Fetch PBI list from backend
@@ -100,7 +100,7 @@ class ProductBacklog extends React.Component {
                 this.setState({
                   pbiList: sorted,
                   priority_max: sorted[sorted.length - 1].priority,
-                  sprint_no: sprint_number,
+                  sprint_no: sprint_number
                 });
               }
             })
@@ -123,6 +123,17 @@ class ProductBacklog extends React.Component {
     this.setState({
       adding: false
     });
+  };
+
+  setStartProject = () => {
+    axios
+      .post(`http://127.0.0.1:8000/product/api/startproject/`, {
+        project_name: this.state.project.name
+      })
+      .then(res => {
+        this.fetch();
+      })
+      .catch(err => console.log(err));
   };
 
   columns = [
@@ -150,7 +161,7 @@ class ProductBacklog extends React.Component {
   };
 
   render() {
-    console.log(this.state.project)
+    console.log(this.state.project);
     if (!this.state.project) {
       return (
         <div className="create-project-wrapper">
@@ -173,9 +184,14 @@ class ProductBacklog extends React.Component {
           />
         </div>
       );
-    } else if (this.state.pbiList === null || this.state.pbiList.length === 0) {
+    } else if (!this.state.project.started) {
       return (
-          <InviteMembers project={this.state.project} visible={true} />
+        <InviteMembers
+          project={this.state.project}
+          visible={true}
+          setStartProject={this.setStartProject}
+          refresh={this.fetch}
+        />
       );
     } else {
       console.log(this.state.pbiList);
@@ -218,7 +234,7 @@ class ProductBacklog extends React.Component {
             rowKey={pbi => pbi.id.toString()}
             pagination={this.state.pagination}
             dataSource={
-              this.state.currentView
+              this.state.currentView && this.state.pbiList
                 ? this.state.pbiList.filter(pbi => pbi.status !== "Done")
                 : this.state.pbiList
             }
