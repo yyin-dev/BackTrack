@@ -24,6 +24,10 @@ class AuthModal extends React.Component {
   }
 
   render() {
+    if (this.context.user) {
+    console.log(".....")
+    this.context.authModalVisibility = false;
+    }
     return (
       <Modal
         className="auth-modal"

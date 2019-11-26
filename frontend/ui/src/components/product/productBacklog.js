@@ -19,7 +19,6 @@ import "./productBacklog.css";
 import { Context } from "../../context/ContextSource";
 
 class ProductBacklog extends React.Component {
-  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {
@@ -37,13 +36,8 @@ class ProductBacklog extends React.Component {
 
   static contextType = Context;
 
-  componentDidMount() {
-    this._isMounted = true;
+  componentWillMount() {
     this.fetch();
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
   }
 
   fetch = () => {
@@ -60,7 +54,7 @@ class ProductBacklog extends React.Component {
           if (projects.length === 0) {
             // Not in project
             return;
-          } else if (this._isMounted) {
+          } else {
             this.setState({
               project: projects[0]
             });
@@ -156,6 +150,7 @@ class ProductBacklog extends React.Component {
   };
 
   render() {
+    console.log(this.state.project)
     if (!this.state.project) {
       return (
         <div className="create-project-wrapper">
