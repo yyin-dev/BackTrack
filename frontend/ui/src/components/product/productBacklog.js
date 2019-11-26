@@ -36,7 +36,7 @@ class ProductBacklog extends React.Component {
 
   static contextType = Context;
 
-  componentWillMount() {
+  componentDidMount() {
     this.fetch();
   }
 

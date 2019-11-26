@@ -10,6 +10,8 @@ import {
 import "./productBacklog.css";
 import { Context } from "../../context/ContextSource";
 import AddMemberForm from "./addMemberForm";
+import { Table} from "antd";
+const { Column } = Table;
 
 class InviteMembers extends React.Component {
   constructor(props) {
@@ -24,7 +26,7 @@ class InviteMembers extends React.Component {
   componentDidMount() {
     this.fetch();
   }
-
+  
   fetch = () => {
     console.log("called!");
     console.log(this.props.project);
@@ -42,7 +44,9 @@ class InviteMembers extends React.Component {
             style={{
               border: "1px solid rgb(235, 237, 240)"
             }}
-            title={this.props.project.name}
+            title={"Project Name: ".concat(
+              this.props.project.name)}
+            
             extra={[
               <div key="dummy-key-to-suppress-warning">
                 <AddMemberForm
@@ -59,6 +63,12 @@ class InviteMembers extends React.Component {
               </Descriptions.Item>
             </Descriptions>
           </PageHeader>
+            <Table
+            dataSource={this.state.users}
+            rowKey={user => user.username.toString()}
+             >
+            <Column title="Current Users" dataIndex="username" key="username" width="10%" />
+        </Table>
       </Layout>
     );
   }
