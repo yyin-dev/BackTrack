@@ -29,7 +29,8 @@ class ProductBacklog extends React.Component {
       isCreatingProject: false,
       pbiList: null, // null: not in project; []: in project but no PBIs.
       priority_max: -1,
-      sprint_no: 1
+      sprint_no: 1,
+      isLoaded: false
     };
   }
 
@@ -53,6 +54,9 @@ class ProductBacklog extends React.Component {
           let projects = res.data;
           if (projects.length === 0) {
             // Not in project
+            this.setState({
+              isLoaded: true
+            });
             return;
           } else {
             this.setState({
@@ -75,7 +79,8 @@ class ProductBacklog extends React.Component {
               if (res.data.length === 0) {
                 // No PBIs yet
                 this.setState({
-                  pbiList: []
+                  pbiList: [],
+                  isLoaded: true
                 });
               } else {
                 // Fetch PBI list from backend
@@ -100,7 +105,8 @@ class ProductBacklog extends React.Component {
                 this.setState({
                   pbiList: sorted,
                   priority_max: sorted[sorted.length - 1].priority,
-                  sprint_no: sprint_number
+                  sprint_no: sprint_number,
+                  isLoaded: true
                 });
               }
             })
@@ -162,7 +168,9 @@ class ProductBacklog extends React.Component {
 
   render() {
     console.log(this.state.project);
-    if (!this.state.project) {
+    if (!this.state.isLoaded) {
+      return <div style={{ margin: "auto" }}>Loading...</div>;
+    } else if (!this.state.project) {
       return (
         <div className="create-project-wrapper">
           <Empty
