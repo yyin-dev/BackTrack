@@ -39,12 +39,14 @@ class AddMemberForm extends React.Component {
       return;
     }
 
+    console.log("result", result);
+
     if (result.role === "Scrum Master" && this.props.hasScrumMaster) {
       message.error("Cannot invite multiple Scrum Master for a project.");
       return;
     }
-    
-    if (result.role !== "Scurm Master" && result.projects.length !== 0 ){
+
+    if (result.role !== "Scrum Master" && result.projects.length !== 0 ){
       message.error("The invited developer is occupied by another project.");
       return;
     }

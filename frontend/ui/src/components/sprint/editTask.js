@@ -1,13 +1,17 @@
 import React from 'react';
 import axios from 'axios';
+import { Context } from '../../context/ContextSource'
 
 import { Modal, Tag, Button, message, Form, Input, InputNumber, Tooltip } from 'antd';
 
 class EditTask extends React.Component {
+
+    static contextType = Context
+
     constructor(props) {
         super(props)
         this.task = this.props.task
-        this.state = { 
+        this.state = {
             visible: false,
             taskName: this.task.name,
             description: this.task.description,
@@ -37,7 +41,7 @@ class EditTask extends React.Component {
         this.setState({
             visible: true,
         });
-    } 
+    }
 
     handleDelete = e => {
         axios.delete(`http://127.0.0.1:8000/sprint/api/${this.task.id}/delete/`)
@@ -127,7 +131,8 @@ class EditTask extends React.Component {
                 {this.task.name}
             </Tag>
             <Tooltip title="Start Task">
-                <Button icon="caret-right" onClick={this.changeStatus} disabled={this.props.disabled}/>
+              {this.context.user.role}
+                <Button disabled={this.context.user.role === "Scrum Master" || this.props.disabled} icon="caret-right" onClick={this.changeStatus} />
             </Tooltip>
             <Modal
                 title="View Task"

@@ -2,11 +2,16 @@ import React from 'react';
 import axios from 'axios';
 import { Button, Popconfirm, message, Tooltip } from 'antd';
 import EditPBIForm from './editPBIForm';
+import { Context } from "../../context/ContextSource";
+
 
 axios.defaults.xsrfHeaderName = "X-CSRFToken"
 axios.defaults.xsrfCookieName = 'csrftoken'
 
 class ActionButtons extends React.Component {
+
+  static contextType = Context;
+
   constructor(props) {
     super(props)
 
@@ -69,7 +74,7 @@ class ActionButtons extends React.Component {
 
     if (pbiStatus === "To Do" || pbiStatus === "Unfinished") {
       EditButton = <Tooltip title="Edit">
-        <Button icon="edit" onClick={this.handleEdit} />
+        <Button disabled={this.context.user.role !== "Product Owner"} icon="edit" onClick={this.handleEdit} />
       </Tooltip>
     } else {
       EditButton = <Button icon="edit" disabled />
@@ -79,7 +84,7 @@ class ActionButtons extends React.Component {
     if (pbiStatus === "To Do" || pbiStatus === "Unfinished") {
       DeleteButton = <Tooltip title="Delete">
         <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete()}>
-          <Button icon="delete" />
+          <Button disabled={this.context.user.role !== "Product Owner"} icon="delete" />
         </Popconfirm>
       </Tooltip>
     } else {
@@ -89,10 +94,10 @@ class ActionButtons extends React.Component {
     return (
       <div>
         <Tooltip title="Move up">
-          <Button icon="up" onClick={() => this.handleMove('up')} />
+          <Button disabled={this.context.user.role !== "Product Owner"} icon="up" onClick={() => this.handleMove('up')} />
         </Tooltip>
         <Tooltip title="Move down">
-          <Button icon="down" onClick={() => this.handleMove('down')} />
+          <Button disabled={this.context.user.role !== "Product Owner"} icon="down" onClick={() => this.handleMove('down')} />
         </Tooltip>
         {DeleteButton}
         {EditButton}
@@ -103,7 +108,7 @@ class ActionButtons extends React.Component {
           close={this.handleClose}
         />
         <Popconfirm title="Move to sprint?" onConfirm={() => this.handleMoveToSprint()}>
-          <Button icon="forward" />
+          <Button disabled={this.context.user.role !== "Product Owner" || (this.props.pbi.status !== "To Do" && this.props.pbi.status !== "Unfinished") } icon="forward" />
         </Popconfirm>
       </div >
     )

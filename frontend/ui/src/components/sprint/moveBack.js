@@ -1,9 +1,13 @@
 import React from "react";
 import axios from "axios";
+import { Context } from "../../context/ContextSource";
 
 import { Button, Popconfirm, Tooltip } from "antd";
 
 class MoveBack extends React.Component {
+
+    static contextType = Context;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -41,7 +45,7 @@ class MoveBack extends React.Component {
                         title="Sure to move back PBI?"
                         onConfirm={() => this.handleOk()}
                     >
-                        <Button icon="backward" />
+                        <Button disabled={this.context.user.role !== "Product Owner"} icon="backward" />
                     </Popconfirm>
                 </Tooltip>
             </div>

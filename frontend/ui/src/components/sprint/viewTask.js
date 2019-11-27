@@ -1,9 +1,13 @@
 import React from "react";
 import axios from "axios";
+import { Context } from "../../context/ContextSource";
 
 import { Modal, Tag, Button, message, Tooltip } from "antd";
 
 class ViewTask extends React.Component {
+
+  static contextType = Context;
+
   constructor(props) {
     super(props);
     this.task = this.props.task;
@@ -65,6 +69,7 @@ class ViewTask extends React.Component {
       FinishButton = (
         <Tooltip title="Finish Task">
           <Button
+            disabled={this.context.user.role === "Scrum Master" }
             icon="check-circle"
             onClick={this.changeStatus}
           />

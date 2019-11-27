@@ -1,24 +1,27 @@
 import React from 'react';
-
 import { Modal, Button, InputNumber, Card, Select, Input, message, Form } from 'antd';
 import './endSprint.css'
 import axios from 'axios';
-const { Option } = Select;
+import { Context } from "../../context/ContextSource";
 
+const { Option } = Select;
 const default_capacity = 10
 
 /*
  * Logic for ending sprint
  * 1. PBI with unfinished task:
  *  a. Back to product backlog: Sprint -> null, status -> "Unfinished"
- *  b. Move to next sprint: Sprint -> nextSprint, status -> "Unfinished", 
+ *  b. Move to next sprint: Sprint -> nextSprint, status -> "Unfinished",
  *  TODO: its status should be automatically changed to "In progress" when next sprint
- *     is started. 
+ *     is started.
  * 2. PBI with all tasks finished:
- *  Back to product backlog: Sprint unchanged, status -> "Done" 
+ *  Back to product backlog: Sprint unchanged, status -> "Done"
  */
 
 class EndSprint extends React.Component {
+
+  static contextType = Context;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -38,7 +41,7 @@ class EndSprint extends React.Component {
     });
 
     // PBI with unfinished task     -> this.state.unfinished_pbis
-    // PBI with all tasks finished  -> this.state.finished_pbis 
+    // PBI with all tasks finished  -> this.state.finished_pbis
     var i, j;
     for (i = 0; i < this.props.pbis.length; ++i) {
       for (j = 0; j < this.props.pbis[i].tasks.length; ++j) {
@@ -193,7 +196,7 @@ class EndSprint extends React.Component {
       <div style={{ display: "inline" }}>
         <Button
           onClick={this.showModal}
-          disabled={this.props.disabled}
+          disabled={this.props.disabled || this.context.user.role !== "Product Owner"}
         >
           End Sprint
         </Button>

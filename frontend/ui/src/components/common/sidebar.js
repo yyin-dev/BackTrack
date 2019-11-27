@@ -30,8 +30,10 @@ class Sidebar extends React.Component {
   detectUrlChange() { }
 
   componentDidMount() {
+
+
     setInterval(() => {
-      // const { match, location, history } = this.props;
+      // console.log("this.context.user", this.context.user);
       const { location } = this.props;
       var selectedMenuItemKey;
       if (location.pathname === "/") {
@@ -48,8 +50,6 @@ class Sidebar extends React.Component {
   }
 
   render() {
-    const { user } = this.context
-
     return (
       <Sider
         breakpoint="lg"
@@ -63,8 +63,8 @@ class Sidebar extends React.Component {
           <Menu.Item key="0" >
             <div className="sidebar-username-wrapper">
               <Icon type="user" style={{fontSize: "2em"}}/>
-              <span>{user ? user.username: ""}</span>
-              <span>{user ? `, ${user.role}` : ""}</span>
+              <span>{this.context.user ? this.context.user.username: ""}</span>
+              <span>{this.context.user ? `, ${this.context.user.role}` : ""}</span>
             </div>
           </Menu.Item>
           <Menu.Item key="1" to="/"  >
@@ -82,6 +82,16 @@ class Sidebar extends React.Component {
             <span className="nav-text" >Sprint Backlog</span>
             <Link to="/sprint"></Link>
           </Menu.Item>
+          {
+            this.context.user
+            ? this.context.user.role === "Scrum Master"
+            ? <Menu.Item key="4"  >
+                <Icon type="code" />
+                  <span className="nav-text" >Projects</span>
+                  <Link to="/project"></Link>
+              </Menu.Item>
+            : "" : ""
+          }
         </Menu>
       </Sider>
     )

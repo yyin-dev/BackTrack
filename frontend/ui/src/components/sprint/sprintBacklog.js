@@ -8,18 +8,20 @@ import AddTask from "./addTask";
 import EditTask from "./editTask";
 import MoveBack from "./moveBack";
 import ViewPBI from "./viewPBI";
+import { Context } from "../../context/ContextSource";
 
 const { Column, ColumnGroup } = Table;
 
 class SprintBacklog extends React.Component {
+
+  static contextType = Context;
+
   constructor(props) {
     super(props);
-
     this.state = {
       sprint_started: false,
       sprint_no: -1,
       sprint_pk: -1,
-
       pbis: [],
       capacity: -1,
       total_effort: -1,
@@ -160,7 +162,7 @@ class SprintBacklog extends React.Component {
                   <AddTask
                     id={id}
                     refresh={this.fetch}
-                    disableAdd={disable_add}
+                    disableAdd={disable_add || this.context.user.role !== "Product Owner"}
                   />
                 )}
               />

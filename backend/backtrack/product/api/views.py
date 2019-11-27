@@ -38,7 +38,7 @@ class CancelMember(APIView):
         user.projects.clear()
         user.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
-        
+
 class UserProjects(APIView):
     def get(self, request, userid):
         user = User.objects.get(id=userid)
@@ -119,10 +119,13 @@ class MovePBI(APIView):
 
 class AddPBI(APIView):
     def post(self, request):
+
+        parentProject = Project.objects.get(id=request.data['projectId'])
+
         new_pbi = PBI(title=request.data['title'],
                       detail=request.data['detail'],
                       story_point=request.data['story_point'],
-
+                      project=parentProject,
                       # Default values
                       status="To Do",
                       start_date="2019-01-01",
@@ -158,7 +161,7 @@ class MovebackPBI(APIView):
         cur_pbi = PBI.objects.get(id=pk)
         cur_pbi.status = newStatus
         cur_pbi.sprint = None
-        
+
         cur_pbi.save()
         return Response(status=status.HTTP_202_ACCEPTED)
 
@@ -202,7 +205,7 @@ class MovebackPBIAfterSprint(APIView):
         print(newStatus)
 
         # newStatus == "Unfinished": unfinished task, set Sprint to None
-        # newStatus == "Done"      : finished task, Sprint unchanged 
+        # newStatus == "Done"      : finished task, Sprint unchanged
         if newStatus == "Unfinished":
             cur_pbi.sprint = None
         cur_pbi.save()
@@ -224,7 +227,7 @@ class CreateSprint(APIView):
         from django.db.models import Max
         currNo = Sprint.objects.all().aggregate(Max('no'))['no__max']
         cap = request.data["sprintCapacity"]
-        newSprint = Sprint.objects.create(no=currNo+1, capacity=cap, status="Created")   
+        newSprint = Sprint.objects.create(no=currNo+1, capacity=cap, status="Created")
         newSprint.save()
 
         return Response(status=status.HTTP_201_CREATED)

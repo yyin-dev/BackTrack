@@ -7,7 +7,7 @@ class AddTask extends React.Component {
     constructor(props) {
         super(props)
         this.pbi = this.props.id
-        this.state = { 
+        this.state = {
             visible: false,
             taskName: "",
             description: "",
@@ -37,7 +37,7 @@ class AddTask extends React.Component {
         this.setState({
             visible: true,
         });
-    } 
+    }
 
     handleOk = e => {
         axios.post("http://127.0.0.1:8000/sprint/api/create/", {
@@ -87,7 +87,7 @@ class AddTask extends React.Component {
             <div>
             <Button icon="plus" onClick={this.viewDetail} disabled={this.disableAdd} />
             <Modal
-                title="View Task"
+                title="Add Task"
                 visible={this.state.visible}
                 onOk={this.handleOk}
                 onCancel={this.handleCancel}

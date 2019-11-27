@@ -27,7 +27,6 @@ class ProductBacklog extends React.Component {
       pagination: {},
       adding: false,
       isCreatingProject: false,
-
       pbiList: null, // null: not in project; []: in project but no PBIs.
       priority_max: -1,
       sprint_no: 1
@@ -37,6 +36,7 @@ class ProductBacklog extends React.Component {
   static contextType = Context;
 
   componentDidMount() {
+    console.log("this.context.user", this.context.user);
     this.fetch();
   }
 
@@ -188,7 +188,7 @@ class ProductBacklog extends React.Component {
       return (
         <InviteMembers
           project={this.state.project}
-          visible={true}
+          visible="true"
           setStartProject={this.setStartProject}
           refresh={this.fetch}
         />
@@ -213,11 +213,12 @@ class ProductBacklog extends React.Component {
                   <Radio.Button value="full">Full View</Radio.Button>
                 </Radio.Group>
 
-                <Button icon="plus" onClick={this.showEditForm} />
+                <Button disabled={this.context.user.role !== "Product Owner"} icon="plus" onClick={this.showEditForm} />
                 <AddPBIForm
                   visible={this.state.adding}
                   close={this.closeEditForm}
                   refresh={this.fetch}
+                  projectId={this.state.project.id}
                 />
               </div>
             ]}

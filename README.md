@@ -8,12 +8,12 @@
     cd backtrack  
     python manage.py runserver  
 
-3. Go to another terminal    
-    cd frontend/ui    
-    yarn install    
-    yarn add antd --save  
-    yarn add axios --save  
-    yarn start    
+3. Go to another terminal
+    cd frontend/ui
+    yarn install
+    yarn add antd --save
+    yarn add axios --save
+    yarn start
 
 
 ### Useful resrouces
@@ -29,4 +29,3 @@ https://ant.design/
 - PBI to "Done" after sprint --wtk
 - Product Backlog Sprint No. --cgy
 - Product backlog not enable edit PBI status
-  

@@ -30,6 +30,7 @@ class AddPBIForm extends React.Component {
       title: this.state.title,
       detail: this.state.detail,
       story_point: this.state.story_point,
+      projectId: this.props.projectId
     })
       .then(res => {
         message.success("New PBI created!", 3)
@@ -51,6 +52,7 @@ class AddPBIForm extends React.Component {
   }
 
   render() {
+    console.log("this.props.projectId", this.props.projectId);
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
