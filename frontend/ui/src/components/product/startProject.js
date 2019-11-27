@@ -11,16 +11,16 @@ class StartProject extends React.Component {
   static contextType = Context;
 
   start = () => {
-    // if (!this.props.hasScrumMaster) {
-    //   message.error("Must invite a scrum master to start a project");
-    //   return;
-    // } else if (this.props.developerNum < 3 || this.props.developerNum > 9) {
-    //   message.error("Developer number should between 3 - 9");
-    //   return;
-    // } else {
-      //start a project
+    if (!this.props.hasScrumMaster) {
+      message.error("Must invite a scrum master to start a project");
+      return;
+    } else if (this.props.developerNum < 3 || this.props.developerNum > 9) {
+      message.error("Developer number should between 3 - 9");
+      return;
+    } else {
+      // start a project
       this.props.setStartProject()
-    //}
+    }
   }
 
   render() {

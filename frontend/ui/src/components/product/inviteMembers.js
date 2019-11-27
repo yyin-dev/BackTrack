@@ -16,8 +16,10 @@ class InviteMembers extends React.Component {
     super(props);
     this.state = {
       users: null,
+      userForTheProject: 0,
       hasScrumMaster: false,
-      developerNum: 0
+      developerNum: 0,
+      isLoaded: false,
     };
     this.addDeveloper = this.addDeveloper.bind(this);
     this.setScrumMaster = this.setScrumMaster.bind(this);
@@ -42,16 +44,45 @@ class InviteMembers extends React.Component {
   }
 
   fetch = () => {
-    console.log("called!");
-    console.log(this.props.project);
+    
     axios.get(`http://127.0.0.1:8000/user/api/`).then(res => {
+      // filter users for the current project
+      const usersForTheProject_ = res.data
+        ? res.data.filter(user => user.projects[0] === this.props.project.id)
+        : res.data;
+      console.log("called!");
+      console.log(usersForTheProject_);
+
+      // check if the current project has scrum master
+      const hasScrumMaster_ = usersForTheProject_
+        ? usersForTheProject_.filter(user => user.role === "Scrum Master")
+            .length > 0
+        : false;
+
+      // count developer numbers for the current project (not include the PO)
+      const developerNum_ = usersForTheProject_
+        ? hasScrumMaster_
+          ? usersForTheProject_.length - 2 // all users minus PO and Scrum Master
+          : usersForTheProject_.length - 1 // all users minus PO
+        : 0;
+
       this.setState({
-        users: res.data
+        users: res.data,
+        usersForTheProject: usersForTheProject_,
+        hasScrumMaster: hasScrumMaster_,
+        developerNum: developerNum_,
+        isLoaded: true
       });
     });
   };
 
   render() {
+    // this.fetch();
+   
+    // console.log(this.state.usersForTheProject);
+    if (!this.state.isLoaded) {
+      return <div style={{ margin: "auto" }}>Loading...</div>;
+    }
     return (
       <Layout style={{ height: "100vh" }}>
         <PageHeader
@@ -86,11 +117,7 @@ class InviteMembers extends React.Component {
         </PageHeader>
         <Table
           dataSource={
-            this.state.users
-              ? this.state.users.filter(
-                  user => user.projects[0] === this.props.project.id
-                )
-              : this.state.users
+            this.state.usersForTheProject
           }
           rowKey={user => user.username.toString()}
         >
@@ -101,10 +128,17 @@ class InviteMembers extends React.Component {
             width="10%"
           />
           <Column
+            title="User's Role"
+            dataIndex="role"
+            key="role"
+            width="10%"
+          />
+          <Column
+            title="Kick Out"
             key="delete"
             width="10%"
             render={user => (
-              <CancelMember user_id={user.id} refresh={this.fetch} />
+              <CancelMember user_id={user.id} my_id={this.context.user.id} my_role={this.context.user.role} refresh={this.props.refresh} refresh_invitemembers={this.fetch} />
             )}
           />
         </Table>

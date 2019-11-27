@@ -32,6 +32,7 @@ class ProductBacklog extends React.Component {
       sprint_no: 1,
       isLoaded: false
     };
+    this.fetch = this.fetch.bind(this)
   }
 
   static contextType = Context;
@@ -43,7 +44,7 @@ class ProductBacklog extends React.Component {
 
   fetch = () => {
     var project_id;
-
+    
     // Get projects of the user
     if (this.context.user) {
       axios
@@ -51,10 +52,13 @@ class ProductBacklog extends React.Component {
           `http://127.0.0.1:8000/product/api/projectofuser/${this.context.user.id}`
         )
         .then(res => {
+          console.log("11111")
+          console.log(res.data)
           let projects = res.data;
           if (projects.length === 0) {
             // Not in project
             this.setState({
+              project: null,
               isLoaded: true
             });
             return;
@@ -73,6 +77,16 @@ class ProductBacklog extends React.Component {
           ) {
             message.error("Developer/Product Owner in multiple project!!!");
           }
+
+          axios
+          .get("http://127.0.0.1:8000/sprint/api/")
+          .then(res => { 
+            let sprint_no = res.data[0].no;
+            this.setState({
+              sprint_no: sprint_no,
+            });
+          });
+          
           axios
             .get(`http://127.0.0.1:8000/product/api/projectpbis/${project_id}`)
             .then(res => {
@@ -91,6 +105,7 @@ class ProductBacklog extends React.Component {
                 let acc = 0;
                 var i;
                 var sprint_number = 1;
+                
                 for (i = 0; i < sorted.length; ++i) {
                   if (sorted[i].sprint !== null) {
                     sprint_number = Math.max(
@@ -105,8 +120,7 @@ class ProductBacklog extends React.Component {
                 this.setState({
                   pbiList: sorted,
                   priority_max: sorted[sorted.length - 1].priority,
-                  sprint_no: sprint_number,
-                  isLoaded: true
+                  isLoaded: true,
                 });
               }
             })

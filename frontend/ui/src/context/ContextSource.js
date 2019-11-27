@@ -25,6 +25,7 @@ export class ContextProvider extends React.Component {
     this.setState({ user: user })
   }
 
+
   render() {
     return (<Context.Provider value={{
       user: this.state.user,
