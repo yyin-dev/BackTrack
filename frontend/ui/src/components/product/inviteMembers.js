@@ -34,17 +34,19 @@ class InviteMembers extends React.Component {
   };
 
   setScrumMaster() {
+    console.log("in parent: hasScrumMaster = ", this.state.hasScrumMaster);
     this.setState({
-      hasScrumMaster: true
+        hasScrumMaster :  true
     });
-  }
+    console.log("in parent: hasScrumMaster = ", this.state.hasScrumMaster);
+  };
 
   componentDidMount() {
     this.fetch();
   }
 
   fetch = () => {
-    
+
     axios.get(`http://127.0.0.1:8000/user/api/`).then(res => {
       // filter users for the current project
       const usersForTheProject_ = res.data
@@ -78,7 +80,7 @@ class InviteMembers extends React.Component {
 
   render() {
     // this.fetch();
-   
+
     // console.log(this.state.usersForTheProject);
     if (!this.state.isLoaded) {
       return <div style={{ margin: "auto" }}>Loading...</div>;

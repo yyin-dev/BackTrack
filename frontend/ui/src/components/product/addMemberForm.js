@@ -40,6 +40,7 @@ class AddMemberForm extends React.Component {
     }
 
     console.log("result", result);
+    console.log("this.props.hasScrumMaster", this.props.hasScrumMaster);
 
     if (result.role === "Scrum Master" && this.props.hasScrumMaster) {
       message.error("Cannot invite multiple Scrum Master for a project.");
@@ -55,8 +56,12 @@ class AddMemberForm extends React.Component {
     }
 
     // update information for the project
-    if (result.role === "Scrum Master") this.props.setScrumMaster();
-    else this.props.addDeveloper();
+    if (result.role === "Scrum Master") {
+      console.log("result.role === \"Scrum Master\"");
+      this.props.setScrumMaster();
+    } else {
+      this.props.addDeveloper();
+    }
 
     axios
       .post("http://127.0.0.1:8000/user/api/addusertoproject/", {

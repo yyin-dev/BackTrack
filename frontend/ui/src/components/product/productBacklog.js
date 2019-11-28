@@ -39,94 +39,108 @@ class ProductBacklog extends React.Component {
 
   componentDidMount() {
     console.log("this.context.user", this.context.user);
+    this.context.setProjectId(16)
+    console.log("this.context", this.context);
+    console.log("this.context.projectId", this.context.projectId);
+
     this.fetch();
   }
 
   fetch = () => {
     var project_id;
-    
+
     // Get projects of the user
     if (this.context.user) {
-      axios
-        .get(
-          `http://127.0.0.1:8000/product/api/projectofuser/${this.context.user.id}`
-        )
-        .then(res => {
-          console.log("11111")
-          console.log(res.data)
-          let projects = res.data;
-          if (projects.length === 0) {
-            // Not in project
-            this.setState({
-              project: null,
-              isLoaded: true
-            });
-            return;
-          } else {
-            this.setState({
-              project: projects[0]
-            });
-          }
 
-          project_id = projects[0].id;
+      console.log("this.context.projectId", this.context.projectId);
 
-          // TODO: handle multiple project issue for scrum master
-          if (
-            this.context.user.role === "Developer/Product Owner" &&
-            projects.length > 1
-          ) {
-            message.error("Developer/Product Owner in multiple project!!!");
-          }
+      if (this.context.user.role !== "Scrum Master"){
+        axios
+          .get(
+            `http://127.0.0.1:8000/product/api/projectofuser/${this.context.user.id}`
+          )
+          .then(res => {
+            console.log("11111")
+            console.log(res.data)
+            let projects = res.data;
+            if (projects.length === 0) {
+              // Not in project
+              this.setState({
+                project: null,
+                isLoaded: true
+              });
+              return;
+            } else {
+              this.setState({
+                project: projects[0]
+              });
+            }
 
-          axios
-          .get("http://127.0.0.1:8000/sprint/api/")
-          .then(res => { 
-            let sprint_no = res.data[0].no;
-            this.setState({
-              sprint_no: sprint_no,
-            });
-          });
-          
-          axios
-            .get(`http://127.0.0.1:8000/product/api/projectpbis/${project_id}`)
+            project_id = projects[0].id;
+
+            // TODO: handle multiple project issue for scrum master
+            if (
+              this.context.user.role === "Developer/Product Owner" &&
+              projects.length > 1
+            ) {
+              message.error("Developer/Product Owner in multiple project!!!");
+            }
+
+            axios
+            .get("http://127.0.0.1:8000/sprint/api/")
             .then(res => {
-              if (res.data.length === 0) {
-                // No PBIs yet
-                this.setState({
-                  pbiList: [],
-                  isLoaded: true
-                });
-              } else {
-                // Fetch PBI list from backend
-                let sorted = res.data;
-                sorted.sort((a, b) => (a.priority < b.priority ? -1 : 1));
+              let sprint_no = res.data[0].no;
+              this.setState({
+                sprint_no: sprint_no,
+              });
+            });
 
-                // Calculate accumulated story point for each PBI
-                let acc = 0;
-                var i;
-                var sprint_number = 1;
-                
-                for (i = 0; i < sorted.length; ++i) {
-                  if (sorted[i].sprint !== null) {
-                    sprint_number = Math.max(
-                      sorted[i].sprint.no,
-                      sprint_number
-                    );
+            axios
+              .get(`http://127.0.0.1:8000/product/api/projectpbis/${project_id}`)
+              .then(res => {
+                if (res.data.length === 0) {
+                  // No PBIs yet
+                  this.setState({
+                    pbiList: [],
+                    isLoaded: true
+                  });
+                } else {
+                  // Fetch PBI list from backend
+                  let sorted = res.data;
+                  sorted.sort((a, b) => (a.priority < b.priority ? -1 : 1));
+
+                  // Calculate accumulated story point for each PBI
+                  let acc = 0;
+                  var i;
+                  var sprint_number = 1;
+
+                  for (i = 0; i < sorted.length; ++i) {
+                    if (sorted[i].sprint !== null) {
+                      sprint_number = Math.max(
+                        sorted[i].sprint.no,
+                        sprint_number
+                      );
+                    }
+                    acc += sorted[i].story_point;
+                    sorted[i].acc = acc;
                   }
-                  acc += sorted[i].story_point;
-                  sorted[i].acc = acc;
-                }
 
-                this.setState({
-                  pbiList: sorted,
-                  priority_max: sorted[sorted.length - 1].priority,
-                  isLoaded: true,
-                });
-              }
-            })
-            .catch(error => console.log(error));
-        });
+                  this.setState({
+                    pbiList: sorted,
+                    priority_max: sorted[sorted.length - 1].priority,
+                    isLoaded: true,
+                  });
+                }
+              })
+              .catch(error => console.log(error));
+          });
+      }
+      else if (this.context.user.role === "Scrum Master") {
+
+      }
     }
+
+
   };
 
   handleViewChange = e => {
