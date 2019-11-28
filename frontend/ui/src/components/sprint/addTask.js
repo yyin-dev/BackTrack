@@ -2,8 +2,12 @@ import React from 'react';
 import axios from 'axios';
 
 import { Modal, Form, Input, Button, InputNumber, message } from 'antd';
+import { Context } from '../../context/ContextSource'
 
 class AddTask extends React.Component {
+
+    static contextType = Context
+
     constructor(props) {
         super(props)
         this.pbi = this.props.id
@@ -11,8 +15,7 @@ class AddTask extends React.Component {
             visible: false,
             taskName: "",
             description: "",
-            estimatedTime: 0,
-            pic: ""
+            estimatedTime: 0
         };
         this.disableAdd = this.props.disableAdd
     }
@@ -46,7 +49,7 @@ class AddTask extends React.Component {
             status: "To Do",
             description: this.state.description,
             estimated_time: this.state.estimatedTime,
-            pic: this.state.pic
+            pic: this.context.user.username
         })
         .then(res => {
             message.success("New Task Created!", 3)
@@ -54,8 +57,7 @@ class AddTask extends React.Component {
                 visible: false,
                 taskName: "",
                 description: "",
-                estimatedTime: 0,
-                pic: ""
+                estimatedTime: 0
             });
             this.props.refresh()
         })
@@ -101,9 +103,6 @@ class AddTask extends React.Component {
                     </Form.Item>
                     <Form.Item label="Estimated Time">
                         <InputNumber value={this.state.estimatedTime} onChange={this.handleEstimatedTime} defaultValue={0} />
-                    </Form.Item>
-                    <Form.Item label="Person In Charge">
-                        <Input value={this.state.pic} onChange={this.handlePic} placeholder="Enter Person In Charge" allowClear/>
                     </Form.Item>
                 </Form>
             </Modal>

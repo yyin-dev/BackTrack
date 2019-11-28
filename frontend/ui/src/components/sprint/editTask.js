@@ -97,7 +97,7 @@ class EditTask extends React.Component {
             status: "In Progress",
             description: this.task.description,
             estimated_time: this.task.estimated_time,
-            pic: this.task.pic
+            pic: this.context.user.username
         })
         .then(res => {
             message.success("Task Started!", 3)
@@ -161,9 +161,7 @@ class EditTask extends React.Component {
                     <Form.Item label="Estimated Time">
                         <InputNumber value={this.state.estimatedTime} onChange={this.handleEstimatedTime} defaultValue={0} />
                     </Form.Item>
-                    <Form.Item label="Person In Charge">
-                        <Input value={this.state.pic} onChange={this.handlePic} allowClear/>
-                    </Form.Item>
+
                 </Form>
             </Modal>
             </div>
