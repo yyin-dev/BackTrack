@@ -13,14 +13,12 @@ class CreateProjectModal extends React.Component {
         this.props.close()
         this.props.form.resetFields()
 
-        console.log(values)
         axios.post("http://127.0.0.1:8000/product/api/createproject/", {
           project_name: values.name,
           project_description: values.description,
           user: this.context.user,
         })
           .then(res => {
-            console.log(res)
             message.success("Project created!", 3)
             let updatedUser = this.context.user
             updatedUser.role = "Product Owner"

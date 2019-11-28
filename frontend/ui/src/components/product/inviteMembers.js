@@ -3,7 +3,6 @@ import axios from "axios";
 
 import { PageHeader, Layout, Descriptions } from "antd";
 
-import "./productBacklog.css";
 import { Context } from "../../context/ContextSource";
 import AddMemberForm from "./addMemberForm";
 import CancelMember from "./cancelMember";
@@ -46,7 +45,8 @@ class InviteMembers extends React.Component {
 
   fetch = () => {
     axios.get(`http://127.0.0.1:8000/user/api/`).then(res => {
-      // filter users for the current project
+
+      // filter users for the current project, 
       const usersForTheProject_ = res.data
         ? res.data.filter(user => user.projects.includes(this.props.project.id))
         : res.data;
@@ -63,6 +63,14 @@ class InviteMembers extends React.Component {
           ? usersForTheProject_.length - 2 // all users minus PO and Scrum Master
           : usersForTheProject_.length - 1 // all users minus PO
         : 0;
+
+      // add "me" after the user
+      // the usersForTheProject variable is ONLY for display in table, NOT for variable passing
+      usersForTheProject_.forEach(user => {
+        if (user.username === this.context.user.username) {
+          user.username += " (me)"
+        }
+      });
 
       this.setState({
         users: res.data,
@@ -120,19 +128,19 @@ class InviteMembers extends React.Component {
         >
           <ColumnGroup title="All Members for the Project">
             <Column
-              title="Group Member Name"
+              title="Name"
               dataIndex="username"
               key="username"
               width="10%"
             />
             <Column
-              title="Member's Role"
+              title="Role"
               dataIndex="role"
               key="role"
               width="10%"
             />
             <Column
-              title="Remove the Member"
+              title="Action"
               key="delete"
               width="10%"
               render={user => (
