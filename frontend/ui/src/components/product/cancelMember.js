@@ -13,6 +13,7 @@ class CancelMember extends React.Component {
             user_id: this.props.user_id,
             my_id: this.props.my_id,
             my_role: this.props.my_role,
+            project_id: this.props.project_id,
         };
     }
     static contextType = Context;
@@ -29,6 +30,7 @@ class CancelMember extends React.Component {
         else if (this.state.user_id !== this.state.my_id){
             axios.post(`http://127.0.0.1:8000/product/api/cancelmember/`,{
                         user_id: this.state.user_id,
+                        project_id: this.state.project_id,
                 })
                 .then(res => {
                     let updatedUser = this.context.user

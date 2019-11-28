@@ -50,10 +50,8 @@ class InviteMembers extends React.Component {
     axios.get(`http://127.0.0.1:8000/user/api/`).then(res => {
       // filter users for the current project
       const usersForTheProject_ = res.data
-        ? res.data.filter(user => user.projects[0] === this.props.project.id)
+        ? res.data.filter(user => user.projects.includes(this.props.project.id))
         : res.data;
-      console.log("called!");
-      console.log(usersForTheProject_);
 
       // check if the current project has scrum master
       const hasScrumMaster_ = usersForTheProject_
@@ -140,7 +138,12 @@ class InviteMembers extends React.Component {
             key="delete"
             width="10%"
             render={user => (
-              <CancelMember user_id={user.id} my_id={this.context.user.id} my_role={this.context.user.role} refresh={this.props.refresh} refresh_invitemembers={this.fetch} />
+              <CancelMember 
+              user_id={user.id} 
+              my_id={this.context.user.id} 
+              my_role={this.context.user.role} 
+              project_id={this.props.project.id}
+              refresh={this.props.refresh} refresh_invitemembers={this.fetch} />
             )}
           />
         </Table>

@@ -15,7 +15,8 @@ const HomeButton = (props) => {
   return (
     <div className="homepage-button-wrapper">
       <Link to={props.to}>
-        <Button onClick={() => props.setProjectIdForScrumMaster(props.projectId)} icon={props.icon} className="homepage-button">{props.title}</Button>
+        {/* <Button onClick={() => props.setProjectIdForScrumMaster(props.projectId)} icon={props.icon} className="homepage-button">{props.title}</Button> */}
+        <Button icon={props.icon} className="homepage-button">{props.title}</Button>
       </Link>
     </div>
   )

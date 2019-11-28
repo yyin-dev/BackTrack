@@ -34,8 +34,9 @@ class InviteMembers(APIView):
 class CancelMember(APIView):
     def post(self, request):
         userid = request.data['user_id']
+        projectid = request.data['project_id']
         user = User.objects.get(id=userid)
-        user.projects.clear()
+        user.projects.remove(projectid)
         user.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
