@@ -34,7 +34,7 @@ class StartProject extends React.Component {
         disabled={this.props.disabled}
         key="start-project"
       >
-        <Button disabled={disableButton}>
+        <Button type="primary" disabled={disableButton}>
           Start Project
         </Button>
       </Popconfirm>

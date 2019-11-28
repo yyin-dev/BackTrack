@@ -256,3 +256,13 @@ class StartProject(APIView):
         project.started = True
         project.save()
         return Response(status=status.HTTP_201_CREATED)
+
+
+class EndProject(APIView):
+    def post(self, request):
+        user = User.objects.get(id=request.data['user_id'])
+        user.role = "Developer"
+        user.save()
+        project = Project.objects.get(name=request.data['project_name'])
+        project.delete()
+        return Response(status=status.HTTP_201_CREATED)

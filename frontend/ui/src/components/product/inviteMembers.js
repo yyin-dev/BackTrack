@@ -8,8 +8,9 @@ import { Context } from "../../context/ContextSource";
 import AddMemberForm from "./addMemberForm";
 import CancelMember from "./cancelMember";
 import StartProject from "./startProject";
+import EndProject from "./endProject";
 import { Table } from "antd";
-const { Column } = Table;
+const { Column, ColumnGroup } = Table;
 
 class InviteMembers extends React.Component {
   constructor(props) {
@@ -100,13 +101,20 @@ class InviteMembers extends React.Component {
               refresh={this.fetch}
               key="Add Member Form"
             />,
+           
+            <EndProject
+            
+              setEndProject={this.props.setEndProject}
+              key="end-project"
+            />,
             <StartProject
-              refresh={this.fetch}
-              hasScrumMaster={this.state.hasScrumMaster}
-              developerNum={this.state.developerNum}
-              setStartProject={this.props.setStartProject}
-              key="start-project"
-            />
+            
+            refresh={this.fetch}
+            hasScrumMaster={this.state.hasScrumMaster}
+            developerNum={this.state.developerNum}
+            setStartProject={this.props.setStartProject}
+            key="start-project"
+          />,
           ]}
         >
           <Descriptions size="small" column={1}>
@@ -121,31 +129,36 @@ class InviteMembers extends React.Component {
           }
           rowKey={user => user.username.toString()}
         >
-          <Column
-            title="Current Users"
-            dataIndex="username"
-            key="username"
-            width="10%"
-          />
-          <Column
-            title="User's Role"
-            dataIndex="role"
-            key="role"
-            width="10%"
-          />
-          <Column
-            title="Kick Out"
-            key="delete"
-            width="10%"
-            render={user => (
-              <CancelMember 
-              user_id={user.id} 
-              my_id={this.context.user.id} 
-              my_role={this.context.user.role} 
-              project_id={this.props.project.id}
-              refresh={this.props.refresh} refresh_invitemembers={this.fetch} />
-            )}
-          />
+         <ColumnGroup title="All Members for the Project">
+            <Column
+              title="Group Member Name"
+              dataIndex="username"
+              key="username"
+              width="10%"
+            />
+            <Column
+              title="Member's Role"
+              dataIndex="role"
+              key="role"
+              width="10%"
+            />
+            <Column
+              title="Remove the Member"
+              key="delete"
+              width="10%"
+              render={user => (
+                <CancelMember
+                  user_id={user.id}
+                  user_role={user.role}
+                  my_id={this.context.user.id}
+                  my_role={this.context.user.role}
+                  project_id={this.props.project.id}
+                  refresh={this.props.refresh}
+                  refresh_invitemembers={this.fetch}
+                />
+              )}
+            />
+          </ColumnGroup>
         </Table>
       </Layout>
     );

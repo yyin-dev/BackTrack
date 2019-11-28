@@ -170,6 +170,19 @@ class ProductBacklog extends React.Component {
       .catch(err => console.log(err));
   };
 
+  setEndProject = () => {
+    axios
+      .post(`http://127.0.0.1:8000/product/api/endproject/`, {
+        project_name: this.state.project.name,
+        user_id: this.context.user.id,
+      })
+      .then(res => {
+        this.fetch();
+      })
+      .catch(err => console.log(err));
+  };
+
+
   columns = [
     { title: "Title", dataIndex: "title", width: "10%" },
     {
@@ -226,6 +239,7 @@ class ProductBacklog extends React.Component {
           project={this.state.project}
           visible="true"
           setStartProject={this.setStartProject}
+          setEndProject={this.setEndProject}
           refresh={this.fetch}
         />
       );
