@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from "axios";
 import { Button } from 'antd';
 import { Link } from "react-router-dom";
 import { withRouter } from 'react-router'
@@ -26,10 +25,6 @@ class Home extends React.Component {
 
   static contextType = Context;
 
-  constructor(props, context) {
-    super(props, context);
-  }
-
   setProjectIdForScrumMaster (projectId) {
     console.log("in setProjectIdForScrumMaster, projectId = ", projectId);
     console.log("this.context", this.context);
@@ -38,10 +33,6 @@ class Home extends React.Component {
   }
 
   render() {
-
-      console.log("in Home.js");
-      console.log("this.context", this.context);
-
     var scrumMasterDisplay;
 
     if (this.context.user){

@@ -38,11 +38,7 @@ class ProductBacklog extends React.Component {
   static contextType = Context;
 
   componentDidMount() {
-    console.log("this.context.user", this.context.user);
     this.context.setProjectId(16)
-    console.log("this.context", this.context);
-    console.log("this.context.projectId", this.context.projectId);
-
     this.fetch();
   }
 
@@ -52,16 +48,12 @@ class ProductBacklog extends React.Component {
     // Get projects of the user
     if (this.context.user) {
 
-      console.log("this.context.projectId", this.context.projectId);
-
       if (this.context.user.role !== "Scrum Master"){
         axios
           .get(
             `http://127.0.0.1:8000/product/api/projectofuser/${this.context.user.id}`
           )
           .then(res => {
-            console.log("11111")
-            console.log(res.data)
             let projects = res.data;
             if (projects.length === 0) {
               // Not in project
@@ -208,7 +200,6 @@ class ProductBacklog extends React.Component {
   };
 
   render() {
-    console.log(this.state.project);
     if (!this.state.isLoaded) {
       return <div style={{ margin: "auto" }}>Loading...</div>;
     } else if (!this.state.project) {

@@ -55,7 +55,6 @@ class AddMemberForm extends React.Component {
 
     // update information for the project
     if (result.role === "Scrum Master") {
-      console.log("result.role === \"Scrum Master\"");
       this.props.setScrumMaster();
     } else {
       this.props.addDeveloper();

@@ -4,9 +4,6 @@ import { Context } from '../../context/ContextSource'
 
 
 class StartProject extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   static contextType = Context;
 
@@ -14,7 +11,7 @@ class StartProject extends React.Component {
     if (!this.props.hasScrumMaster) {
       message.error("Must invite a scrum master to start a project");
       return;
-    } else if (this.props.developerNum < 3 || this.props.developerNum > 9) {
+    } else if (this.props.developerNum < 2 || this.props.developerNum > 9) {
       message.error("Developer number should between 3 - 9");
       return;
     } else {
@@ -28,10 +25,10 @@ class StartProject extends React.Component {
     return (
       <Popconfirm
         title="Start project?"
+        disabled={disableButton}
         onConfirm={this.start}
         okText="Yes"
         cancelText="No"
-        disabled={this.props.disabled}
         key="start-project"
       >
         <Button type="primary" disabled={disableButton}>

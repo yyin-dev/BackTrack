@@ -20,7 +20,7 @@ class InviteMembers extends React.Component {
       userForTheProject: 0,
       hasScrumMaster: false,
       developerNum: 0,
-      isLoaded: false,
+      isLoaded: false
     };
     this.addDeveloper = this.addDeveloper.bind(this);
     this.setScrumMaster = this.setScrumMaster.bind(this);
@@ -35,19 +35,16 @@ class InviteMembers extends React.Component {
   };
 
   setScrumMaster() {
-    console.log("in parent: hasScrumMaster = ", this.state.hasScrumMaster);
     this.setState({
-        hasScrumMaster :  true
+      hasScrumMaster: true
     });
-    console.log("in parent: hasScrumMaster = ", this.state.hasScrumMaster);
-  };
+  }
 
   componentDidMount() {
     this.fetch();
   }
 
   fetch = () => {
-
     axios.get(`http://127.0.0.1:8000/user/api/`).then(res => {
       // filter users for the current project
       const usersForTheProject_ = res.data
@@ -78,9 +75,6 @@ class InviteMembers extends React.Component {
   };
 
   render() {
-    // this.fetch();
-
-    // console.log(this.state.usersForTheProject);
     if (!this.state.isLoaded) {
       return <div style={{ margin: "auto" }}>Loading...</div>;
     }
@@ -101,20 +95,17 @@ class InviteMembers extends React.Component {
               refresh={this.fetch}
               key="Add Member Form"
             />,
-           
             <EndProject
-            
               setEndProject={this.props.setEndProject}
               key="end-project"
             />,
             <StartProject
-            
-            refresh={this.fetch}
-            hasScrumMaster={this.state.hasScrumMaster}
-            developerNum={this.state.developerNum}
-            setStartProject={this.props.setStartProject}
-            key="start-project"
-          />,
+              refresh={this.fetch}
+              hasScrumMaster={this.state.hasScrumMaster}
+              developerNum={this.state.developerNum}
+              setStartProject={this.props.setStartProject}
+              key="start-project"
+            />
           ]}
         >
           <Descriptions size="small" column={1}>
@@ -124,12 +115,10 @@ class InviteMembers extends React.Component {
           </Descriptions>
         </PageHeader>
         <Table
-          dataSource={
-            this.state.usersForTheProject
-          }
+          dataSource={this.state.usersForTheProject}
           rowKey={user => user.username.toString()}
         >
-         <ColumnGroup title="All Members for the Project">
+          <ColumnGroup title="All Members for the Project">
             <Column
               title="Group Member Name"
               dataIndex="username"
@@ -150,8 +139,6 @@ class InviteMembers extends React.Component {
                 <CancelMember
                   user_id={user.id}
                   user_role={user.role}
-                  my_id={this.context.user.id}
-                  my_role={this.context.user.role}
                   project_id={this.props.project.id}
                   refresh={this.props.refresh}
                   refresh_invitemembers={this.fetch}
