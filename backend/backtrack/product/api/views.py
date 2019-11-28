@@ -252,7 +252,7 @@ class CreateProject(APIView):
 
 class StartProject(APIView):
     def post(self, request):
-        project = Project.objects.get(name=request.data['project_name'])
+        project = Project.objects.get(id=request.data['project_id'])
         project.started = True
         project.save()
         return Response(status=status.HTTP_201_CREATED)
@@ -263,6 +263,6 @@ class EndProject(APIView):
         user = User.objects.get(id=request.data['user_id'])
         user.role = "Developer"
         user.save()
-        project = Project.objects.get(name=request.data['project_name'])
+        project = Project.objects.get(id=request.data['project_id'])
         project.delete()
         return Response(status=status.HTTP_201_CREATED)

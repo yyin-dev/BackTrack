@@ -49,7 +49,7 @@ class UserLoginView(APIView):
 class AddUserToProject(APIView):
     def post(self, request):
         user = User.objects.get(username=request.data['new_member_name'])
-        project = Project.objects.get(name=request.data['project_name'])
+        project = Project.objects.get(id=request.data['project_id'])
         user.projects.add(project)
         user.save()
 

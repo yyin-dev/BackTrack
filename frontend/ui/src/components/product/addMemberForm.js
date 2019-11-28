@@ -62,7 +62,7 @@ class AddMemberForm extends React.Component {
     axios
       .post("http://127.0.0.1:8000/user/api/addusertoproject/", {
         new_member_name: this.state.newMemberName,
-        project_name: this.props.project.name
+        project_id: this.props.project.id
       })
       .then(res => {
         const newMemberRole = result.role === "Scrum Master" ? "Scrum Master" : "Developer"
