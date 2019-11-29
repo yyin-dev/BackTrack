@@ -1,5 +1,7 @@
 import React from "react";
 import axios from "axios";
+import { Route, Link } from "react-router-dom";
+import Home from "../home/Home";
 
 import {
   PageHeader,
@@ -38,16 +40,16 @@ class ProductBacklog extends React.Component {
   static contextType = Context;
 
   componentDidMount() {
-    this.context.setProjectId(16)
     this.fetch();
   }
 
   fetch = () => {
     var project_id;
+    console.log("in productBacklog.js this.context.projectId", this.context.projectId);
 
     // Get projects of the user
     if (this.context.user) {
-
+      // for developer and product owner
       if (this.context.user.role !== "Scrum Master"){
         axios
           .get(
@@ -59,7 +61,6 @@ class ProductBacklog extends React.Component {
               // Not in project
               this.setState({
                 project: null,
-                isLoaded: true
               });
               return;
             } else {
@@ -94,7 +95,6 @@ class ProductBacklog extends React.Component {
                   // No PBIs yet
                   this.setState({
                     pbiList: [],
-                    isLoaded: true
                   });
                 } else {
                   // Fetch PBI list from backend
@@ -120,16 +120,102 @@ class ProductBacklog extends React.Component {
                   this.setState({
                     pbiList: sorted,
                     priority_max: sorted[sorted.length - 1].priority,
-                    isLoaded: true,
                   });
                 }
               })
               .catch(error => console.log(error));
           });
       }
+      // for Scrum Master
       else if (this.context.user.role === "Scrum Master") {
+        if (this.context.projectId) {
+          message.success("You are viewing Project ".concat(this.context.projectId) , 3)
+          axios
+            .get(
+              `http://127.0.0.1:8000/product/api/projectofuser/${this.context.user.id}`
+            )
+            .then(res => {
+              let projects = res.data;
+              if (projects.length === 0) { // Not in project
+                this.setState({
+                  project: null,
+                  isLoaded: true
+                });
+                return;
+              } else {
+                for (var i = 0; i < projects.length; i++) {
+                  if (projects[i].id === this.context.projectId){
+                    this.setState({
+                      project: projects[i]
+                    });
+                  }
+                }
+              }
 
+              project_id = this.state.project.id;
+
+              // handle multiple project issue for scrum master
+              if (
+                this.context.user.role === "Developer/Product Owner" &&
+                projects.length > 1
+              ) {
+                message.error("Developer/Product Owner in multiple project!!!");
+              }
+
+              axios
+              .get("http://127.0.0.1:8000/sprint/api/")
+              .then(res => {
+                let sprint_no = res.data[0].no;
+                this.setState({
+                  sprint_no: sprint_no,
+                });
+              });
+
+              axios
+                .get(`http://127.0.0.1:8000/product/api/projectpbis/${project_id}`)
+                .then(res => {
+                  if (res.data.length === 0) { // No PBIs yet
+                    this.setState({
+                      pbiList: [],
+                      isLoaded: true
+                    });
+                  } else { // Fetch PBI list from backend
+                    let sorted = res.data;
+                    sorted.sort((a, b) => (a.priority < b.priority ? -1 : 1));
+
+                    // Calculate accumulated story point for each PBI
+                    let acc = 0;
+                    var i;
+                    var sprint_number = 1;
+
+                    for (i = 0; i < sorted.length; ++i) {
+                      if (sorted[i].sprint !== null) {
+                        sprint_number = Math.max(
+                          sorted[i].sprint.no,
+                          sprint_number
+                        );
+                      }
+                      acc += sorted[i].story_point;
+                      sorted[i].acc = acc;
+                    }
+
+                    this.setState({
+                      pbiList: sorted,
+                      priority_max: sorted[sorted.length - 1].priority,
+                      isLoaded: true,
+                    });
+                  }
+                })
+                .catch(error => console.log(error));
+            });
+        } else {
+          message.success("Please go back to homepage to select a project", 3)
+        }
       }
+
+      this.setState({
+        isLoaded: true,
+      });
     }
 
 
@@ -203,19 +289,29 @@ class ProductBacklog extends React.Component {
     if (!this.state.isLoaded) {
       return <div style={{ margin: "auto" }}>Loading...</div>;
     } else if (!this.state.project) {
+      // no project for the current user
       return (
         <div className="create-project-wrapper">
           <Empty
             description={
               <span>
-                You are not in any project. <br />
-                Wait for an invitation or create one!
+                {
+                  this.context.user.role === "Scrum Master"
+                  ? this.context.projectId
+                    ? "You are not in any project, \n wait for a project owner to invite you!"
+                    : <span>Please go back to <Link to="/">homepage</Link> to select a project you want to view!</span>
+                  : "You are not in any project. \n Wait for an invitation or create one!"
+                }
               </span>
             }
           >
-            <Button type="primary" onClick={this.toggleCreatingProject}>
-              Create Project
-            </Button>
+            {
+              this.context.user.role !== "Scrum Master"
+              ? <Button type="primary" onClick={this.toggleCreatingProject}>
+                  Create Project
+                </Button>
+              : ""
+            }
           </Empty>
           <CreateProjectModal
             visible={this.state.isCreatingProject}
@@ -281,6 +377,7 @@ class ProductBacklog extends React.Component {
                 : this.state.pbiList
             }
           />
+        <span style={{"text-align": "center"}}>See <Link to="/sprint">sprint backlog</Link></span>
         </Layout>
       );
     }

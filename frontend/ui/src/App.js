@@ -40,6 +40,8 @@ class App extends React.Component {
       <Redirect to={{ pathname: "/", component: { Home } }} />
     );
 
+    let homePage = <Route path="/" component={Home} />
+
     return (
       <ContextProvider>
         <AuthModal isLoggedIn={this.state.isLoggedIn} setLoggedIn = {this.setLoggedIn} />
@@ -50,7 +52,7 @@ class App extends React.Component {
               <Switch>
                 {productPage}
                 {sprintPage}
-                <Route path="/" component={Home} />
+                {homePage}
               </Switch>
             </Layout>
           </Layout>

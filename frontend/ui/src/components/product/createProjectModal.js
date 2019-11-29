@@ -22,6 +22,7 @@ class CreateProjectModal extends React.Component {
             message.success("Project created!", 3)
             let updatedUser = this.context.user
             updatedUser.role = "Product Owner"
+            console.log("in CreateProjectModal.js: handleSubmit");
             this.context.setUser(updatedUser)
             this.props.refresh();
           })

@@ -33,7 +33,6 @@ class Sidebar extends React.Component {
 
 
     setInterval(() => {
-      // console.log("this.context.user", this.context.user);
       const { location } = this.props;
       var selectedMenuItemKey;
       if (location.pathname === "/") {

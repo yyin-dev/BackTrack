@@ -6,42 +6,49 @@ import { Context } from '../../context/ContextSource'
 
 import './Home.css'
 
-const HomeButton = (props) => {
+class HomeButton extends React.Component {
 
+  constructor(props, context) {
+    super(props, context);
+  }
 
+  render () {
+    return (
+      <div className="homepage-button-wrapper">
+        <Link to={this.props.to}>
+          { <Button onClick={() => this.props.setProjectIdForScrumMaster(this.props.projectId)} icon={this.props.icon} className="homepage-button">{this.props.title}</Button> }
+        </Link>
+      </div>
+    );
+  }
 
-
-  return (
-    <div className="homepage-button-wrapper">
-      <Link to={props.to}>
-        {/* <Button onClick={() => props.setProjectIdForScrumMaster(props.projectId)} icon={props.icon} className="homepage-button">{props.title}</Button> */}
-        <Button icon={props.icon} className="homepage-button">{props.title}</Button>
-      </Link>
-    </div>
-  )
 }
 
 class Home extends React.Component {
 
-  static contextType = Context;
-
-  setProjectIdForScrumMaster (projectId) {
-    console.log("in setProjectIdForScrumMaster, projectId = ", projectId);
-    console.log("this.context", this.context);
-
-    // this.context.setProjectId(projectId)
+  constructor(props, context) {
+    super(props, context);
   }
+
+  static contextType = Context;
 
   render() {
     var scrumMasterDisplay;
-
     if (this.context.user){
       if (this.context.user.role === "Scrum Master"){
         scrumMasterDisplay =
           <div className="homepage-all-button-wrapper">
             {
                 this.context.user.projects.map((projectId, index) => {
-                    return <HomeButton to="/product" title={"Product ".concat(projectId)} projectId={projectId} setProjectIdForScrumMaster={this.setProjectIdForScrumMaster} icon="like" />
+                  return (
+                    <div className="homepage-button-wrapper">
+                       <Link to="/product">
+                         <Button onClick={() => this.context.setProjectId(projectId)} icon="like" className="homepage-button">
+                           {"Project ".concat(projectId)}
+                         </Button>
+                       </Link>
+                     </div>
+                  );
                 })
             }
           </div>
@@ -52,10 +59,16 @@ class Home extends React.Component {
     return (
       <div className="home-wrapper">
         <h2>Welcome to the project!</h2>
-          <div className="homepage-all-button-wrapper">
-            <HomeButton to="/product" title="Product Backlog" icon="like" />
-            <HomeButton to="/sprint" title="Sprint Backlog" icon="shop" />
-          </div>
+        {
+          this.context.user
+          ? this.context.user.role !== "Scrum Master"
+            ? <div className="homepage-all-button-wrapper">
+                <HomeButton to="/product" title="Product Backlog" icon="like" />
+                <HomeButton to="/sprint" title="Sprint Backlog" icon="shop" />
+              </div>
+            : ""
+          : ""
+        }
         {scrumMasterDisplay}
       </div>
     );
