@@ -8,8 +8,8 @@ import './Home.css'
 
 class HomeButton extends React.Component {
 
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
   }
 
   render () {
@@ -33,6 +33,8 @@ class Home extends React.Component {
   static contextType = Context;
 
   render() {
+
+    /*
     var scrumMasterDisplay;
     if (this.context.user){
       if (this.context.user.role === "Scrum Master"){
@@ -54,22 +56,35 @@ class Home extends React.Component {
           </div>
       } else {scrumMasterDisplay=""}
     } else {scrumMasterDisplay=""}
-
+    */
 
     return (
       <div className="home-wrapper">
-        <h2>Welcome to the project!</h2>
-        {
-          this.context.user
-          ? this.context.user.role !== "Scrum Master"
-            ? <div className="homepage-all-button-wrapper">
-                <HomeButton to="/product" title="Product Backlog" icon="like" />
+        <h1>Welcome to the project!</h1>
+        { this.context.user !== null
+          ? <span>
+              <h3>Name: {this.context.user.username}</h3>
+              <h3>Role: {this.context.user.role}</h3>
+              <div className="homepage-all-button-wrapper">
+                <HomeButton to="/product" title="Product Backlog" icon="hdd" />
                 <HomeButton to="/sprint" title="Sprint Backlog" icon="shop" />
+                <HomeButton to="/project" title="Project" icon="project" />
               </div>
-            : ""
+            </span>
           : ""
         }
-        {scrumMasterDisplay}
+
+        {
+          // this.context.user
+          // ? this.context.user.role !== "Scrum Master"
+          //   ? <div className="homepage-all-button-wrapper">
+          //       <HomeButton to="/product" title="Product Backlog" icon="like" />
+          //       <HomeButton to="/sprint" title="Sprint Backlog" icon="shop" />
+          //     </div>
+          //   : ""
+          // : ""
+        }
+        {/*scrumMasterDisplay*/}
       </div>
     );
   }

@@ -30,17 +30,17 @@ class Sidebar extends React.Component {
   detectUrlChange() { }
 
   componentDidMount() {
-
-
     setInterval(() => {
       const { location } = this.props;
       var selectedMenuItemKey;
       if (location.pathname === "/") {
         selectedMenuItemKey = "1";
-      } else if (location.pathname.startsWith("/product")) {
+      } else if (location.pathname.startsWith("/project")) {
         selectedMenuItemKey = "2"
-      } else if (location.pathname.startsWith("/sprint")) {
+      } else if (location.pathname.startsWith("/product")) {
         selectedMenuItemKey = "3"
+      } else if (location.pathname.startsWith("/sprint")) {
+        selectedMenuItemKey = "4"
       }
       this.setState({
         selectedMenuItem: [selectedMenuItemKey]
@@ -72,25 +72,21 @@ class Sidebar extends React.Component {
             <Link to="/" />
           </Menu.Item>
           <Menu.Item key="2"  >
+            <Icon type="code" />
+            <span className="nav-text" >Project</span>
+            <Link to="/project"></Link>
+          </Menu.Item>
+          <Menu.Item key="3"  >
             <Icon type="clock-circle" />
             <span className="nav-text" >Product Backlog</span>
             <Link to="/product"></Link>
           </Menu.Item>
-          <Menu.Item key="3"  >
+          <Menu.Item key="4"  >
             <Icon type="code" />
             <span className="nav-text" >Sprint Backlog</span>
             <Link to="/sprint"></Link>
           </Menu.Item>
-          {
-            this.context.user
-            ? this.context.user.role === "Scrum Master"
-            ? <Menu.Item key="4"  >
-                <Icon type="code" />
-                  <span className="nav-text" >Projects</span>
-                  <Link to="/project"></Link>
-              </Menu.Item>
-            : "" : ""
-          }
+
         </Menu>
       </Sider>
     )
