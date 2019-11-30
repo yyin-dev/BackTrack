@@ -16,7 +16,7 @@ class HomeButton extends React.Component {
     return (
       <div className="homepage-button-wrapper">
         <Link to={this.props.to}>
-          { <Button onClick={() => this.props.setProjectIdForScrumMaster(this.props.projectId)} icon={this.props.icon} className="homepage-button">{this.props.title}</Button> }
+          <Button icon={this.props.icon} className="homepage-button">{this.props.title}</Button>
         </Link>
       </div>
     );
