@@ -34,13 +34,13 @@ class Sidebar extends React.Component {
       const { location } = this.props;
       var selectedMenuItemKey;
       if (location.pathname === "/") {
-        selectedMenuItemKey = "1";
+        selectedMenuItemKey = "home";
       } else if (location.pathname.startsWith("/project")) {
-        selectedMenuItemKey = "2"
+        selectedMenuItemKey = "project"
       } else if (location.pathname.startsWith("/product")) {
-        selectedMenuItemKey = "3"
+        selectedMenuItemKey = "product backlog"
       } else if (location.pathname.startsWith("/sprint")) {
-        selectedMenuItemKey = "4"
+        selectedMenuItemKey = "sprint backlog"
       }
       this.setState({
         selectedMenuItem: [selectedMenuItemKey]
