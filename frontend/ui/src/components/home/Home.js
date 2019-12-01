@@ -8,8 +8,8 @@ import './Home.css'
 
 class HomeButton extends React.Component {
 
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
   }
 
   render() {
@@ -33,27 +33,6 @@ class Home extends React.Component {
   static contextType = Context;
 
   render() {
-    var scrumMasterDisplay;
-    if (this.context.user && this.context.user.role === "Scrum Master") {
-      scrumMasterDisplay =
-        <div className="homepage-all-button-wrapper">
-          {
-            this.context.user.projects.map((projectId, index) => {
-              return (
-                <div className="homepage-button-wrapper">
-                  <Link to="/product">
-                    <Button onClick={() => this.context.setProjectId(projectId)} icon="like" className="homepage-button">
-                      {"Project ".concat(projectId)}
-                    </Button>
-                  </Link>
-                </div>
-              );
-            })
-          }
-        </div>
-    } else { scrumMasterDisplay = "" }
-
-
     return (
       <div className="home-wrapper">
         <h2>Welcome to the project!</h2>
@@ -63,11 +42,11 @@ class Home extends React.Component {
               ? <div className="homepage-all-button-wrapper">
                 <HomeButton to="/product" title="Product Backlog" icon="like" />
                 <HomeButton to="/sprint" title="Sprint Backlog" icon="shop" />
+                <HomeButton to="/project" title="Project" icon="project" />
               </div>
               : ""
             : ""
         }
-        {scrumMasterDisplay}
       </div>
     );
   }

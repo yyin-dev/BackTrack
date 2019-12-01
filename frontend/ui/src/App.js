@@ -1,14 +1,12 @@
 import React from "react";
 import { Layout } from "antd";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
-
 import Sidebar from "./components/common/sidebar";
 import ProductBacklog from "./components/product/productBacklog";
 import SprintBacklog from "./components/sprint/sprintBacklog";
 import Home from "./components/home/Home";
 import Project from './components/project/Project'
 import AuthModal from "./components/authModal/AuthModal";
-
 import { ContextProvider } from "./context/ContextSource";
 
 class App extends React.Component {

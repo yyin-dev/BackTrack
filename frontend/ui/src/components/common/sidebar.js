@@ -30,17 +30,17 @@ class Sidebar extends React.Component {
   detectUrlChange() { }
 
   componentDidMount() {
-
-
     setInterval(() => {
       const { location } = this.props;
       var selectedMenuItemKey;
       if (location.pathname === "/") {
         selectedMenuItemKey = "1";
-      } else if (location.pathname.startsWith("/product")) {
+      } else if (location.pathname.startsWith("/project")) {
         selectedMenuItemKey = "2"
-      } else if (location.pathname.startsWith("/sprint")) {
+      } else if (location.pathname.startsWith("/product")) {
         selectedMenuItemKey = "3"
+      } else if (location.pathname.startsWith("/sprint")) {
+        selectedMenuItemKey = "4"
       }
       this.setState({
         selectedMenuItem: [selectedMenuItemKey]
@@ -66,22 +66,12 @@ class Sidebar extends React.Component {
               <span>{this.context.user ? `, ${this.context.user.role}` : ""}</span>
             </div>
           </Menu.Item>
-          <Menu.Item key="1" to="/"  >
+          <Menu.Item key="home" to="/"  >
             <Icon type="home" />
             <span className="nav-text" >Home</span>
             <Link to="/" />
           </Menu.Item>
-          <Menu.Item key="2"  >
-            <Icon type="clock-circle" />
-            <span className="nav-text" >Product Backlog</span>
-            <Link to="/product"></Link>
-          </Menu.Item>
-          <Menu.Item key="3"  >
-            <Icon type="code" />
-            <span className="nav-text" >Sprint Backlog</span>
-            <Link to="/sprint"></Link>
-          </Menu.Item>
-          <Menu.Item key="4"  >
+          <Menu.Item key="project"  >
             <Icon type="code" />
             <span className="nav-text" >
               {this.context.user && this.context.user.role == "Scrum Master" ? 
@@ -89,6 +79,17 @@ class Sidebar extends React.Component {
             </span>
             <Link to="/project"></Link>
           </Menu.Item>
+          <Menu.Item key="product backlog"  >
+            <Icon type="clock-circle" />
+            <span className="nav-text" >Product Backlog</span>
+            <Link to="/product"></Link>
+          </Menu.Item>
+          <Menu.Item key="sprint backlog"  >
+            <Icon type="code" />
+            <span className="nav-text" >Sprint Backlog</span>
+            <Link to="/sprint"></Link>
+          </Menu.Item>
+          
         </Menu>
       </Sider>
     )
