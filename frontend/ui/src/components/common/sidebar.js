@@ -61,8 +61,8 @@ class Sidebar extends React.Component {
         <Menu theme="dark" mode="inline" selectedKeys={this.state.selectedMenuItem} >
           <Menu.Item key="0" >
             <div className="sidebar-username-wrapper">
-              <Icon type="user" style={{fontSize: "2em"}}/>
-              <span>{this.context.user ? this.context.user.username: ""}</span>
+              <Icon type="user" style={{ fontSize: "2em" }} />
+              <span>{this.context.user ? this.context.user.username : ""}</span>
               <span>{this.context.user ? `, ${this.context.user.role}` : ""}</span>
             </div>
           </Menu.Item>
@@ -81,16 +81,14 @@ class Sidebar extends React.Component {
             <span className="nav-text" >Sprint Backlog</span>
             <Link to="/sprint"></Link>
           </Menu.Item>
-          {
-            this.context.user
-            ? this.context.user.role === "Scrum Master"
-            ? <Menu.Item key="4"  >
-                <Icon type="code" />
-                  <span className="nav-text" >Projects</span>
-                  <Link to="/project"></Link>
-              </Menu.Item>
-            : "" : ""
-          }
+          <Menu.Item key="4"  >
+            <Icon type="code" />
+            <span className="nav-text" >
+              {this.context.user && this.context.user.role == "Scrum Master" ? 
+              "Projects" : "Project"}
+            </span>
+            <Link to="/project"></Link>
+          </Menu.Item>
         </Menu>
       </Sider>
     )

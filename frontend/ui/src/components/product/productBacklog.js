@@ -1,7 +1,6 @@
 import React from "react";
 import axios from "axios";
 import { Route, Link } from "react-router-dom";
-import Home from "../home/Home";
 
 import {
   PageHeader,
@@ -15,9 +14,7 @@ import {
 } from "antd";
 import ActionButtons from "./actionButtons";
 import AddPBIForm from "./addPBIForm";
-import CreateProjectModal from "./createProjectModal";
 import InviteMembers from "./inviteMembers";
-import "./productBacklog.css";
 import { Context } from "../../context/ContextSource";
 
 class ProductBacklog extends React.Component {
@@ -50,7 +47,7 @@ class ProductBacklog extends React.Component {
     // Get projects of the user
     if (this.context.user) {
       // for developer and product owner
-      if (this.context.user.role !== "Scrum Master"){
+      if (this.context.user.role !== "Scrum Master") {
         axios
           .get(
             `http://127.0.0.1:8000/product/api/projectofuser/${this.context.user.id}`
@@ -80,13 +77,13 @@ class ProductBacklog extends React.Component {
             }
 
             axios
-            .get("http://127.0.0.1:8000/sprint/api/")
-            .then(res => {
-              let sprint_no = res.data[0].no;
-              this.setState({
-                sprint_no: sprint_no,
+              .get("http://127.0.0.1:8000/sprint/api/")
+              .then(res => {
+                let sprint_no = res.data[0].no;
+                this.setState({
+                  sprint_no: sprint_no,
+                });
               });
-            });
 
             axios
               .get(`http://127.0.0.1:8000/product/api/projectpbis/${project_id}`)
@@ -126,10 +123,11 @@ class ProductBacklog extends React.Component {
               .catch(error => console.log(error));
           });
       }
+
       // for Scrum Master
       else if (this.context.user.role === "Scrum Master") {
         if (this.context.projectId) {
-          message.success("You are viewing Project ".concat(this.context.projectId) , 3)
+          message.success("You are viewing Project ".concat(this.context.projectId), 3)
           axios
             .get(
               `http://127.0.0.1:8000/product/api/projectofuser/${this.context.user.id}`
@@ -144,7 +142,7 @@ class ProductBacklog extends React.Component {
                 return;
               } else {
                 for (var i = 0; i < projects.length; i++) {
-                  if (projects[i].id === this.context.projectId){
+                  if (projects[i].id === this.context.projectId) {
                     this.setState({
                       project: projects[i]
                     });
@@ -163,13 +161,13 @@ class ProductBacklog extends React.Component {
               }
 
               axios
-              .get("http://127.0.0.1:8000/sprint/api/")
-              .then(res => {
-                let sprint_no = res.data[0].no;
-                this.setState({
-                  sprint_no: sprint_no,
+                .get("http://127.0.0.1:8000/sprint/api/")
+                .then(res => {
+                  let sprint_no = res.data[0].no;
+                  this.setState({
+                    sprint_no: sprint_no,
+                  });
                 });
-              });
 
               axios
                 .get(`http://127.0.0.1:8000/product/api/projectpbis/${project_id}`)
@@ -279,45 +277,21 @@ class ProductBacklog extends React.Component {
     }
   ];
 
-  toggleCreatingProject = () => {
-    this.setState({
-      isCreatingProject: !this.state.isCreatingProject
-    });
-  };
-
   render() {
     if (!this.state.isLoaded) {
       return <div style={{ margin: "auto" }}>Loading...</div>;
     } else if (!this.state.project) {
       // no project for the current user
       return (
-        <div className="create-project-wrapper">
+        <div style={{ margin: "auto" }}>
           <Empty
             description={
               <span>
-                {
-                  this.context.user.role === "Scrum Master"
-                  ? this.context.projectId
-                    ? "You are not in any project, \n wait for a project owner to invite you!"
-                    : <span>Please go back to <Link to="/">homepage</Link> to select a project you want to view!</span>
-                  : "You are not in any project. \n Wait for an invitation or create one!"
-                }
+                You are not in any project. Go back to <Link to="/">project page</Link> for details.
               </span>
             }
           >
-            {
-              this.context.user.role !== "Scrum Master"
-              ? <Button type="primary" onClick={this.toggleCreatingProject}>
-                  Create Project
-                </Button>
-              : ""
-            }
           </Empty>
-          <CreateProjectModal
-            visible={this.state.isCreatingProject}
-            close={this.toggleCreatingProject}
-            refresh={this.fetch}
-          />
         </div>
       );
     } else if (!this.state.project.started) {
@@ -331,7 +305,6 @@ class ProductBacklog extends React.Component {
         />
       );
     } else {
-      console.log(this.state.pbiList);
       return (
         <Layout style={{ height: "100vh" }}>
           <PageHeader
@@ -377,7 +350,7 @@ class ProductBacklog extends React.Component {
                 : this.state.pbiList
             }
           />
-        <span style={{"text-align": "center"}}>See <Link to="/sprint">sprint backlog</Link></span>
+          <span style={{ "text-align": "center" }}>See <Link to="/sprint">sprint backlog</Link></span>
         </Layout>
       );
     }

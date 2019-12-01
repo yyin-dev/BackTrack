@@ -6,6 +6,7 @@ import Sidebar from "./components/common/sidebar";
 import ProductBacklog from "./components/product/productBacklog";
 import SprintBacklog from "./components/sprint/sprintBacklog";
 import Home from "./components/home/Home";
+import Project from './components/project/Project'
 import AuthModal from "./components/authModal/AuthModal";
 
 import { ContextProvider } from "./context/ContextSource";
@@ -40,6 +41,12 @@ class App extends React.Component {
       <Redirect to={{ pathname: "/", component: { Home } }} />
     );
 
+    let projectPage = this.state.isLoggedIn ? (
+      <Route path="/project" component={Project} />
+    ) : (
+      <Redirect to={{ pathname: "/", component: { Home } }} />
+    );
+
     let homePage = <Route path="/" component={Home} />
 
     return (
@@ -52,6 +59,7 @@ class App extends React.Component {
               <Switch>
                 {productPage}
                 {sprintPage}
+                {projectPage}
                 {homePage}
               </Switch>
             </Layout>

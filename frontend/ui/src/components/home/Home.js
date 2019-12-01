@@ -12,7 +12,7 @@ class HomeButton extends React.Component {
     super(props, context);
   }
 
-  render () {
+  render() {
     return (
       <div className="homepage-button-wrapper">
         <Link to={this.props.to}>
@@ -34,26 +34,24 @@ class Home extends React.Component {
 
   render() {
     var scrumMasterDisplay;
-    if (this.context.user){
-      if (this.context.user.role === "Scrum Master"){
-        scrumMasterDisplay =
-          <div className="homepage-all-button-wrapper">
-            {
-                this.context.user.projects.map((projectId, index) => {
-                  return (
-                    <div className="homepage-button-wrapper">
-                       <Link to="/product">
-                         <Button onClick={() => this.context.setProjectId(projectId)} icon="like" className="homepage-button">
-                           {"Project ".concat(projectId)}
-                         </Button>
-                       </Link>
-                     </div>
-                  );
-                })
-            }
-          </div>
-      } else {scrumMasterDisplay=""}
-    } else {scrumMasterDisplay=""}
+    if (this.context.user && this.context.user.role === "Scrum Master") {
+      scrumMasterDisplay =
+        <div className="homepage-all-button-wrapper">
+          {
+            this.context.user.projects.map((projectId, index) => {
+              return (
+                <div className="homepage-button-wrapper">
+                  <Link to="/product">
+                    <Button onClick={() => this.context.setProjectId(projectId)} icon="like" className="homepage-button">
+                      {"Project ".concat(projectId)}
+                    </Button>
+                  </Link>
+                </div>
+              );
+            })
+          }
+        </div>
+    } else { scrumMasterDisplay = "" }
 
 
     return (
@@ -61,13 +59,13 @@ class Home extends React.Component {
         <h2>Welcome to the project!</h2>
         {
           this.context.user
-          ? this.context.user.role !== "Scrum Master"
-            ? <div className="homepage-all-button-wrapper">
+            ? this.context.user.role !== "Scrum Master"
+              ? <div className="homepage-all-button-wrapper">
                 <HomeButton to="/product" title="Product Backlog" icon="like" />
                 <HomeButton to="/sprint" title="Sprint Backlog" icon="shop" />
               </div>
+              : ""
             : ""
-          : ""
         }
         {scrumMasterDisplay}
       </div>
