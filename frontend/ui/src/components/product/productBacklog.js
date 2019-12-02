@@ -74,6 +74,7 @@ class ProductBacklog extends React.Component {
               var i;
               var sprint_number = 1;
 
+              // TODO: sprint number
               for (i = 0; i < sorted.length; ++i) {
                 if (sorted[i].sprint !== null) {
                   sprint_number = Math.max(sorted[i].sprint.no, sprint_number);
