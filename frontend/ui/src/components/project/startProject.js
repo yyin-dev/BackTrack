@@ -21,7 +21,7 @@ class StartProject extends React.Component {
   }
 
   render() {
-    const disableButton = this.context.user.role !== "Product Owner"
+    const disableButton = this.context.user.role !== "Product Owner" ||this.props.started
     return (
       <Popconfirm
         title="Start project?"

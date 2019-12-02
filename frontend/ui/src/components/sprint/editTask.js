@@ -127,11 +127,11 @@ class EditTask extends React.Component {
 
         return (
             <div>
-            <Tag color="blue" onClick={this.viewDetail} style={{fontSize: '18px', margin: '5px'}}>
+            <Tag color="blue" onClick={this.viewDetail} style={{fontSize: '18px', margin: '5px', size: '10px'}}>
                 {this.task.name}
             </Tag>
             <Tooltip title="Start Task">
-              {this.context.user.role}
+              
                 <Button disabled={this.context.user.role === "Scrum Master" || this.props.disabled} icon="caret-right" onClick={this.changeStatus} />
             </Tooltip>
             <Modal

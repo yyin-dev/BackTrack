@@ -122,6 +122,7 @@ class ProjectMembers extends React.Component {
               refresh={this.fetch}
               hasScrumMaster={this.state.hasScrumMaster}
               developerNum={this.state.developerNum}
+              started={this.props.project.started}
               setStartProject={this.props.setStartProject}
               key="start-project"
             />

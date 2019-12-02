@@ -98,7 +98,7 @@ class AddMemberForm extends React.Component {
       }
     };
     
-    const disableButton = this.context.user.role !== "Product Owner"
+    const disableButton = this.context.user.role !== "Product Owner" || this.props.project.started
     return (
       <div style={{ display: "inline" }}>
         <Button onClick={this.viewDetail} disabled={disableButton}>Add Member</Button>
