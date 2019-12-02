@@ -17,6 +17,7 @@ from .views import (
     StartProject,
     EndProject,
     ProjectPBIS,
+    ProjectById,
     InviteMembers,
     CancelMember)
 
@@ -28,6 +29,8 @@ urlpatterns = [
     path('createproject/', CreateProject.as_view()),
 
     path('projectofuser/<userid>/', UserProjects.as_view()),
+    path('projectbyid/<projectid>/', ProjectById.as_view()),
+
     path('projectpbis/<projectid>/', ProjectPBIS.as_view()),
 
     path('invitemembers/', InviteMembers.as_view()),
