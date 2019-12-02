@@ -157,6 +157,7 @@ class ProjectMembers extends React.Component {
               width="10%"
               render={user => (
                 <CancelMember
+                  project_started={this.props.project.started}
                   user_id={user.id}
                   user_role={user.role}
                   project_id={this.props.project.id}

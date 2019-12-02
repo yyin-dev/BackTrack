@@ -69,9 +69,11 @@ class CancelMember extends React.Component {
 
   render() {
     const disableButton =
-      this.context.user.role === "Product Owner"
-        ? this.props.user_role === "Product Owner" // Product Owner cannot remove himself
-        : this.props.user_id !== this.context.user.id; // Developer/Scrum Master cannot remove anyone but himself
+      this.props.project_started === true
+        ? true
+        : this.context.user.role === "Product Owner"
+            ? this.props.user_role === "Product Owner" // Product Owner cannot remove himself
+            : this.props.user_id !== this.context.user.id; // Developer/Scrum Master cannot remove anyone but himself
 
     const popMessage =
       this.context.user.role === "Product Owner"
