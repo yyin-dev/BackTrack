@@ -78,8 +78,6 @@ class Project extends React.Component {
   };
 
   render() {
-    console.log(this.state.projects)
-
     if (!this.state.projects) {
       // no project for the current user
       return (

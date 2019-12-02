@@ -61,7 +61,7 @@ class Sidebar extends React.Component {
         <Menu theme="dark" mode="inline" selectedKeys={this.state.selectedMenuItem} >
           <Menu.Item key="0" >
             <div className="sidebar-username-wrapper">
-              <Icon type="user" style={{ fontSize: "2em" }} />
+              <Icon type="user" style={{ fontSize: "1.5em" }} />
               <span>{this.context.user ? this.context.user.username : ""}</span>
               <span>{this.context.user ? `, ${this.context.user.role}` : ""}</span>
             </div>

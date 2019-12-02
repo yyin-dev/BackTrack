@@ -55,7 +55,7 @@ class SelectProject extends React.Component {
             type="primary"
             onClick={this.handleClick}
           >
-            Submit
+            OK
           </Button>
         </Card>
       </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 
-import { PageHeader, Layout, Descriptions ,Button, Modal} from "antd";
+import { PageHeader, Layout, Descriptions, Button } from "antd";
 
 import { Context } from "../../context/ContextSource";
 import AddMemberForm from "./addMemberForm";
@@ -9,7 +9,6 @@ import CancelMember from "./cancelMember";
 import StartProject from "./startProject";
 import EndProject from "./endProject";
 import { Table } from "antd";
-import SelectProject from "./selectProject";
 const { Column, ColumnGroup } = Table;
 
 class ProjectMembers extends React.Component {
@@ -39,19 +38,18 @@ class ProjectMembers extends React.Component {
       hasScrumMaster: true
     });
   }
-  returnToProjectList(){
+  returnToProjectList() {
     this.context.setProjectId(null);
     this.props.refresh();
   }
- 
+
   componentDidMount() {
     this.fetch();
   }
 
   fetch = () => {
     axios.get(`http://127.0.0.1:8000/user/api/`).then(res => {
-
-      // filter users for the current project, 
+      // filter users for the current project,
       const usersForTheProject_ = res.data
         ? res.data.filter(user => user.projects.includes(this.props.project.id))
         : res.data;
@@ -73,7 +71,7 @@ class ProjectMembers extends React.Component {
       // the usersForTheProject variable is ONLY for display in table, NOT for variable passing
       usersForTheProject_.forEach(user => {
         if (user.username === this.context.user.username) {
-          user.username += " (me)"
+          user.username += " (me)";
         }
       });
 
@@ -99,10 +97,14 @@ class ProjectMembers extends React.Component {
           }}
           title={"Project Name: ".concat(this.props.project.name)}
           extra={[
-            
-            <Button disabled = {this.context.user.role !== "Scrum Master"} onClick={()=>this.returnToProjectList()}>Return to project list</Button>,
-            
-            
+            <Button
+              key="dummy-key"
+              disabled={this.context.user.role !== "Scrum Master"}
+              onClick={() => this.returnToProjectList()}
+            >
+              Return to project list
+            </Button>,
+
             <AddMemberForm
               project={this.props.project}
               users={this.state.users}
@@ -145,12 +147,7 @@ class ProjectMembers extends React.Component {
               key="username"
               width="10%"
             />
-            <Column
-              title="Role"
-              dataIndex="role"
-              key="role"
-              width="10%"
-            />
+            <Column title="Role" dataIndex="role" key="role" width="10%" />
             <Column
               title="Action"
               key="delete"

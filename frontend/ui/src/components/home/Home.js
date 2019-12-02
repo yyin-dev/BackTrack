@@ -9,9 +9,6 @@ import './Home.css'
 
 class HomeButton extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
   static contextType = Context;
 
   componentDidMount() {
@@ -19,7 +16,7 @@ class HomeButton extends React.Component {
   }
 
   fetch = () => {
-    if (this.context.projectId || this.context.user === "Scrum Master") return;
+    if (this.context.projectId || this.context.user.role === "Scrum Master") return;
 
     // for new log in of dev/PO, set project id
     axios
@@ -48,10 +45,6 @@ class HomeButton extends React.Component {
 }
 
 class Home extends React.Component {
-
-  constructor(props, context) {
-    super(props, context);
-  }
 
   static contextType = Context;
 

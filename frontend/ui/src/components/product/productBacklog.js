@@ -10,7 +10,6 @@ import {
   Radio,
   Button,
   Empty,
-  message
 } from "antd";
 import ActionButtons from "./actionButtons";
 import AddPBIForm from "./addPBIForm";
@@ -40,17 +39,21 @@ class ProductBacklog extends React.Component {
 
   fetch = () => {
     if (this.context.user) {
-      console.log(this.context.projectId);
       if (this.context.projectId) {
+
+        // get current project to view
         axios
           .get(
             `http://127.0.0.1:8000/product/api/projectbyid/${this.context.projectId}`
           )
           .then(res => {
-            console.log(res.data);
+            this.setState({
+              project: res.data
+            })
           })
           .catch(error => console.log(error));
 
+        // get project pbis
         axios
           .get(
             `http://127.0.0.1:8000/product/api/projectpbis/${this.context.projectId}`
@@ -128,7 +131,7 @@ class ProductBacklog extends React.Component {
   ];
 
   render() {
-    if (!this.context.projectId) {
+    if (!this.state.isLoaded) {
       return <div style={{ margin: "auto" }}>Loading...</div>;
     } else if (!this.state.project) {
       // no project for the current user
@@ -137,8 +140,8 @@ class ProductBacklog extends React.Component {
           <Empty
             description={
               <span>
-                You are not in any project. Go back to{" "}
-                <Link to="/">project page</Link> for details.
+                You are not viewing any project. Go back to{" "}
+                <Link to="/project">project page</Link> for details.
               </span>
             }
           ></Empty>
@@ -150,7 +153,7 @@ class ProductBacklog extends React.Component {
           <Empty
             description={
               <span>
-                Your project is not started yet. Go back to{" "}
+                This project is not started yet. Go back to{" "}
                 <Link to="/project">project page</Link> for details.
               </span>
             }
