@@ -59,6 +59,7 @@ class Project extends React.Component {
       })
       .then(res => {
         this.fetch();
+        message.success("Project Started");
       })
       .catch(err => console.log(err));
   };
@@ -71,6 +72,7 @@ class Project extends React.Component {
       })
       .then(res => {
         this.fetch();
+        this.context.setProjectId(null);
       })
       .catch(err => console.log(err));
   };

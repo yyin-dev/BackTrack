@@ -335,7 +335,7 @@ class ProductBacklog extends React.Component {
                 : this.state.pbiList
             }
           />
-          <span style={{ "text-align": "center" }}>
+          <span style={{ textAlign: "center" }}>
             See <Link to="/sprint">sprint backlog</Link>
           </span>
         </Layout>

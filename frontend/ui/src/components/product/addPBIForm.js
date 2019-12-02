@@ -52,7 +52,6 @@ class AddPBIForm extends React.Component {
   }
 
   render() {
-    console.log("this.props.projectId", this.props.projectId);
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },

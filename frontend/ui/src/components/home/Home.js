@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { Button } from 'antd';
 import { Link } from "react-router-dom";
 import { withRouter } from 'react-router'
@@ -11,6 +12,28 @@ class HomeButton extends React.Component {
   constructor(props) {
     super(props);
   }
+  static contextType = Context;
+
+  componentDidMount() {
+    this.fetch();
+  }
+
+  fetch = () => {
+    if (this.context.projectId || this.context.user === "Scrum Master") return;
+
+    // for new log in of dev/PO, set project id
+    axios
+      .get(`http://127.0.0.1:8000/product/api/projectofuser/${this.context.user.id}`)
+      .then(res => {
+        let projects = res.data;
+
+        // the user is enrolled to only one project (PO/dev), and the project id hasn't been set yet
+        // => set project id
+        if (projects.length > 0) {
+            this.context.setProjectId(projects[0].id);
+        }
+      });
+  };
 
   render() {
     return (

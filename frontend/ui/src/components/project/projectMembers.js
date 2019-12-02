@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 
-import { PageHeader, Layout, Descriptions } from "antd";
+import { PageHeader, Layout, Descriptions ,Button, Modal} from "antd";
 
 import { Context } from "../../context/ContextSource";
 import AddMemberForm from "./addMemberForm";
@@ -9,6 +9,7 @@ import CancelMember from "./cancelMember";
 import StartProject from "./startProject";
 import EndProject from "./endProject";
 import { Table } from "antd";
+import SelectProject from "./selectProject";
 const { Column, ColumnGroup } = Table;
 
 class ProjectMembers extends React.Component {
@@ -38,7 +39,11 @@ class ProjectMembers extends React.Component {
       hasScrumMaster: true
     });
   }
-
+  returnToProjectList(){
+    this.context.setProjectId(null);
+    this.props.refresh();
+  }
+ 
   componentDidMount() {
     this.fetch();
   }
@@ -94,6 +99,10 @@ class ProjectMembers extends React.Component {
           }}
           title={"Project Name: ".concat(this.props.project.name)}
           extra={[
+            
+            <Button disabled = {this.context.user.role !== "Scrum Master"} onClick={()=>this.returnToProjectList()}>Return to project list</Button>,
+            
+            
             <AddMemberForm
               project={this.props.project}
               users={this.state.users}
@@ -116,9 +125,12 @@ class ProjectMembers extends React.Component {
             />
           ]}
         >
-          <Descriptions size="small" column={1}>
+          <Descriptions size="small" column={2}>
             <Descriptions.Item label="Project Description">
               {this.props.project.description}
+            </Descriptions.Item>
+            <Descriptions.Item label="Status">
+              {this.props.project.started ? "Started" : "Not Started"}
             </Descriptions.Item>
           </Descriptions>
         </PageHeader>
