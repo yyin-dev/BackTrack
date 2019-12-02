@@ -74,7 +74,7 @@ class Sidebar extends React.Component {
           <Menu.Item key="project"  >
             <Icon type="code" />
             <span className="nav-text" >
-              {this.context.user && this.context.user.role == "Scrum Master" ? 
+              {this.context.user && this.context.user.role === "Scrum Master" ? 
               "Projects" : "Project"}
             </span>
             <Link to="/project"></Link>

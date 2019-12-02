@@ -38,14 +38,12 @@ class Home extends React.Component {
         <h2>Welcome to the project!</h2>
         {
           this.context.user
-            ? this.context.user.role !== "Scrum Master"
               ? <div className="homepage-all-button-wrapper">
+                <HomeButton to="/project" title="Project" icon="project" />
                 <HomeButton to="/product" title="Product Backlog" icon="like" />
                 <HomeButton to="/sprint" title="Sprint Backlog" icon="shop" />
-                <HomeButton to="/project" title="Project" icon="project" />
               </div>
               : ""
-            : ""
         }
       </div>
     );

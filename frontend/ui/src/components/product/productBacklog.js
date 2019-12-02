@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import {
   PageHeader,
@@ -14,7 +14,6 @@ import {
 } from "antd";
 import ActionButtons from "./actionButtons";
 import AddPBIForm from "./addPBIForm";
-import InviteMembers from "./inviteMembers";
 import { Context } from "../../context/ContextSource";
 
 class ProductBacklog extends React.Component {
@@ -31,7 +30,7 @@ class ProductBacklog extends React.Component {
       sprint_no: 1,
       isLoaded: false
     };
-    this.fetch = this.fetch.bind(this)
+    this.fetch = this.fetch.bind(this);
   }
 
   static contextType = Context;
@@ -42,7 +41,6 @@ class ProductBacklog extends React.Component {
 
   fetch = () => {
     var project_id;
-    console.log("in productBacklog.js this.context.projectId", this.context.projectId);
 
     // Get projects of the user
     if (this.context.user) {
@@ -57,7 +55,7 @@ class ProductBacklog extends React.Component {
             if (projects.length === 0) {
               // Not in project
               this.setState({
-                project: null,
+                project: null
               });
               return;
             } else {
@@ -76,22 +74,22 @@ class ProductBacklog extends React.Component {
               message.error("Developer/Product Owner in multiple project!!!");
             }
 
-            axios
-              .get("http://127.0.0.1:8000/sprint/api/")
-              .then(res => {
-                let sprint_no = res.data[0].no;
-                this.setState({
-                  sprint_no: sprint_no,
-                });
+            axios.get("http://127.0.0.1:8000/sprint/api/").then(res => {
+              let sprint_no = res.data[0].no;
+              this.setState({
+                sprint_no: sprint_no
               });
+            });
 
             axios
-              .get(`http://127.0.0.1:8000/product/api/projectpbis/${project_id}`)
+              .get(
+                `http://127.0.0.1:8000/product/api/projectpbis/${project_id}`
+              )
               .then(res => {
                 if (res.data.length === 0) {
                   // No PBIs yet
                   this.setState({
-                    pbiList: [],
+                    pbiList: []
                   });
                 } else {
                   // Fetch PBI list from backend
@@ -116,7 +114,7 @@ class ProductBacklog extends React.Component {
 
                   this.setState({
                     pbiList: sorted,
-                    priority_max: sorted[sorted.length - 1].priority,
+                    priority_max: sorted[sorted.length - 1].priority
                   });
                 }
               })
@@ -127,14 +125,18 @@ class ProductBacklog extends React.Component {
       // for Scrum Master
       else if (this.context.user.role === "Scrum Master") {
         if (this.context.projectId) {
-          message.success("You are viewing Project ".concat(this.context.projectId), 3)
+          message.success(
+            "You are viewing Project ".concat(this.context.projectId),
+            3
+          );
           axios
             .get(
               `http://127.0.0.1:8000/product/api/projectofuser/${this.context.user.id}`
             )
             .then(res => {
               let projects = res.data;
-              if (projects.length === 0) { // Not in project
+              if (projects.length === 0) {
+                // Not in project
                 this.setState({
                   project: null,
                   isLoaded: true
@@ -160,24 +162,26 @@ class ProductBacklog extends React.Component {
                 message.error("Developer/Product Owner in multiple project!!!");
               }
 
-              axios
-                .get("http://127.0.0.1:8000/sprint/api/")
-                .then(res => {
-                  let sprint_no = res.data[0].no;
-                  this.setState({
-                    sprint_no: sprint_no,
-                  });
+              axios.get("http://127.0.0.1:8000/sprint/api/").then(res => {
+                let sprint_no = res.data[0].no;
+                this.setState({
+                  sprint_no: sprint_no
                 });
+              });
 
               axios
-                .get(`http://127.0.0.1:8000/product/api/projectpbis/${project_id}`)
+                .get(
+                  `http://127.0.0.1:8000/product/api/projectpbis/${project_id}`
+                )
                 .then(res => {
-                  if (res.data.length === 0) { // No PBIs yet
+                  if (res.data.length === 0) {
+                    // No PBIs yet
                     this.setState({
                       pbiList: [],
                       isLoaded: true
                     });
-                  } else { // Fetch PBI list from backend
+                  } else {
+                    // Fetch PBI list from backend
                     let sorted = res.data;
                     sorted.sort((a, b) => (a.priority < b.priority ? -1 : 1));
 
@@ -200,23 +204,21 @@ class ProductBacklog extends React.Component {
                     this.setState({
                       pbiList: sorted,
                       priority_max: sorted[sorted.length - 1].priority,
-                      isLoaded: true,
+                      isLoaded: true
                     });
                   }
                 })
                 .catch(error => console.log(error));
             });
         } else {
-          message.success("Please go back to homepage to select a project", 3)
+          message.success("Please go back to homepage to select a project", 3);
         }
       }
 
       this.setState({
-        isLoaded: true,
+        isLoaded: true
       });
     }
-
-
   };
 
   handleViewChange = e => {
@@ -234,30 +236,6 @@ class ProductBacklog extends React.Component {
       adding: false
     });
   };
-
-  setStartProject = () => {
-    axios
-      .post(`http://127.0.0.1:8000/product/api/startproject/`, {
-        project_id: this.state.project.id
-      })
-      .then(res => {
-        this.fetch();
-      })
-      .catch(err => console.log(err));
-  };
-
-  setEndProject = () => {
-    axios
-      .post(`http://127.0.0.1:8000/product/api/endproject/`, {
-        project_id: this.state.project.id,
-        user_id: this.context.user.id,
-      })
-      .then(res => {
-        this.fetch();
-      })
-      .catch(err => console.log(err));
-  };
-
 
   columns = [
     { title: "Title", dataIndex: "title", width: "10%" },
@@ -287,22 +265,25 @@ class ProductBacklog extends React.Component {
           <Empty
             description={
               <span>
-                You are not in any project. Go back to <Link to="/">project page</Link> for details.
+                You are not in any project. Go back to{" "}
+                <Link to="/">project page</Link> for details.
               </span>
             }
-          >
-          </Empty>
+          ></Empty>
         </div>
       );
     } else if (!this.state.project.started) {
       return (
-        <InviteMembers
-          project={this.state.project}
-          visible="true"
-          setStartProject={this.setStartProject}
-          setEndProject={this.setEndProject}
-          refresh={this.fetch}
-        />
+        <div style={{ margin: "auto" }}>
+          <Empty
+            description={
+              <span>
+                Your project is not started yet. Go back to{" "}
+                <Link to="/project">project page</Link> for details.
+              </span>
+            }
+          ></Empty>
+        </div>
       );
     } else {
       return (
@@ -323,7 +304,11 @@ class ProductBacklog extends React.Component {
                   <Radio.Button value="full">Full View</Radio.Button>
                 </Radio.Group>
 
-                <Button disabled={this.context.user.role !== "Product Owner"} icon="plus" onClick={this.showEditForm} />
+                <Button
+                  disabled={this.context.user.role !== "Product Owner"}
+                  icon="plus"
+                  onClick={this.showEditForm}
+                />
                 <AddPBIForm
                   visible={this.state.adding}
                   close={this.closeEditForm}
@@ -350,7 +335,9 @@ class ProductBacklog extends React.Component {
                 : this.state.pbiList
             }
           />
-          <span style={{ "text-align": "center" }}>See <Link to="/sprint">sprint backlog</Link></span>
+          <span style={{ "text-align": "center" }}>
+            See <Link to="/sprint">sprint backlog</Link>
+          </span>
         </Layout>
       );
     }

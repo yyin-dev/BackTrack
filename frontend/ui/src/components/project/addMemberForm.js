@@ -101,7 +101,7 @@ class AddMemberForm extends React.Component {
     const disableButton = this.context.user.role !== "Product Owner"
     return (
       <div style={{ display: "inline" }}>
-        <Button onClick={this.viewDetail} disabled={disableButton}>Add New Member</Button>
+        <Button onClick={this.viewDetail} disabled={disableButton}>Add Member</Button>
         <Modal
           title="Invite Member"
           visible={this.state.visible}

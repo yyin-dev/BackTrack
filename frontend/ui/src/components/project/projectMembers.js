@@ -11,7 +11,7 @@ import EndProject from "./endProject";
 import { Table } from "antd";
 const { Column, ColumnGroup } = Table;
 
-class InviteMembers extends React.Component {
+class ProjectMembers extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -160,4 +160,4 @@ class InviteMembers extends React.Component {
   }
 }
 
-export default InviteMembers;
+export default ProjectMembers;

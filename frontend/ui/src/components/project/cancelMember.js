@@ -20,7 +20,7 @@ class CancelMember extends React.Component {
     if (
       this.state.user_id === this.context.user.id &&
       this.context.user.role === "Product Owner"
-    ) {
+    ) { // PO remove themselves
       message.error("Product Owner should not delete themselves.");
       return;
     } else if (
@@ -30,6 +30,7 @@ class CancelMember extends React.Component {
       message.error("Developer can not delete other members.");
       return;
     } else if (this.state.user_id !== this.context.user.id) {
+      // PO remove other members
       axios
         .post(`http://127.0.0.1:8000/product/api/cancelmember/`, {
           user_id: this.state.user_id,
@@ -43,6 +44,7 @@ class CancelMember extends React.Component {
         })
         .then(err => console.log(err));
     } else {
+      // developer and scrum master reject invitation
       axios
         .post(`http://127.0.0.1:8000/product/api/cancelmember/`, {
           user_id: this.state.user_id,
@@ -52,6 +54,7 @@ class CancelMember extends React.Component {
           let updatedUser = this.context.user;
           updatedUser.role = "Product Owner";
           this.context.setUser(updatedUser);
+          this.context.setProjectId(null);
           this.props.refresh();
         })
         .then(err => console.log(err));

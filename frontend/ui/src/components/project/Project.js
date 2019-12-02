@@ -1,49 +1,50 @@
 import React from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 
-import {
-  Empty,
-  message,
-  Button
-} from "antd";
-import CreateProjectModal from './createProjectModal'
+import { Empty, message, Button } from "antd";
+import CreateProjectModal from "./createProjectModal";
+import ProjectMembers from "./projectMembers";
 import { Context } from "../../context/ContextSource";
+import SelectProject from "./selectProject";
 
 class Project extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      project: null,
-      isCreatingProject: false,
+      projects: null,
+      isCreatingProject: false
     };
   }
 
-  static contextType = Context
+  static contextType = Context;
 
   componentDidMount() {
-    this.fetch()
+    this.fetch();
   }
 
   fetch = () => {
-    let { user } = this.context
+    let { user } = this.context;
 
-    axios.get(`http://127.0.0.1:8000/product/api/projectofuser/${user.id}`)
+    axios
+      .get(`http://127.0.0.1:8000/product/api/projectofuser/${user.id}`)
       .then(res => {
         let projects = res.data;
-        console.log(res)
-        if (projects.length === 0) { // Not in project
-          this.setState({ project: null });
+        if (projects.length === 0) {
+          // Not in project
+          this.setState({ projects: null });
           return;
         } else {
-          this.setState({ project: projects[0] });
+          this.setState({ projects: projects });
+          if (this.context.user.role !== "Scrum Master" && !this.context.projectId) {
+            this.context.setProjectId(projects[0].id);
+          }
         }
 
         if (user.role === "Developer/Product Owner" && projects.length > 1) {
           message.error("Developer/Product Owner in multiple project!!!");
         }
       });
-  }
+  };
 
   toggleCreatingProject = () => {
     this.setState({
@@ -51,25 +52,51 @@ class Project extends React.Component {
     });
   };
 
+  setStartProject = () => {
+    axios
+      .post(`http://127.0.0.1:8000/product/api/startproject/`, {
+        project_id: this.state.projects[0].id
+      })
+      .then(res => {
+        this.fetch();
+      })
+      .catch(err => console.log(err));
+  };
+
+  setEndProject = () => {
+    axios
+      .post(`http://127.0.0.1:8000/product/api/endproject/`, {
+        project_id: this.state.projects[0].id,
+        user_id: this.context.user.id
+      })
+      .then(res => {
+        this.fetch();
+      })
+      .catch(err => console.log(err));
+  };
+
   render() {
-    if (!this.state.project) { // no project for the current user
+    if (!this.state.projects) {
+      // no project for the current user
       return (
         <div style={{ margin: "auto" }}>
           <Empty
             description={
               <span>
                 You are not in any project. Wait for an invitation
-                {this.context.user.role === "Scurm Master" ? "" : " or create one!"}
+                {this.context.user.role === "Scrum Master"
+                  ? "!"
+                  : " or create one!"}
               </span>
             }
           >
-            {
-              this.context.user.role !== "Scrum Master"
-                ? <Button type="primary" onClick={this.toggleCreatingProject}>
-                  Create Project
-                </Button>
-                : ""
-            }
+            {this.context.user.role !== "Scrum Master" ? (
+              <Button type="primary" onClick={this.toggleCreatingProject}>
+                Create Project
+              </Button>
+            ) : (
+              ""
+            )}
           </Empty>
           <CreateProjectModal
             visible={this.state.isCreatingProject}
@@ -78,10 +105,24 @@ class Project extends React.Component {
           />
         </div>
       );
+    } else if (!this.context.projectId) {
+      // the user is scrum master, and he hasn't choose a project yet.
+      return (
+        <SelectProject projects={this.state.projects} refresh={this.fetch} />
+      );
     } else {
-      return <span>You are in project {this.state.project.id}</span>
+      const curProject = this.state.projects.find(project => project.id === this.context.projectId)
+      return (
+        <ProjectMembers
+          project={curProject}
+          visible="true"
+          setStartProject={this.setStartProject}
+          setEndProject={this.setEndProject}
+          refresh={this.fetch}
+        />
+      );
     }
   }
 }
 
-export default Project
+export default Project;
