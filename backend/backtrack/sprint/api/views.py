@@ -7,18 +7,13 @@ from rest_framework.generics import (
     RetrieveAPIView,
     UpdateAPIView)
 
-from product.models import PBI, Sprint
+from product.models import PBI, Sprint, Project
 from sprint.models import Task
 from product.api.serializers import PBISerializerSprint, SprintSerializerSprint
 from sprint.api.serializers import TaskSerializer
 
-class TaskInSprintView(ListAPIView):
+class SprintDetail(APIView):
     """
-    Returns all PBIs in latest sprint.
-    
-    The return value is an list containing ONE SINGLE sprint object. The reason
-    is that we used ListAPIView and a list is expected.
-
     Problem of caching for queryset:
     https://stackoverflow.com/questions/47479080/problems-with-cache-queryset-django-rest-framework
     https://www.django-rest-framework.org/api-guide/generic-views/
@@ -26,15 +21,19 @@ class TaskInSprintView(ListAPIView):
     """
     serializer_class = SprintSerializerSprint
 
-    def get_queryset(self):
-        if len(Sprint.objects.all()) == 0:
-            s = Sprint.objects.create(no=1)
-            s.save()
+    def get(self, request, projectid, sprintno):
+        project = Project.objects.get(pk=projectid)
 
-        sprints = Sprint.objects.order_by('-no')
-        latest_sprint = sprints.first()
-        return Sprint.objects.filter(no=latest_sprint.no)
+        if not project.sprints:
+            new_sprint = Sprint.objects.create(no=1)
+            new_sprint.project = project
+            new_sprint.save()
 
+        sprints = project.sprints
+        latest_sprint = sprints.order_by('-no').first()
+        data = SprintSerializerSprint(latest_sprint).data
+
+        return Response(data=data, status=status.HTTP_202_ACCEPTED)
 
 class addTask(APIView):
     def post(self, request):

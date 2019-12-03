@@ -35,8 +35,14 @@ class SprintBacklog extends React.Component {
   }
 
   fetch = () => {
+    const { projectId, sprintNo } = this.context
+    if (projectId === null || sprintNo === null) {
+      console.log("No project available!")
+      return
+    }
+
     axios
-      .get("http://127.0.0.1:8000/sprint/api/")
+      .get(`http://127.0.0.1:8000/sprint/api/project-sprint/${projectId}/${sprintNo}`)
       .then(res => {
         let pbis = res.data[0].pbis;
         var i, j;
