@@ -1,17 +1,5 @@
 from django.db import models
 
-class Sprint(models.Model):
-    no = models.IntegerField()
-    capacity = models.IntegerField(default=10)
-    status = models.CharField(max_length=10, default="Created") # "Created", "Started", "Done"
-
-    class Meta:
-        ordering = ['no']
-
-    def __str__(self):
-        return str(self.no)
-
-
 class Project(models.Model):
     name = models.CharField(max_length= 50)
     description = models.TextField(max_length=200)
@@ -20,6 +8,18 @@ class Project(models.Model):
     def __str__(self):
         return str(self.name)
 
+class Sprint(models.Model):
+    project = models.ForeignKey(Project, related_name="sprints", on_delete=models.CASCADE, null=True)
+
+    no = models.IntegerField(default=-1)
+    capacity = models.IntegerField(default=10)
+    status = models.CharField(max_length=10, default="Created") # "Created", "Started", "Done"
+
+    class Meta:
+        ordering = ['no']
+
+    def __str__(self):
+        return str(self.no)
 
 class PBI(models.Model):
     project = models.ForeignKey(Project, related_name="pbis", on_delete=models.CASCADE, null=True)
