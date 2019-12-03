@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 
 import { Button, Card, Radio } from "antd";
 import { Context } from "../../context/ContextSource";
@@ -7,18 +8,27 @@ class SelectProject extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedId: null
+      selectedId: props.projects[0].id
     };
   }
 
   static contextType = Context;
 
   handleClick = e => {
-    this.context.setProjectId(
-      this.state.selectedId === null
-        ? this.props.projects[0].id
-        : this.state.selectedId
-    );
+    this.context.setProjectId(this.state.selectedId);
+
+    // get current project
+    axios
+      .get(
+        `http://127.0.0.1:8000/product/api/projectbyid/${this.state.selectedId}`
+      )
+      .then(res => {
+        const sprints = res.data.sprints;
+        if (sprints.length === 0) this.context.setSprintNo(-1);
+        else this.context.setSprintNo(sprints[sprints.length - 1].no);
+      })
+      .catch(error => console.log(error));
+
     this.props.refresh();
   };
 

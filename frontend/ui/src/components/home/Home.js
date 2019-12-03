@@ -34,7 +34,6 @@ class HomeButton extends React.Component {
             const sprints = projects[0].sprints;
             if (sprints.length === 0) this.context.setSprintNo(-1);
             else this.context.setSprintNo(sprints[sprints.length-1].no);
-            console.log(this.context.sprintNo);
         }
       });
   };
