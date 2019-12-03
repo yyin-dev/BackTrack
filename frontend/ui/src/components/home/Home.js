@@ -16,6 +16,9 @@ class HomeButton extends React.Component {
   }
 
   fetch = () => {
+    // fetch() only fetches project id for PO/dev, but not SM. The project id
+    // for SM would be default value (null) until explicitly chosen by the user
+    // in the project page.
     if (this.context.projectId || this.context.user.role === "Scrum Master") return;
 
     // for new log in of dev/PO, set project id
@@ -27,7 +30,7 @@ class HomeButton extends React.Component {
         // the user is enrolled to only one project (PO/dev), and the project id hasn't been set yet
         // => set project id
         if (projects.length > 0) {
-            this.context.setProjectId(projects[0].id);
+          this.context.setProjectId(projects[0].id);
         }
       });
   };
@@ -54,12 +57,12 @@ class Home extends React.Component {
         <h2>Welcome to the project!</h2>
         {
           this.context.user
-              ? <div className="homepage-all-button-wrapper">
-                <HomeButton to="/project" title="Project" icon="project" />
-                <HomeButton to="/product" title="Product Backlog" icon="like" />
-                <HomeButton to="/sprint" title="Sprint Backlog" icon="shop" />
-              </div>
-              : ""
+            ? <div className="homepage-all-button-wrapper">
+              <HomeButton to="/project" title="Project" icon="project" />
+              <HomeButton to="/product" title="Product Backlog" icon="like" />
+              <HomeButton to="/sprint" title="Sprint Backlog" icon="shop" />
+            </div>
+            : ""
         }
       </div>
     );
