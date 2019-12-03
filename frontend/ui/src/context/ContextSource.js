@@ -8,6 +8,7 @@ export class ContextProvider extends React.Component {
     this.state = {
       user: null,
       projectId: null,
+      sprintNo: null,
       authModalVisibility: true,
     }
   }
@@ -31,13 +32,20 @@ export class ContextProvider extends React.Component {
     this.setState({ projectId: projectId })
   }
 
+  // set the sprint number for the current productBacklog page view
+  setSprintNo = (sprintNo) => {
+    this.setState({ sprintNo: sprintNo })
+  }
+
 
   render() {
     return (<Context.Provider value={{
       user: this.state.user,
       projectId: this.state.projectId,
+      sprintNo: this.state.sprintNo,
       setUser: this.setUser,
       setProjectId: this.setProjectId,
+      setSprintNo: this.setSprintNo,
       authModalVisibility: this.state.authModalVisibility,
       showAuthModal: this.showAuthModal,
       closeAuthModal: this.closeAuthModal,

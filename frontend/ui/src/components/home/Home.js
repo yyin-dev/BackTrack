@@ -28,6 +28,10 @@ class HomeButton extends React.Component {
         // => set project id
         if (projects.length > 0) {
             this.context.setProjectId(projects[0].id);
+            const sprints = projects[0].sprints;
+            if (sprints.length === 0) this.context.setSprintNo(-1);
+            else this.context.setSprintNo(sprints[sprints.length-1].no);
+            console.log(this.context.sprintNo);
         }
       });
   };
