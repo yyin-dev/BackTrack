@@ -60,7 +60,9 @@ class ActionButtons extends React.Component {
 
   handleMoveToSprint = () => {
     axios.post("http://127.0.0.1:8000/product/api/movetosprint/", {
-      'id': this.props.pbi.id,
+      'projectid': this.context.projectId,
+      'pbiid': this.props.pbi.id,
+      'sprintno': this.context.sprintNo
     })
       .then(res => {
         message.success("PBI moved to sprint!", 3)

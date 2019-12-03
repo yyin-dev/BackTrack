@@ -73,7 +73,6 @@ class EndSprint extends React.Component {
     })
       .then(res => {
         this.props.refresh()
-        message.success("Move succeed!", 3)
       })
       .catch(err => console.log(err))
   }
@@ -87,16 +86,20 @@ class EndSprint extends React.Component {
     })
       .then(res => {
         this.props.refresh()
-        message.success("Move back succeed!", 3)
       })
       .catch(err => console.log(err))
   }
 
   createNewSprint = () => {
     axios.post("http://127.0.0.1:8000/product/api/createsprint/", {
+      projectid: this.context.projectId,
+      sprintno: this.context.sprintNo+1,
       sprintCapacity: this.state.new_sprint_capacity
     })
-      .then(res => { message.success("Enter new sprint!", 3) })
+      .then(res => { 
+        this.context.setSprintNo(this.context.sprintNo+1)
+        message.success("Enter new sprint!", 3) 
+      })
       .catch(err => console.log(err))
   }
 
@@ -250,7 +253,7 @@ class EndSprint extends React.Component {
             <Form.Item label="Sprint Number">
               <InputNumber
                 disabled={true}
-                defaultValue={this.props.sprint_no + 1}
+                defaultValue={this.context.sprintNo + 1}
               />
             </Form.Item>
             <Form.Item label="Max Capacity">

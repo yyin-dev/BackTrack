@@ -20,7 +20,6 @@ class SprintBacklog extends React.Component {
     super(props);
     this.state = {
       sprint_started: false,
-      sprint_no: -1,
       sprint_pk: -1,
       pbis: [],
       capacity: -1,
@@ -44,10 +43,9 @@ class SprintBacklog extends React.Component {
     axios
       .get(`http://127.0.0.1:8000/sprint/api/project-sprint/${projectId}/${sprintNo}`)
       .then(res => {
-        let pbis = res.data[0].pbis;
+        let pbis = res.data.pbis;
         var i, j;
-        let sprint_no = res.data[0].no;
-        let capacity = res.data[0].capacity;
+        let capacity = res.data.capacity;
         let total_effort = 0;
         let remain_effort = 0;
 
@@ -69,9 +67,8 @@ class SprintBacklog extends React.Component {
         }
 
         this.setState({
-          sprint_no: sprint_no,
-          sprint_started: res.data[0].status === "Started",
-          sprint_pk: res.data[0].id,
+          sprint_started: res.data.status === "Started",
+          sprint_pk: res.data.id,
 
           pbis: pbis,
           capacity: capacity,
@@ -121,7 +118,6 @@ class SprintBacklog extends React.Component {
                   key="start-sprint"
                 />,
                 <EndSprint
-                  sprint_no={this.state.sprint_no}
                   refresh={this.fetch}
                   pbis={this.state.pbis}
                   disabled={!this.state.sprint_started}
@@ -131,7 +127,7 @@ class SprintBacklog extends React.Component {
             >
               <Descriptions size="small" column={4}>
                 <Descriptions.Item label="Sprint Number">
-                  {this.state.sprint_no}
+                  {this.context.sprintNo}
                 </Descriptions.Item>
 
                 <Descriptions.Item label="Max Capacity">

@@ -79,18 +79,17 @@ class MoveToSprint(APIView):
     Set the sprint_no of the selected PBI to the latest Sprint
     """
     def post(self, request):
-        id = request.data["id"]
-        cur_pbi = PBI.objects.get(id=id)
+        pbiid = request.data["pbiid"]
+        projectid = request.data["projectid"]
+        sprintno = request.data["sprintno"]
+
+        cur_pbi = PBI.objects.get(id=pbiid)
+        cur_project = Project.objects.get(id=projectid)
 
         # Try to get current Sprint object
-        latest_sprint = Sprint.objects.order_by('-no').first()
+        sprint = Sprint.objects.get(no=sprintno, project=cur_project)
 
-        if not latest_sprint:
-            spr = Sprint.objects.create(no=1)
-            spr.save()
-            cur_pbi.sprint = spr
-        else:
-            cur_pbi.sprint = latest_sprint
+        cur_pbi.sprint = sprint
 
         cur_pbi.status = "In Progress"
         cur_pbi.save()
@@ -232,9 +231,11 @@ class CreateSprint(APIView):
     def post(self, request):
         # https://stackoverflow.com/questions/844591/how-to-do-select-max-in-django/844614
         from django.db.models import Max
-        currNo = Sprint.objects.all().aggregate(Max('no'))['no__max']
+        currNo = request.data["sprintno"]
+        currProj = Project.objects.get(id=request.data["projectid"])
+
         cap = request.data["sprintCapacity"]
-        newSprint = Sprint.objects.create(no=currNo+1, capacity=cap, status="Created")
+        newSprint = Sprint.objects.create(no=currNo, capacity=cap, status="Created",project=currProj)
         newSprint.save()
 
         return Response(status=status.HTTP_201_CREATED)
@@ -261,6 +262,8 @@ class StartProject(APIView):
         project = Project.objects.get(id=request.data['project_id'])
         project.started = True
         project.save()
+        newSprint = Sprint.objects.create(no=1, capacity=10, status="Created", project=project)
+        newSprint.save()
         return Response(status=status.HTTP_201_CREATED)
 
 

@@ -58,6 +58,7 @@ class Project extends React.Component {
         project_id: this.state.projects[0].id
       })
       .then(res => {
+        this.context.setSprintNo(1);
         this.fetch();
         message.success("Project Started");
       })

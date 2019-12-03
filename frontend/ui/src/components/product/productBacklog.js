@@ -25,7 +25,6 @@ class ProductBacklog extends React.Component {
       adding: false,
       pbiList: null, // null: not in project; []: in project but no PBIs.
       priority_max: -1,
-      sprint_no: 1,
       isLoaded: false
     };
     this.fetch = this.fetch.bind(this);
@@ -72,13 +71,8 @@ class ProductBacklog extends React.Component {
               // Calculate accumulated story point for each PBI
               let acc = 0;
               var i;
-              var sprint_number = 1;
 
-              // TODO: sprint number
               for (i = 0; i < sorted.length; ++i) {
-                if (sorted[i].sprint !== null) {
-                  sprint_number = Math.max(sorted[i].sprint.no, sprint_number);
-                }
                 acc += sorted[i].story_point;
                 sorted[i].acc = acc;
               }
@@ -196,7 +190,7 @@ class ProductBacklog extends React.Component {
           >
             <Descriptions size="small" column={1}>
               <Descriptions.Item label="Sprint Number">
-                {this.state.sprint_no}
+                {this.context.sprintNo}
               </Descriptions.Item>
             </Descriptions>
           </PageHeader>
