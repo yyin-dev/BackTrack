@@ -100,18 +100,20 @@ class MoveToSprint(APIView):
 class MovePBI(APIView):
     def post(self, request):
         priority = int(request.data['priority'])
-        target1 = PBI.objects.get(priority=priority)
+        project = Project.objects.get(id=request.data['projectId'])
+        siblingPBIs = PBI.objects.filter(project=project)
+        target1 = siblingPBIs.get(priority=priority)
 
         if request.data['option'] == 'up':
             if priority == 1:
                 return Response(status=status.HTTP_204_NO_CONTENT)
 
-            target2 = PBI.objects.get(priority=priority-1)
+            target2 = siblingPBIs.get(priority=priority-1)
         elif request.data['option'] == 'down':
-            if priority == len(PBI.objects.all()):
+            if priority == len(siblingPBIs):
                 return Response(status=status.HTTP_204_NO_CONTENT)
 
-            target2 = PBI.objects.get(priority=priority+1)
+            target2 = siblingPBIs.get(priority=priority+1)
 
         temp = target1.priority
         target1.priority = target2.priority
@@ -125,7 +127,6 @@ class MovePBI(APIView):
 
 class AddPBI(APIView):
     def post(self, request):
-
         parentProject = Project.objects.get(id=request.data['projectId'])
 
         new_pbi = PBI(title=request.data['title'],
@@ -139,7 +140,7 @@ class AddPBI(APIView):
         new_pbi.save()
 
         # update the priority
-        for pbi in PBI.objects.all():
+        for pbi in PBI.objects.filter(project=parentProject):
             pbi.priority += 1
             pbi.save()
 

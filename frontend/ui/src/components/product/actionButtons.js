@@ -9,7 +9,6 @@ axios.defaults.xsrfHeaderName = "X-CSRFToken"
 axios.defaults.xsrfCookieName = 'csrftoken'
 
 class ActionButtons extends React.Component {
-
   static contextType = Context;
 
   constructor(props) {
@@ -35,8 +34,9 @@ class ActionButtons extends React.Component {
 
   handleMove = (option) => {
     axios.post("http://127.0.0.1:8000/product/api/move/", {
-      'priority': this.props.pbi.priority,
-      'option': option,
+      priority: this.props.pbi.priority,
+      option: option,
+      projectId: this.context.projectId,
       withCredentials: true,
     })
       .then(res => {
@@ -60,9 +60,9 @@ class ActionButtons extends React.Component {
 
   handleMoveToSprint = () => {
     axios.post("http://127.0.0.1:8000/product/api/movetosprint/", {
-      'projectid': this.context.projectId,
-      'pbiid': this.props.pbi.id,
-      'sprintno': this.context.sprintNo
+      projectid: this.context.projectId,
+      pbiid: this.props.pbi.id,
+      sprintno: this.context.sprintNo
     })
       .then(res => {
         message.success("PBI moved to sprint!", 3)

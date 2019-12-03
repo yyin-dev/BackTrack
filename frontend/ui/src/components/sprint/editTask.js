@@ -57,7 +57,6 @@ class EditTask extends React.Component {
 
   handleOk = e => {
     axios.post("http://127.0.0.1:8000/sprint/api/edit/", {
-      pbi: this.task.pbi,
       id: this.task.id,
       name: this.state.taskName,
       status: "To Do",

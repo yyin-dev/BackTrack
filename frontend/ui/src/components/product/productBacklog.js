@@ -122,7 +122,11 @@ class ProductBacklog extends React.Component {
     {
       title: "Actions",
       render: pbi => <ActionButtons pbi={pbi} refresh={this.fetch} />
-    }
+    },
+    // {
+    //   title: "priority",
+    //   render: pbi => pbi.priority
+    // }
   ];
 
   render() {
