@@ -70,6 +70,7 @@ class EndSprint extends React.Component {
       id: pbi.id,
       newTitle: pbi.newTitle,
       newStoryPoint: pbi.newStoryPoint,
+      projectId: this.context.projectId
     })
       .then(res => {
         this.props.refresh()
@@ -82,7 +83,7 @@ class EndSprint extends React.Component {
       id: pbi.id,
       newTitle: pbi.newTitle,
       newStoryPoint: pbi.newStoryPoint,
-      newStatus: newStatus
+      newStatus: newStatus,
     })
       .then(res => {
         this.props.refresh()

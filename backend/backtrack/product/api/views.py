@@ -188,9 +188,11 @@ class MoveToNextSprint(APIView):
         cur_pbi.story_point = newStoryPoint
         cur_pbi.status = "To Do"
 
+        project = Project.objects.get(id=request.data['projectId'])
         prev_sprint_no = cur_pbi.sprint.no
         new_sprint_no = prev_sprint_no + 1
-        new_sprint = Sprint.objects.get(no=new_sprint_no)
+        new_sprint = Sprint.objects.get(no=new_sprint_no, project=project)
+        print(new_sprint)
         cur_pbi.sprint = new_sprint
         cur_pbi.save()
 
