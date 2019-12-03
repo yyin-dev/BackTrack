@@ -88,7 +88,7 @@ class CancelMember extends React.Component {
             disabled={disableButton}
             onConfirm={() => this.handleOk()}
           >
-            <Button icon="backward" disabled={disableButton} />
+            <Button icon="delete" disabled={disableButton} />
           </Popconfirm>
         </Tooltip>
       </div>
