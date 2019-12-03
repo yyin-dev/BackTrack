@@ -51,6 +51,7 @@ class SprintSerializerSprint(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    sprints = SprintSerializerProduct(many=True, read_only=True)
     class Meta:
         model = Project
-        fields = ["id", "name", "description", "started"]
+        fields = ["id", "name", "description", "started", "sprints"]
