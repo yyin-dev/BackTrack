@@ -25,7 +25,7 @@ class MoveBack extends React.Component {
       }
       )
       .then(res => {
-        window.location.reload();
+        this.props.refresh()
       })
       .then(err => console.log(err));
   };

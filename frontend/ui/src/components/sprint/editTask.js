@@ -69,7 +69,7 @@ class EditTask extends React.Component {
         this.setState({
           visible: false
         });
-        window.location.reload()
+        this.props.refresh()
       })
       .catch(err => {
         alert("Wrong")
