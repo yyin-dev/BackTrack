@@ -56,6 +56,17 @@ class EditTask extends React.Component {
   }
 
   handleOk = e => {
+    // check input length of title and description
+    if (this.state.taskName.length > 70) {
+      message.error("task title should be no more than 70 characters.")
+      return;
+    }
+  
+    if (this.state.description.length > 500) {
+      message.error("task description should be no more than 500 characters.")
+      return;
+    }
+      
     axios.post("http://127.0.0.1:8000/sprint/api/edit/", {
       id: this.task.id,
       name: this.state.taskName,
@@ -126,7 +137,7 @@ class EditTask extends React.Component {
 
     return (
       <div>
-        <Tag color="blue" onClick={this.viewDetail} style={{ fontSize: '18px', margin: '5px' }}>
+        <Tag color="blue" onClick={this.viewDetail} style={{ fontSize: '14px', margin: '5px' }}>
           {this.task.name}
         </Tag>
         <Tooltip title="Start Task">

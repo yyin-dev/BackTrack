@@ -43,6 +43,17 @@ class AddTask extends React.Component {
   }
 
   handleOk = e => {
+    // check input length of title and description
+    if (this.state.taskName.length > 70) {
+      message.error("task title should be no more than 70 characters.")
+      return;
+    }
+
+    if (this.state.description.length > 500) {
+      message.error("task description should be no more than 500 characters.")
+      return;
+    }
+
     axios.post("http://127.0.0.1:8000/sprint/api/create/", {
       pbi: this.pbi,
       name: this.state.taskName,

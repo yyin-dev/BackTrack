@@ -47,6 +47,16 @@ class AddPBIForm extends React.Component {
   }
 
   handleSubmit = () => {
+  // check input length of title and description
+  if (this.state.title.length > 70) {
+    message.error("PBI title should be no more than 70 characters.")
+    return;
+  }
+    
+  if (this.state.detail.length > 500) {
+    message.error("PBI detail should be no more than 500 characters.")
+    return;
+  }
     this.postNewPBI()
     this.props.close()
   }

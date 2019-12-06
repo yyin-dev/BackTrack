@@ -25,7 +25,7 @@ class PBI(models.Model):
     project = models.ForeignKey(Project, related_name="pbis", on_delete=models.CASCADE, null=True)
     sprint = models.ForeignKey(Sprint, related_name="pbis", on_delete=models.CASCADE, null=True)
 
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=70)
     detail = models.CharField(max_length=500)
     status = models.CharField(max_length=20) # "To Do", "In Progress", "Done"
     start_date = models.DateField()

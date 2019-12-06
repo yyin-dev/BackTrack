@@ -8,7 +8,7 @@ class Task(models.Model):
     # By default, the field is not null.
     pbi = models.ForeignKey(PBI, related_name='tasks', on_delete=models.CASCADE)
 
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=70)
     description = models.CharField(max_length=500)
     status = models.CharField(max_length=20)
     estimated_time = models.PositiveIntegerField()

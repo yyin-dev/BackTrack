@@ -82,7 +82,7 @@ class ViewTask extends React.Component {
         <Tag
           color="blue"
           onClick={this.viewDetail}
-          style={{ fontSize: "18px", margin: "5px" }}
+          style={{ fontSize: "14px", margin: "5px" }}
         >
           {this.task.name}
         </Tag>

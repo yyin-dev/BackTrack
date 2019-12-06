@@ -30,7 +30,7 @@ class ViewPBI extends React.Component {
 
         return (
             <div>
-                <p onClick={this.viewDetail} style={{fontSize: '18px', margin: '5px', cursor: "pointer",}}>{this.props.pbi.title}</p>
+                <p onClick={this.viewDetail} style={{fontSize: '14px', margin: '5px', cursor: "pointer",}}>{this.props.pbi.title}</p>
 
                 <Modal
                     title="View PBI"

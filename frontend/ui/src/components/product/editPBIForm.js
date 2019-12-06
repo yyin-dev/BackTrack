@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-import { Modal, Form, Input, InputNumber, Select, Tooltip } from 'antd';
+import { Modal, Form, Input, InputNumber, Select, Tooltip, message } from 'antd';
 const { Option } = Select;
 
 class EditPBIForm extends React.Component {
@@ -32,6 +32,17 @@ class EditPBIForm extends React.Component {
   }
 
   handleSubmit = () => {
+    // check input length of title and description
+    if (this.state.title.length > 70) {
+      message.error("PBI title should be no more than 70 characters.")
+      return;
+    }
+
+    if (this.state.detail.length > 500) {
+      message.error("PBI detail should be no more than 500 characters.")
+      return;
+    }
+
     // Use "PATCH" instead of "PUT" for partial update
     // https://stackoverflow.com/questions/41110742/django-rest-framework-partial-update
     axios.patch(`http://127.0.0.1:8000/product/api/${this.props.pbi.id}/update/`, {
@@ -77,7 +88,7 @@ class EditPBIForm extends React.Component {
                 <Option value="In Progress">In Progress</Option>
                 <Option value="Done">Done</Option>
               </Select>
-            </Tooltip>,
+            </Tooltip>
           </Form.Item>
           <Form.Item label="Story Points">
             <InputNumber value={this.state.story_point} onChange={this.handleStoryPointInput} />
