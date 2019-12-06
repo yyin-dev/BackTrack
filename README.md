@@ -20,5 +20,5 @@ You need to have environment for python and Django first.
 
 ## Limitations of our final executable
 * Insufficient test
-* PBI priority changing only allowed for continuous PBI
+* PBI priority changing only allowed for switching PBIs of two adjacent rows
 * System not real-time and synchronized for different users
