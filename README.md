@@ -1,7 +1,8 @@
 # BackTrack
 This is the group project for HKU COMP 3297 <em>Sortware Engineering</em>, 2019 -- group F (FastDev).
 ## Installation
-You need to have environment for python and Django first.
+You need to have environment for python and Django first.   
+
 *   **For Backend**  
     cd backend  
     python -m venv env  
