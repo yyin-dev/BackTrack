@@ -2,20 +2,20 @@
 This is the group project for HKU COMP 3297 <em>Sortware Engineering</em>, 2019 -- group F (FastDev).
 ## Installation
 You need to have environment for python and Django first.
-* <b>For Backend</b></br> 
-    cd backend<br/>
-    python -m venv env<br/>
-    source env/bin/activate <br/> 
-    pip install django djangorestframework django-cors-headers <br/> 
-    cd backtrack<br/> 
-    python manage.py runserver<br/> 
+*   **For Backend**  
+    cd backend  
+    python -m venv env  
+    source env/bin/activate  
+    pip install django djangorestframework   django-cors-headers  
+    cd backtrack  
+    python manage.py runserver  
 
-* <b>For Frontend</b></br> 
-    cd frontend/ui<br/> 
-    yarn install<br/> 
-    yarn add antd --save<br/> 
-    yarn add axios --save<br/> 
-    yarn start<br/> 
+*   **For Frontend**  
+    cd frontend/ui  
+    yarn install  
+    yarn add antd --save  
+    yarn add axios --save  
+    yarn start  
 
 ## Limitations of our final executable
 * Insufficient test
