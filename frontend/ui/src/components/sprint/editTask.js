@@ -99,7 +99,7 @@ class EditTask extends React.Component {
       pic: this.context.user.username
     })
       .then(res => {
-        message.success("Task Started!", 3)
+        message.success("Task Started! You've claimed the task!", 3)
         this.setState({
           visible: false
         });
