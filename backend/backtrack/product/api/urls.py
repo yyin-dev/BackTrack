@@ -36,7 +36,7 @@ urlpatterns = [
     path('invitemembers/', InviteMembers.as_view()),
     path('cancelmember/', CancelMember.as_view()),
     path('startproject/', StartProject.as_view()),
-     path('endproject/', EndProject.as_view()),
+    path('endproject/', EndProject.as_view()),
 
 
     # Note that <pk> url should be put lower than urls above
