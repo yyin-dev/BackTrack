@@ -112,12 +112,9 @@ class SprintBacklog extends React.Component {
     const { isLoaded } = this.state;
     if (!isLoaded) {
       return <div style={{ margin: "auto" }}>Loading...</div>;
-    } else {
-      var disable_add = false;
-      if (this.state.total_effort >= this.state.capacity) {
-        disable_add = true;
-      }
-
+    } 
+    
+    else {
       if (!this.context.projectId) {
         return (
           <div style={{ margin: "auto" }}>
