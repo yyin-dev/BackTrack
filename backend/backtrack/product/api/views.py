@@ -51,12 +51,14 @@ class UserProjects(APIView):
 
         return Response(data=serialized, status=status.HTTP_202_ACCEPTED)
 
+
 class ProjectById(APIView):
     def get(self, request, projectid):
         project = Project.objects.get(id=projectid)
         serialized = ProjectSerializer(project).data
 
         return Response(data=serialized, status=status.HTTP_202_ACCEPTED)
+
 
 class ProjectPBIS(APIView):
     def get(self, request, projectid):
