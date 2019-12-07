@@ -1,7 +1,5 @@
 import React from "react";
 import axios from "axios";
-import { Context } from "../../context/ContextSource";
-
 import "./sprintBacklog.css";
 
 import {
@@ -15,6 +13,8 @@ import {
   InputNumber
 } from "antd";
 
+import { Context } from "../../context/ContextSource";
+
 class EditTask extends React.Component {
   static contextType = Context;
 
@@ -26,7 +26,7 @@ class EditTask extends React.Component {
       taskName: this.task.name,
       description: this.task.description,
       estimatedTime: this.task.estimated_time,
-      pic: this.context.user.username
+      pic: null
     };
   }
 
