@@ -53,6 +53,17 @@ We provide utility for conveniently initializing data for users, for testing.
     | Dev8 | 11111111 | Developer |
     | SM1 | 11111111 | Scrum Master |
 
+## Run Unit Test
+Simple test cases for models are offered (not included tests for views).
+
+```
+cd backend  
+python -m venv env  
+source env/bin/activate  
+cd backtrack  
+python manage.py test  
+```
+
 ## Limitations of our final executable
 * Insufficient test
 * PBI priority changing only allowed for switching PBIs of two adjacent rows  

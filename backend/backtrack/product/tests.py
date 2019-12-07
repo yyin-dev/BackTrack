@@ -28,18 +28,19 @@ class ModalTest(TestCase):
             start_date="2019-12-07",
             priority=0)
 
+        User.objects.create(
+            username = "U1",
+            role = "Scrum Master"
+        )
+
         Task.objects.create(
             name="T1",
             description="N/A",
             pbi=PBI.objects.get(title="P1"),
             status="To Do",
             estimated_time=0,
-            pic="FastDev")
+            pic=User.objects.get(username="U1"))
         
-        User.objects.create(
-            username = "U1",
-            role = "Scrum Master"
-        )
 
     def test_project(self):
         project = Project.objects.get(name="Project1")
@@ -60,7 +61,7 @@ class ModalTest(TestCase):
         self.assertEqual(task.description, "N/A")
         self.assertEqual(task.status, "To Do")
         self.assertEqual(task.estimated_time, 0)
-        self.assertEqual(task.pic, "FastDev")
+        self.assertEqual(task.pic, User.objects.get(username="U1"))
     
     def test_user(self):
         user = User.objects.get(username="U1")
