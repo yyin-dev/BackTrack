@@ -37,8 +37,7 @@ class SprintBacklog extends React.Component {
 
   fetch = () => {
     const { projectId, sprintNo } = this.context;
-    if (projectId === null || sprintNo === -1) {
-      console.log("No project available!");
+    if (projectId === null || sprintNo === -1 || sprintNo === null) {
       this.setState({
         isLoaded: true
       });
@@ -130,7 +129,7 @@ class SprintBacklog extends React.Component {
         );
       }
 
-      if (this.context.sprintNo === -1) {
+      if (this.context.sprintNo === -1 || this.context.sprintNo === null) {
         return (
           <div style={{ margin: "auto" }}>
             <Empty

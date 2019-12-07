@@ -1,0 +1,94 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "admin",
+      "password": "pbkdf2_sha256$10000$vkRy7QauoLLj$ry+3xm3YX+YrSXbri8s3EcXDIrx5ceM+xQjtpLdw2oE=",
+      "is_superuser": true,
+      "is_staff": true,
+      "is_active": true
+    }
+  },
+  {
+    "model": "user.User",
+    "pk": 1,
+    "fields": {
+      "username": "Dev1",
+      "password": "11111111",
+      "role": "Product Owner"
+    }
+  },
+  {
+    "model": "user.User",
+    "pk": 2,
+    "fields": {
+      "username": "Dev2",
+      "password": "11111111",
+      "role": "Product Owner"
+    }
+  },
+  {
+    "model": "user.User",
+    "pk": 3,
+    "fields": {
+      "username": "Dev3",
+      "password": "11111111",
+      "role": "Developer"
+    }
+  },
+  {
+    "model": "user.User",
+    "pk": 4,
+    "fields": {
+      "username": "Dev4",
+      "password": "11111111",
+      "role": "Developer"
+    }
+  },
+  {
+    "model": "user.User",
+    "pk": 5,
+    "fields": {
+      "username": "Dev5",
+      "password": "11111111",
+      "role": "Developer"
+    }
+  },
+  {
+    "model": "user.User",
+    "pk": 6,
+    "fields": {
+      "username": "Dev6",
+      "password": "11111111",
+      "role": "Developer"
+    }
+  },
+  {
+    "model": "user.User",
+    "pk": 7,
+    "fields": {
+      "username": "Dev7",
+      "password": "11111111",
+      "role": "Developer"
+    }
+  },
+  {
+    "model": "user.User",
+    "pk": 8,
+    "fields": {
+      "username": "Dev8",
+      "password": "11111111",
+      "role": "Developer"
+    }
+  },
+  {
+    "model": "user.User",
+    "pk": 9,
+    "fields": {
+      "username": "SM1",
+      "password": "11111111",
+      "role": "Scrum Master"
+    }
+  }
+]

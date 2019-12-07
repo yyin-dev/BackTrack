@@ -124,6 +124,10 @@ REST_FRAMEWORK = {
     ]
 }
 
+FIXTURE_DIRS = (
+   '/path/to/myapp/fixtures/',
+)
+
 CORS_ORIGIN_ALLOW_ALL = True
 
 CSRF_COOKIE_NAME = "XCSRF-TOKEN"
