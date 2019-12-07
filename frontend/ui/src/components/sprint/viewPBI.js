@@ -1,12 +1,19 @@
 import React from 'react';
 
-import { Modal } from 'antd';
+import { Modal, Tooltip } from 'antd';
 
 class ViewPBI extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { visible: false }
+        this.state = {
+          visible: false,
+          hover: false
+        }
     }
+
+    toggleHover = () => {
+	     this.setState({hover: !this.state.hover})
+     }
 
     viewDetail = e => {
         this.setState({
@@ -28,9 +35,20 @@ class ViewPBI extends React.Component {
 
     render() {
 
+        var hoverStyle;
+        if (this.state.hover) {
+          hoverStyle = {fontSize: '14px', margin: '5px', cursor: "pointer", width: "max-content", color: '#33ccff'}
+        } else {
+          hoverStyle = {fontSize: '14px', margin: '5px', cursor: "pointer", width: "max-content"}
+        }
+
         return (
             <div>
-                <p onClick={this.viewDetail} style={{fontSize: '14px', margin: '5px', cursor: "pointer",}}>{this.props.pbi.title}</p>
+              <Tooltip placement="rightTop" title="Click to view PBI">
+                <p onClick={this.viewDetail} style={hoverStyle} onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover}>
+                  {this.props.pbi.title}
+                </p>
+              </Tooltip>
 
                 <Modal
                     title="View PBI"
