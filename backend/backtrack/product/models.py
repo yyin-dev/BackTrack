@@ -22,6 +22,16 @@ class Project(models.Model):
     def get_pbis(self):
         return self.pbis.all()
 
+    def get_latest_sprint(self):
+        if not self.sprints:
+            new_sprint = Sprint.objects.create(no=1)
+            new_sprint.project = self
+            new_sprint.save()
+
+        sprints = self.sprints
+        latest_sprint = sprints.order_by('-no').first()
+        return latest_sprint
+
 
 class Sprint(models.Model):
     project = models.ForeignKey(Project, related_name="sprints", 

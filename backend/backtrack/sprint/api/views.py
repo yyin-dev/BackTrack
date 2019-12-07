@@ -24,13 +24,7 @@ class SprintDetail(APIView):
     def get(self, request, projectid, sprintno):
         project = Project.objects.get(pk=projectid)
 
-        if not project.sprints:
-            new_sprint = Sprint.objects.create(no=1)
-            new_sprint.project = project
-            new_sprint.save()
-
-        sprints = project.sprints
-        latest_sprint = sprints.order_by('-no').first()
+        latest_sprint = project.get_latest_sprint()
         data = SprintSerializerSprint(latest_sprint).data
 
         return Response(data=data, status=status.HTTP_202_ACCEPTED)
