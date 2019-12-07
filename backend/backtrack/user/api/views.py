@@ -53,5 +53,5 @@ class AddUserToProject(APIView):
         user = User.objects.get(username=request.data['new_member_name'])
         project = Project.objects.get(id=request.data['project_id'])
         
-        user.add_to_project(project)
+        user.join_project(project)
         return Response(status=status.HTTP_204_NO_CONTENT)

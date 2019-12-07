@@ -142,7 +142,7 @@ class MovebackPBI(APIView):
         newStatus = request.data["newStatus"]
 
         cur_pbi = PBI.objects.get(id=pk)
-        cur_pbi.move_back_to_product_backlog_during_sprint(newStatus)
+        cur_pbi.move_back_during_sprint(newStatus)
         cur_pbi.save()
         return Response(status=status.HTTP_202_ACCEPTED)
 
@@ -174,7 +174,7 @@ class MovebackPBIAfterSprint(APIView):
         newStatus = request.data["newStatus"]
 
         cur_pbi = PBI.objects.get(id=id)
-        cur_pbi.move_back_to_product_backlog_at_sprint_end(newTitle, newStoryPoint, newStatus)
+        cur_pbi.move_back_at_sprint_end(newTitle, newStoryPoint, newStatus)
 
         return Response(status=status.HTTP_202_ACCEPTED)
 

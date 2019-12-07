@@ -12,10 +12,6 @@ class User(models.Model):
     def __str__(self):
         return str(self.username)
 
-    def quit_project(self, project_id):
-        self.projects.remove(project_id)
-        self.save()
-
     def get_projects(self):
         return self.projects.all()
 
@@ -27,7 +23,11 @@ class User(models.Model):
         self.projects.add(new_proj)
         self.save()
 
-    def add_to_project(self, project):
+    def quit_project(self, project_id):
+        self.projects.remove(project_id)
+        self.save()
+
+    def join_project(self, project):
         self.projects.add(project)
         self.save()
 

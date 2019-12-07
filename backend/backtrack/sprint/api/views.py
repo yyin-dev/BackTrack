@@ -9,6 +9,7 @@ from rest_framework.generics import (
 
 from product.models import PBI, Sprint, Project
 from sprint.models import Task
+from user.models import User
 from product.api.serializers import PBISerializerSprint, SprintSerializerSprint
 from sprint.api.serializers import TaskSerializer
 
@@ -29,6 +30,7 @@ class SprintDetail(APIView):
 
         return Response(data=data, status=status.HTTP_202_ACCEPTED)
 
+
 class addTask(APIView):
     def post(self, request):
         pbi_object = PBI.objects.get(id=request.data['pbi'])
@@ -42,6 +44,7 @@ class addTask(APIView):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 class editTask(APIView):
     def post(self, request):
         task = Task.objects.get(id=request.data['id'])
@@ -49,7 +52,8 @@ class editTask(APIView):
         task.description = request.data['description']
         task.status = request.data['status']
         task.estimated_time = request.data['estimated_time']
-        task.pic = request.data['pic']
+        # pic = User.objects.get(username=request.data['pic'])
+
         task.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -51,6 +51,10 @@ class Sprint(models.Model):
         self.status = "Started"
         self.save()
 
+    def end(self):
+        self.status = "Done"
+        self.save()
+
 
 class PBI(models.Model):
     project = models.ForeignKey(Project, related_name="pbis", on_delete=models.CASCADE, null=True)
@@ -88,26 +92,28 @@ class PBI(models.Model):
         self.title = new_title
         self.story_point = new_story_point
         self.status = new_status
+
         prev_sprint_no = self.sprint.no
         new_sprint_no = prev_sprint_no + 1
         new_sprint = Sprint.objects.get(no=new_sprint_no, project=project)
         self.sprint = new_sprint
+
         self.save()
 
-    def move(self, option):
+    def move(self, direction):
         print("p: ", self.priority)
         all_pbis = PBI.objects.filter(project=self.project)
 
         # Two corner cases
-        if option == "up" and self.priority == 1:
+        if direction == "up" and self.priority == 1:
             return
 
-        if option == "down" and self.priority == len(all_pbis):
+        if direction == "down" and self.priority == len(all_pbis):
             return
 
         # General case
         neighbor = None
-        if option == "up":
+        if direction == "up":
             neighbor = all_pbis.get(priority=self.priority-1)
         else:
             neighbor = all_pbis.get(priority=self.priority+1)
@@ -121,11 +127,11 @@ class PBI(models.Model):
         self.save()
         neighbor.save()
 
-    def move_back_to_product_backlog_during_sprint(self, new_status):
+    def move_back_during_sprint(self, new_status):
         self.status = new_status
         self.sprint = None
 
-    def move_back_to_product_backlog_at_sprint_end(self, new_title, new_story_point, new_status):
+    def move_back_at_sprint_end(self, new_title, new_story_point, new_status):
         self.title = new_title
         self.story_point = new_story_point
         self.status = new_status
