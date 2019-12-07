@@ -19,10 +19,12 @@ class UserListView(ListAPIView):
 
 class UserSignup(APIView):
     def post(self, request):
-        new_user = User.objects.create()
-        new_user.username = request.data['username']
-        new_user.password = request.data['password']
-        if request.data['role'] == "Scrum Master":
+        username = request.data['username']
+        password = request.data['password']
+        role = request.data['role']
+
+        new_user = User.objects.create(username=username, password=password)
+        if role == "Scrum Master":
             new_user.role = "Scrum Master"
         else:
             new_user.role = "Developer"
@@ -50,7 +52,6 @@ class AddUserToProject(APIView):
     def post(self, request):
         user = User.objects.get(username=request.data['new_member_name'])
         project = Project.objects.get(id=request.data['project_id'])
-        user.projects.add(project)
-        user.save()
-
+        
+        user.add_to_project(project)
         return Response(status=status.HTTP_204_NO_CONTENT)

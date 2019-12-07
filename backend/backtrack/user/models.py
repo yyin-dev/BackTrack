@@ -27,3 +27,7 @@ class User(models.Model):
         self.projects.add(new_proj)
         self.save()
 
+    def add_to_project(self, project):
+        self.projects.add(project)
+        self.save()
+
