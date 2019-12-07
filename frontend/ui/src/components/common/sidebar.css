@@ -1,3 +1,6 @@
 .sidebar-username-wrapper {
-    text-align:center;
+    text-align:left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

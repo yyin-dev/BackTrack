@@ -108,25 +108,22 @@ class ProductBacklog extends React.Component {
   };
 
   columns = [
-    { title: "Title", dataIndex: "title", width: "10%" },
+    { title: "Title", dataIndex: "title", width: "20%" },
     {
       title: "Sprint No",
       dataIndex: "sprint",
-      width: "10%",
+      width: "8%",
       render: sprint => (sprint ? <span>{sprint.no}</span> : <span></span>)
     },
-    { title: "Status", dataIndex: "status", width: "15%" },
-    { title: "Detail", dataIndex: "detail", width: "15%" },
-    { title: "Story Point", dataIndex: "story_point", width: "10%" },
-    { title: "Accumulated Story Point", dataIndex: "acc", width: "10%" },
+    { title: "Status", dataIndex: "status", width: "11%" },
+    { title: "Detail", dataIndex: "detail", width: "25%" },
+    { title: "Story Point", dataIndex: "story_point", width: "8%" },
+    { title: "Accumulated Story Point", dataIndex: "acc", width: "8%" },
     {
       title: "Actions",
+      width: "20%",
       render: pbi => <ActionButtons pbi={pbi} refresh={this.fetch} />
     },
-    // {
-    //   title: "priority",
-    //   render: pbi => pbi.priority
-    // }
   ];
 
   render() {
@@ -201,6 +198,7 @@ class ProductBacklog extends React.Component {
 
           <Table
             columns={this.columns}
+            bordered={true}
             rowKey={pbi => pbi.id.toString()}
             pagination={this.state.pagination}
             dataSource={

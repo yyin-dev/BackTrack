@@ -1,19 +1,21 @@
 import React from "react";
 import axios from "axios";
-import { Layout, Table, PageHeader, Descriptions, message } from "antd";
-import ViewTask from "./viewTask";
-import StartSprint from "./startSprint";
-import EndSprint from "./endSprint";
+import { Empty, Layout, Table, PageHeader, Descriptions, message } from "antd";
+import { Link } from "react-router-dom";
+
 import AddTask from "./addTask";
 import EditTask from "./editTask";
+import EndSprint from "./endSprint";
 import MoveBack from "./moveBack";
+import StartSprint from "./startSprint";
 import ViewPBI from "./viewPBI";
+import ViewTask from "./viewTask";
+
 import { Context } from "../../context/ContextSource";
 
 const { Column, ColumnGroup } = Table;
 
 class SprintBacklog extends React.Component {
-
   static contextType = Context;
 
   constructor(props) {
@@ -34,14 +36,19 @@ class SprintBacklog extends React.Component {
   }
 
   fetch = () => {
-    const { projectId, sprintNo } = this.context
-    if (projectId === null || sprintNo === null) {
-      console.log("No project available!")
-      return
+    const { projectId, sprintNo } = this.context;
+    if (projectId === null || sprintNo === -1) {
+      console.log("No project available!");
+      this.setState({
+        isLoaded: true
+      });
+      return;
     }
 
     axios
-      .get(`http://127.0.0.1:8000/sprint/api/project-sprint/${projectId}/${sprintNo}`)
+      .get(
+        `http://127.0.0.1:8000/sprint/api/project-sprint/${projectId}/${sprintNo}`
+      )
       .then(res => {
         let pbis = res.data.pbis;
         var i, j;
@@ -102,15 +109,42 @@ class SprintBacklog extends React.Component {
         disable_add = true;
       }
 
+      if (!this.context.projectId) {
+        return (
+          <div style={{ margin: "auto" }}>
+            <Empty
+              description={
+                <span>
+                  You are not viewing any project. Go back to{" "}
+                  <Link to="/project">project page</Link> for details.
+                </span>
+              }
+            ></Empty>
+          </div>
+        );
+      }
+
+      if (this.context.sprintNo === -1) {
+        return (
+          <div style={{ margin: "auto" }}>
+            <Empty
+              description={
+                <span>
+                  This project is not started yet. Go back to{" "}
+                  <Link to="/project">project page</Link> for details.
+                </span>
+              }
+            ></Empty>
+          </div>
+        );
+      }
+
       return (
         <Layout style={{ height: "100vh" }}>
           <div>
             <PageHeader
               style={{ border: "1px solid rgb(235, 237, 240)" }}
-              title={"Sprint Backlog: ".concat(
-                this.state.sprint_started ? "" : "NOT",
-                " in progress"
-              )}
+              title={"Sprint Backlog"}
               extra={[
                 <StartSprint
                   disabled={this.state.sprint_started}
@@ -125,7 +159,11 @@ class SprintBacklog extends React.Component {
                 />
               ]}
             >
-              <Descriptions size="small" column={4}>
+              <Descriptions size="small" column={3}>
+                <Descriptions.Item label="Sprint Status">
+                  {this.state.sprint_started ? "in progress" : "not started"}
+                </Descriptions.Item>
+
                 <Descriptions.Item label="Sprint Number">
                   {this.context.sprintNo}
                 </Descriptions.Item>
@@ -148,35 +186,40 @@ class SprintBacklog extends React.Component {
             <Table
               dataSource={this.state.pbis}
               rowKey={pbi => pbi.title.toString()}
+              bordered={true}
             >
               <Column
                 title="PBI"
                 dataIndex="title"
                 key="pbi"
-                width="10%"
+                width="18%"
                 render={(_, pbi) => <ViewPBI pbi={pbi} refresh={this.fetch} />}
               />
               <Column
+                title="Actions"
                 dataIndex="id"
-                key="add_pbi"
-                width="2%"
-                render={id => (
-                  <AddTask
-                    id={id}
-                    refresh={this.fetch}
-                    disableAdd={disable_add || this.context.user.role !== "Product Owner"}
-                  />
+                key="actions"
+                width="6%"
+                render={(_, pbi) => (
+                  <div>
+                    <AddTask
+                      id={pbi.id}
+                      refresh={this.fetch}
+                      disableAdd={
+                        disable_add ||
+                        this.context.user.role !== "Product Owner"
+                      }
+                    />
+                    <br />
+                    <MoveBack pbi={pbi} refresh={this.fetch} />
+                  </div>
                 )}
               />
-              <Column
-                dataIndex="tasks"
-                key="move_back"
-                width="1%"
-                render={(_, pbi) => <MoveBack pbi={pbi} refresh={this.fetch} />}
-              />
               } />
-              <ColumnGroup title="Task">
+              <ColumnGroup title="Task" width="64%">
                 <Column
+                  align
+                  width="21%"
                   title="To Do"
                   dataIndex="tasks"
                   key="to_do"
@@ -196,6 +239,7 @@ class SprintBacklog extends React.Component {
                   )}
                 />
                 <Column
+                  width="20%"
                   title="In Progress"
                   dataIndex="tasks"
                   key="in_progress"
@@ -207,6 +251,7 @@ class SprintBacklog extends React.Component {
                           <ViewTask
                             key={task.name}
                             task={task}
+                            disabled={!this.state.sprint_started}
                             refresh={this.fetch}
                           />
                         ))}
@@ -214,6 +259,7 @@ class SprintBacklog extends React.Component {
                   )}
                 />
                 <Column
+                  width="20%"
                   title="Done"
                   dataIndex="tasks"
                   key="done"
@@ -225,6 +271,7 @@ class SprintBacklog extends React.Component {
                           <ViewTask
                             key={task.name}
                             task={task}
+                            disabled={true}
                             refresh={this.fetch}
                           />
                         ))}
@@ -236,15 +283,15 @@ class SprintBacklog extends React.Component {
                 title="Remaining Effort"
                 dataIndex="remaining"
                 key="remaining"
-                width="15%"
-                render={remaining => <h3>{remaining}</h3>}
+                width="6%"
+                render={remaining => <div>{remaining}</div>}
               />
               <Column
                 title="Total Effort"
                 dataIndex="total"
                 key="total"
-                width="15%"
-                render={total => <h3>{total}</h3>}
+                width="6%"
+                render={total => <div>{total}</div>}
               />
             </Table>
           </div>

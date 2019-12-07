@@ -85,7 +85,7 @@ class AddPBIForm extends React.Component {
             <Input value={this.state.title} onChange={this.handleTitleInput} placeholder="Enter title" />
           </Form.Item>
           <Form.Item label="Story Points">
-            <InputNumber value={this.state.story_point} onChange={this.handleStoryPointInput} defaultValue={0} />
+            <InputNumber value={this.state.story_point} onChange={this.handleStoryPointInput} defaultValue={0} min={0} />
           </Form.Item>
           <Form.Item label="Status">
             <Input value="To Do" disabled />

@@ -66,6 +66,12 @@ class EndSprint extends React.Component {
   };
 
   handleMoveToNextSprint = (pbi) => {
+    console.log(pbi.tasks)
+    if (pbi.newTitle.length > 70) {
+      message.error("PBI title should be no more than 70 characters.")
+      return;
+    }
+
     axios.post(`http://127.0.0.1:8000/product/api/${pbi.id}/movetonextsprint/`, {
       id: pbi.id,
       newTitle: pbi.newTitle,
@@ -79,6 +85,11 @@ class EndSprint extends React.Component {
   }
 
   handleMoveBackToProductBacklog = (pbi, newStatus) => {
+    if (pbi.newTitle.length > 70) {
+      message.error("PBI title should be no more than 70 characters.")
+      return;
+    }
+
     axios.post(`http://127.0.0.1:8000/product/api/${pbi.id}/movebackPBIaftersprint/`, {
       id: pbi.id,
       newTitle: pbi.newTitle,
@@ -240,7 +251,7 @@ class EndSprint extends React.Component {
                 /><br />
                 <FormLabel text="New PBI Story Point" />
                 <InputNumber
-                  min={1}
+                  min={0}
                   defaultValue={pbi.story_point}
                   onChange={v => this.handleNewStoryPointChange(v, index)}
                 />

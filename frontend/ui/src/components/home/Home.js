@@ -55,9 +55,12 @@ class Home extends React.Component {
   static contextType = Context;
 
   render() {
+    if (!this.context.user) {
+      return <div style={{ margin: "auto" }}>Loading...</div>;
+    }
     return (
       <div className="home-wrapper">
-        <h2>Welcome to the project!</h2>
+        <h2>Welcome to <em>BackTrack</em>, {this.context.user.username}.</h2>
         {
           this.context.user
             ? <div className="homepage-all-button-wrapper">

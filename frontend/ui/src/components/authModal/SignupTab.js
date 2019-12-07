@@ -11,11 +11,22 @@ class RegistrationForm extends React.Component {
   };
 
   handleSubmit = e => {
-    // TODO: need better solution
     e.preventDefault ();
     let values = this.props.form.getFieldsValue ();
     let users = [], allUserNames = [];
+    
+    //check length of username and password
+    if (values.username.length > 20) {
+      message.error("User name should be no more than 20 characters.");
+      return;
+    }
 
+    if (values.password.length > 20) {
+      message.error("Password should be no more than 20 characters.");
+      return;
+    }
+
+    // TODO: need better solution
     axios.get (`http://127.0.0.1:8000/user/api/`).then (res => {
       users = res.data;
       allUserNames = users.map (user => user.username);

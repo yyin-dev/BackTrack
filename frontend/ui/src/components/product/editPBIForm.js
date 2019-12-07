@@ -91,7 +91,7 @@ class EditPBIForm extends React.Component {
             </Tooltip>
           </Form.Item>
           <Form.Item label="Story Points">
-            <InputNumber value={this.state.story_point} onChange={this.handleStoryPointInput} />
+            <InputNumber value={this.state.story_point} onChange={this.handleStoryPointInput} min={0} />
           </Form.Item>
           <Form.Item label="Details">
             <Input.TextArea value={this.state.detail} rows={4} onChange={this.handleDetailInput} />

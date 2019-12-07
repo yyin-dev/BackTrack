@@ -92,6 +92,7 @@ class ActionButtons extends React.Component {
     } else {
       DeleteButton = <Button icon="delete" disabled />
     }
+    const disableMoveToSprint = this.context.user.role !== "Product Owner" || (this.props.pbi.status !== "To Do" && this.props.pbi.status !== "Unfinished") 
 
     return (
       <div>
@@ -109,8 +110,8 @@ class ActionButtons extends React.Component {
           refresh={this.props.refresh}
           close={this.handleClose}
         />
-        <Popconfirm title="Move to sprint?" onConfirm={() => this.handleMoveToSprint()}>
-          <Button disabled={this.context.user.role !== "Product Owner" || (this.props.pbi.status !== "To Do" && this.props.pbi.status !== "Unfinished") } icon="forward" />
+        <Popconfirm title="Move to sprint?" disabled={disableMoveToSprint} onConfirm={() => this.handleMoveToSprint()}>
+          <Button disabled={disableMoveToSprint} icon="forward" />
         </Popconfirm>
       </div >
     )

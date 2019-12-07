@@ -1,16 +1,26 @@
-import React from 'react';
-import axios from 'axios';
-import { Context } from '../../context/ContextSource'
+import React from "react";
+import axios from "axios";
+import { Context } from "../../context/ContextSource";
 
-import { Modal, Tag, Button, message, Form, Input, InputNumber, Tooltip } from 'antd';
+import "./sprintBacklog.css";
+
+import {
+  Modal,
+  Card,
+  Button,
+  message,
+  Form,
+  Icon,
+  Input,
+  InputNumber
+} from "antd";
 
 class EditTask extends React.Component {
-
-  static contextType = Context
+  static contextType = Context;
 
   constructor(props) {
-    super(props)
-    this.task = this.props.task
+    super(props);
+    this.task = this.props.task;
     this.state = {
       visible: false,
       taskName: this.task.name,
@@ -20,76 +30,84 @@ class EditTask extends React.Component {
     };
   }
 
-  handleTaskName = (e) => {
-    this.setState({ taskName: e.target.value })
-  }
+  handleTaskName = e => {
+    this.setState({ taskName: e.target.value });
+  };
 
-  handleDescription = (e) => {
-    this.setState({ description: e.target.value })
-  }
+  handleDescription = e => {
+    this.setState({ description: e.target.value });
+  };
 
-  handleEstimatedTime = (v) => {
-    this.setState({ estimatedTime: v })
-  }
+  handleEstimatedTime = v => {
+    this.setState({ estimatedTime: v });
+  };
 
-  handlePic = (e) => {
-    this.setState({ pic: e.target.value })
-  }
+  handlePic = e => {
+    this.setState({ pic: e.target.value });
+  };
 
   viewDetail = e => {
-    console.log(e);
     this.setState({
-      visible: true,
+      visible: true
     });
-  }
+  };
 
   handleDelete = e => {
-    axios.delete(`http://127.0.0.1:8000/sprint/api/${this.task.id}/delete/`)
+    axios
+      .delete(`http://127.0.0.1:8000/sprint/api/${this.task.id}/delete/`)
       .then(res => {
-        message.success("Task Deleted!", 3)
-        this.props.refresh()
+        message.success("Task Deleted!", 3);
+        this.props.refresh();
       })
       .catch(err => {
-        alert("Wrong")
-        console.log(err)
-      })
-  }
+        alert("Wrong");
+        console.log(err);
+      });
+  };
 
   handleOk = e => {
+    // if the user is scrum master, return
+    if (this.context.user.role === "Scrum Master") {
+      this.setState({
+        visible: false
+      });
+      return;
+    }
+
     // check input length of title and description
     if (this.state.taskName.length > 70) {
-      message.error("task title should be no more than 70 characters.")
+      message.error("task title should be no more than 70 characters.");
       return;
     }
-  
+
     if (this.state.description.length > 500) {
-      message.error("task description should be no more than 500 characters.")
+      message.error("task description should be no more than 500 characters.");
       return;
     }
-      
-    axios.post("http://127.0.0.1:8000/sprint/api/edit/", {
-      id: this.task.id,
-      name: this.state.taskName,
-      status: "To Do",
-      description: this.state.description,
-      estimated_time: this.state.estimatedTime,
-      pic: this.state.pic
-    })
+
+    axios
+      .post("http://127.0.0.1:8000/sprint/api/edit/", {
+        id: this.task.id,
+        name: this.state.taskName,
+        status: "To Do",
+        description: this.state.description,
+        estimated_time: this.state.estimatedTime,
+        pic: this.state.pic
+      })
       .then(res => {
-        message.success("Task Edited!", 3)
+        message.success("Task Edited!", 3);
         this.setState({
           visible: false
         });
-        this.props.refresh()
+        this.props.refresh();
       })
       .catch(err => {
-        alert("Wrong")
-        console.log(err)
-      })
+        alert("Wrong");
+        console.log(err);
+      });
   };
 
   handleCancel = e => {
-    console.log(e);
     this.setState({
       visible: false,
       taskName: this.task.name,
@@ -100,79 +118,127 @@ class EditTask extends React.Component {
   };
 
   changeStatus = e => {
-    axios.post("http://127.0.0.1:8000/sprint/api/edit/", {
-      pbi: this.task.pbi,
-      id: this.task.id,
-      name: this.task.name,
-      status: "In Progress",
-      description: this.task.description,
-      estimated_time: this.task.estimated_time,
-      pic: this.context.user.username
-    })
+    axios
+      .post("http://127.0.0.1:8000/sprint/api/edit/", {
+        pbi: this.task.pbi,
+        id: this.task.id,
+        name: this.task.name,
+        status: "In Progress",
+        description: this.task.description,
+        estimated_time: this.task.estimated_time,
+        pic: this.context.user.username
+      })
       .then(res => {
-        message.success("Task Started! You've claimed the task!", 3)
+        message.success("Task Started! You've claimed the task!", 3);
         this.setState({
           visible: false
         });
-        this.props.refresh()
+        this.props.refresh();
       })
       .catch(err => {
-        alert("Wrong")
-        console.log(err)
-      })
+        alert("Wrong");
+        console.log(err);
+      });
   };
 
   render() {
+    const actionIcons =
+      this.context.user.role === "Scrum Master" || this.props.disabled
+        ? [<Icon type="eye" key="eye" onClick={this.viewDetail} />]
+        : [
+            <Icon type="edit" key="edit" onClick={this.viewDetail} />,
+            <Icon
+              type="caret-right"
+              key="caret-right"
+              onClick={this.changeStatus}
+            />
+          ];
 
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 8 },
+        sm: { span: 8 }
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 16 },
-      },
+        sm: { span: 16 }
+      }
     };
 
-    return (
-      <div>
-        <Tag color="blue" onClick={this.viewDetail} style={{ fontSize: '14px', margin: '5px' }}>
-          {this.task.name}
-        </Tag>
-        <Tooltip title="Start Task">
-          <Button
-            disabled={this.context.user.role === "Scrum Master" || this.props.disabled}
-            icon="caret-right"
-            onClick={this.changeStatus}
-          />
-        </Tooltip>
+    // if the user is scrum master, he is not allowed to edit the task
+    // copied from "view task"
+    const editModal =
+      this.context.user.role !== "Scrum Master" ? (
         <Modal
           title="View Task"
           visible={this.state.visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
           footer={[
-            <Button key="delete" onClick={this.handleDelete}>Delete</Button>,
-            <Button key="cancel" onClick={this.handleCancel}>Cancel</Button>,
-            <Button key="submit" type="primary" onClick={this.handleOk}>Submit</Button>,
+            <Button key="delete" onClick={this.handleDelete}>
+              Delete
+            </Button>,
+            <Button key="cancel" onClick={this.handleCancel}>
+              Cancel
+            </Button>,
+            <Button key="submit" type="primary" onClick={this.handleOk}>
+              Submit
+            </Button>
           ]}
         >
           <Form {...formItemLayout}>
             <Form.Item label="Task Name">
-              <Input value={this.state.taskName} onChange={this.handleTaskName} allowClear />
+              <Input
+                value={this.state.taskName}
+                onChange={this.handleTaskName}
+                allowClear
+              />
             </Form.Item>
             <Form.Item label="Description">
-              <Input.TextArea value={this.state.description} rows={4} onChange={this.handleDescription} allowClear />
+              <Input.TextArea
+                value={this.state.description}
+                rows={4}
+                onChange={this.handleDescription}
+                allowClear
+              />
             </Form.Item>
             <Form.Item label="Estimated Time">
-              <InputNumber value={this.state.estimatedTime} onChange={this.handleEstimatedTime} defaultValue={0} />
+              <InputNumber
+                value={this.state.estimatedTime}
+                onChange={this.handleEstimatedTime}
+                defaultValue={0}
+                min={0} 
+              />
             </Form.Item>
-
           </Form>
         </Modal>
+      ) : (
+        <Modal
+          title="View Task"
+          visible={this.state.visible}
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+        >
+          <p>Task Name: {this.task.name}</p>
+          <p>Description: {this.task.description}</p>
+          <p>Status: {this.task.status}</p>
+          <p>Estimated Time: {this.task.estimated_time}</p>
+          <p>Person In Charge: {this.task.pic}</p>
+        </Modal>
+      );
+
+    return (
+      <div className="card-outsider">
+        <Card
+          className="card"
+          bodyStyle={{ padding: "5px" }}
+          actions={actionIcons}
+        >
+          {this.task.name}
+        </Card>
+        {editModal}
       </div>
-    )
+    );
   }
 }
 

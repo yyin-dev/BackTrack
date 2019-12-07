@@ -113,7 +113,7 @@ class AddTask extends React.Component {
               <Input.TextArea value={this.state.description} rows={4} onChange={this.handleDescription} placeholder="Enter Description" allowClear />
             </Form.Item>
             <Form.Item label="Estimated Time">
-              <InputNumber value={this.state.estimatedTime} onChange={this.handleEstimatedTime} defaultValue={0} />
+              <InputNumber value={this.state.estimatedTime} onChange={this.handleEstimatedTime} defaultValue={0} min={0} />
             </Form.Item>
           </Form>
         </Modal>

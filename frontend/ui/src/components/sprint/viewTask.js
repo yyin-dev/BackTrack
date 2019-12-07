@@ -2,18 +2,17 @@ import React from "react";
 import axios from "axios";
 import { Context } from "../../context/ContextSource";
 
-import { Modal, Tag, Button, message, Tooltip } from "antd";
+import "./sprintBacklog.css";
+
+import { Modal, Card, Icon, message, } from "antd";
 
 class ViewTask extends React.Component {
-
   static contextType = Context;
 
   constructor(props) {
     super(props);
     this.task = this.props.task;
     this.state = { visible: false };
-    if (this.task.status === "In Progress") this.disableButton = false;
-    else this.disableButton = true;
   }
 
   viewDetail = e => {
@@ -62,31 +61,38 @@ class ViewTask extends React.Component {
   };
 
   render() {
-    var FinishButton;
-    if (this.disableButton) {
-      FinishButton = <Button icon="check-circle" disabled />;
-    } else {
-      FinishButton = (
-        <Tooltip title="Finish Task">
-          <Button
-            disabled={this.context.user.role === "Scrum Master" }
-            icon="check-circle"
-            onClick={this.changeStatus}
-          />
-        </Tooltip>
-      );
-    }
+    const actionIcons = 
+      this.context.user.role === "Scrum Master" || this.props.disabled
+        ? [
+            <Icon
+              type="eye"
+              key="eye"
+              onClick={this.viewDetail}
+            />
+          ]
+        : [
+            <Icon
+              type="eye"
+              key="eye"
+              onClick={this.viewDetail}
+            />,
 
+            <Icon
+              type="check"
+              key="check"
+              onClick={this.changeStatus}
+            />
+          ]
+    
     return (
-      <div>
-        <Tag
-          color="blue"
-          onClick={this.viewDetail}
-          style={{ fontSize: "14px", margin: "5px" }}
+      <div className="card-outsider">
+        <Card
+          className="card"
+          bodyStyle={{ padding: "5px" }}
+          actions={actionIcons}
         >
           {this.task.name}
-        </Tag>
-        {FinishButton}
+        </Card>
         <Modal
           title="View Task"
           visible={this.state.visible}

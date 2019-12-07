@@ -12,7 +12,7 @@ class Sprint(models.Model):
     project = models.ForeignKey(Project, related_name="sprints", on_delete=models.CASCADE, null=True)
 
     no = models.IntegerField(default=-1)
-    capacity = models.IntegerField(default=10)
+    capacity = models.PositiveIntegerField(default=10)
     status = models.CharField(max_length=10, default="Created") # "Created", "Started", "Done"
 
     class Meta:

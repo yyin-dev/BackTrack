@@ -95,7 +95,7 @@ class ProjectMembers extends React.Component {
           style={{
             border: "1px solid rgb(235, 237, 240)"
           }}
-          title={"Project Name: ".concat(this.props.project.name)}
+          title={this.props.project.name}
           extra={[
             <Button
               key="dummy-key"
@@ -140,15 +140,17 @@ class ProjectMembers extends React.Component {
         <Table
           dataSource={this.state.usersForTheProject}
           rowKey={user => user.username.toString()}
+          align="center"
+          bordered={true}
         >
           <ColumnGroup title="All Members for the Project">
             <Column
               title="Name"
               dataIndex="username"
               key="username"
-              width="10%"
+              width="20%"
             />
-            <Column title="Role" dataIndex="role" key="role" width="10%" />
+            <Column title="Role" dataIndex="role" key="role" width="20%" />
             <Column
               title="Action"
               key="delete"

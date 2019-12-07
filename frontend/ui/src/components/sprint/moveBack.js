@@ -39,9 +39,10 @@ class MoveBack extends React.Component {
   render() {
     return (
       <div>
-        <Tooltip title="Move Back">
+        <Tooltip>
           <Popconfirm
             title="Sure to move back PBI?"
+            disabled={this.context.user.role !== "Product Owner"}
             onConfirm={() => this.handleOk()}
           >
             <Button disabled={this.context.user.role !== "Product Owner"} icon="backward" />

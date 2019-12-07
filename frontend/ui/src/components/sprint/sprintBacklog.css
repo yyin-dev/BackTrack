@@ -1,0 +1,12 @@
+.ant-card-actions > li {
+    margin: 0;
+}
+
+.card {
+    display: inline-block;
+}
+
+.card-outsider {
+    display: inline-block;
+    margin: 5px;
+}
