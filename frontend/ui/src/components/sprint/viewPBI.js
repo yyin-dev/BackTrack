@@ -37,9 +37,9 @@ class ViewPBI extends React.Component {
 
         var hoverStyle;
         if (this.state.hover) {
-          hoverStyle = {fontSize: '14px', margin: '5px', cursor: "pointer", width: "max-content", color: '#33ccff'}
+          hoverStyle = {fontSize: '14px', margin: '5px', cursor: "pointer", display: "inline", color: '#33ccff'}
         } else {
-          hoverStyle = {fontSize: '14px', margin: '5px', cursor: "pointer", width: "max-content"}
+          hoverStyle = {fontSize: '14px', margin: '5px', cursor: "pointer", display: "inline"}
         }
 
         return (
