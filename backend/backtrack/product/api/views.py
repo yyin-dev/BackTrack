@@ -88,10 +88,7 @@ class MoveToSprint(APIView):
 
         # Try to get current Sprint object
         sprint = Sprint.objects.get(no=sprintno, project=cur_project)
-
-        cur_pbi.sprint = sprint
-
-        cur_pbi.status = "In Progress"
+        cur_pbi.moveToSprint(sprint)
         cur_pbi.save()
 
         return Response(status=status.HTTP_202_ACCEPTED)
@@ -166,9 +163,7 @@ class MovebackPBI(APIView):
         newStatus = request.data["newStatus"]
 
         cur_pbi = PBI.objects.get(id=pk)
-        cur_pbi.status = newStatus
-        cur_pbi.sprint = None
-
+        cur_pbi.moveBackPBI(newStatus)
         cur_pbi.save()
         return Response(status=status.HTTP_202_ACCEPTED)
 
@@ -185,15 +180,8 @@ class MoveToNextSprint(APIView):
         newStoryPoint = request.data["newStoryPoint"]
 
         cur_pbi = PBI.objects.get(id=id)
-        cur_pbi.title = newTitle
-        cur_pbi.story_point = newStoryPoint
-        cur_pbi.status = "In Progress"
-
         project = Project.objects.get(id=request.data['projectId'])
-        prev_sprint_no = cur_pbi.sprint.no
-        new_sprint_no = prev_sprint_no + 1
-        new_sprint = Sprint.objects.get(no=new_sprint_no, project=project)
-        cur_pbi.sprint = new_sprint
+        cur_pbi.moveToNextSprint(newTitle,newStoryPoint,"In Progress",project)
         cur_pbi.save()
 
         return Response(status=status.HTTP_202_ACCEPTED)
@@ -210,6 +198,7 @@ class MovebackPBIAfterSprint(APIView):
         cur_pbi.title = newTitle
         cur_pbi.story_point = newStoryPoint
         cur_pbi.status = newStatus
+        cur_pbi.moveback()
         print(newStatus)
 
         # newStatus == "Unfinished": unfinished task, set Sprint to None
@@ -272,7 +261,7 @@ class StartProject(APIView):
 class EndProject(APIView):
     def post(self, request):
         user = User.objects.get(id=request.data['user_id'])
-        user.role = "Developer"
+        user.changeRole("Developer")
         user.save()
         project = Project.objects.get(id=request.data['project_id'])
         project.delete()

@@ -34,3 +34,23 @@ class PBI(models.Model):
 
     def __str__(self):
         return self.title
+
+    def moveBackPBI(self,new_status):
+        self.status = new_status
+        self.sprint = None
+
+    def changeRole(self,new_role):
+        self.role = new_role
+    
+    def moveToSprint(self,sprint):
+        self.sprint = sprint
+        self.status = "In Progress"
+
+    def moveToNextSprint(self,newTitle,newStoryPoint,newStatus,project):
+        self.title = newTitle
+        self.story_point = newStoryPoint
+        self.status = newStatus
+        prev_sprint_no = self.sprint.no
+        new_sprint_no = prev_sprint_no + 1
+        new_sprint = Sprint.objects.get(no=new_sprint_no, project=project)
+        self.sprint = new_sprint
