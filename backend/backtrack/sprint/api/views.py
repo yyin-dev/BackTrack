@@ -39,7 +39,7 @@ class addTask(APIView):
                       description=request.data['description'],
                       status=request.data['status'],
                       estimated_time=request.data['estimated_time'],
-                      pic=request.data['pic'])
+                      pic=None)
         new_task.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -52,8 +52,8 @@ class editTask(APIView):
         task.description = request.data['description']
         task.status = request.data['status']
         task.estimated_time = request.data['estimated_time']
-        # pic = User.objects.get(username=request.data['pic'])
-
+        pic = User.objects.get(username=request.data['pic'])
+        task.pic = pic
         task.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)

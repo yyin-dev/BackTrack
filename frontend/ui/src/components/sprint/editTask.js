@@ -26,7 +26,7 @@ class EditTask extends React.Component {
       taskName: this.task.name,
       description: this.task.description,
       estimatedTime: this.task.estimated_time,
-      pic: this.task.pic
+      pic: this.context.user.username
     };
   }
 

@@ -45,7 +45,7 @@ class ViewTask extends React.Component {
         status: "Done",
         description: this.task.description,
         estimated_time: this.task.estimated_time,
-        pic: this.task.pic
+        pic: this.context.user.username
       })
       .then(res => {
         message.success("Task Finished!", 3);
