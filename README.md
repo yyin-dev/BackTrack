@@ -2,7 +2,7 @@
 The group project for HKU COMP 3297 _Sortware Engineering_, 2019 -- Group F (FastDev).
 
 ## Installation
-You need to have environment for python and Django first.     
+You need to have environment for python, Django, and ReactJS first.     
 
 *   **For Backend**  
     ```
@@ -31,6 +31,7 @@ We provide utility for conveniently initializing data for users, for testing.
     cd backend  
     python -m venv env  
     source env/bin/activate  
+    cd backtrack  
     python manage.py flush  
     python manage.py loaddata init_user_data  
     ```
@@ -54,6 +55,7 @@ We provide utility for conveniently initializing data for users, for testing.
 
 ## Limitations of our final executable
 * Insufficient test
-* PBI priority changing only allowed for switching PBIs of two adjacent rows
+* PBI priority changing only allowed for switching PBIs of two adjacent rows  
+* PO cannot self-define max capacity for the first sprint of a project (forced to be 10 by default). He can only custom max capacity for the subsequent sprints  
 * System not real-time and synchronized for different users
 * Data fetching/querying could be further reduced

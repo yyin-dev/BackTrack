@@ -99,7 +99,7 @@ class SprintBacklog extends React.Component {
   };
 
   disableAddButton = () => {
-    if (this.state.total_effort >= this.state.capacity || this.context.user.role !== "Product Owner") {
+    if (this.state.total_effort >= this.state.capacity || this.context.user.role === "Scrum Master") {
       return true
     }
     else {
@@ -211,7 +211,6 @@ class SprintBacklog extends React.Component {
                       id={pbi.id}
                       refresh={this.fetch}
                       disableAdd={this.disableAddButton}
-
                     />
                     <br />
                     <MoveBack pbi={pbi} refresh={this.fetch} />
