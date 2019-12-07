@@ -98,7 +98,7 @@ class AddTask extends React.Component {
 
     return (
       <div>
-        <Button icon="plus" onClick={this.viewDetail} disabled={this.disableAdd} />
+        <Button icon="plus" onClick={this.viewDetail} disabled={this.props.disableAdd()} />
         <Modal
           title="Add Task"
           visible={this.state.visible}

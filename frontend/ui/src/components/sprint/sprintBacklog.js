@@ -99,6 +99,15 @@ class SprintBacklog extends React.Component {
       });
   };
 
+  disableAddButton = () => {
+    if (this.state.total_effort >= this.state.capacity || this.context.user.role !== "Product Owner") {
+      return true
+    }
+    else {
+      return false
+    }
+  }
+
   render() {
     const { isLoaded } = this.state;
     if (!isLoaded) {
@@ -205,10 +214,8 @@ class SprintBacklog extends React.Component {
                     <AddTask
                       id={pbi.id}
                       refresh={this.fetch}
-                      disableAdd={
-                        disable_add ||
-                        this.context.user.role !== "Product Owner"
-                      }
+                      disableAdd={this.disableAddButton}
+
                     />
                     <br />
                     <MoveBack pbi={pbi} refresh={this.fetch} />
