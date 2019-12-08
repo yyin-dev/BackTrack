@@ -53,8 +53,8 @@ class editTask(APIView):
         task.status = request.data['status']
         task.estimated_time = request.data['estimated_time']
         pic = User.objects.get(username=request.data['pic'])
-        task.pic = pic
-        task.save()
+        # task.pic = pic
+        # task.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 

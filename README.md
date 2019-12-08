@@ -9,7 +9,7 @@ You need to have environment for python, Django, and ReactJS first.
     cd backend  
     python3 -m venv env  
     source env/bin/activate  
-    pip install django djangorestframework django-cors-headers  
+    pip3 install django djangorestframework django-cors-headers  
     cd backtrack  
     python manage.py runserver  
     ```
