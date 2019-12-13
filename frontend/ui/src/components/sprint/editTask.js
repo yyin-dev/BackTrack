@@ -89,10 +89,8 @@ class EditTask extends React.Component {
       .post("http://127.0.0.1:8000/sprint/api/edit/", {
         id: this.task.id,
         name: this.state.taskName,
-        status: "To Do",
         description: this.state.description,
         estimated_time: this.state.estimatedTime,
-        pic: this.state.pic
       })
       .then(res => {
         message.success("Task Edited!", 3);
@@ -120,13 +118,9 @@ class EditTask extends React.Component {
   changeStatus = e => {
     axios
       .post("http://127.0.0.1:8000/sprint/api/edit/", {
-        pbi: this.task.pbi,
         id: this.task.id,
-        name: this.task.name,
         status: "In Progress",
-        description: this.task.description,
-        estimated_time: this.task.estimated_time,
-        pic: this.context.user.username
+        pic: this.context.user.id
       })
       .then(res => {
         message.success("Task Started! You've claimed the task!", 3);

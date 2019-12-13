@@ -4,7 +4,7 @@ import { Context } from "../../context/ContextSource";
 
 import "./sprintBacklog.css";
 
-import { Modal, Card, Icon, message, } from "antd";
+import { Modal, Card, Icon, message } from "antd";
 
 class ViewTask extends React.Component {
   static contextType = Context;
@@ -39,16 +39,18 @@ class ViewTask extends React.Component {
   changeStatus = e => {
     axios
       .post("http://127.0.0.1:8000/sprint/api/edit/", {
-        pbi: this.task.pbi,
         id: this.task.id,
-        name: this.task.name,
         status: "Done",
-        description: this.task.description,
-        estimated_time: this.task.estimated_time,
-        pic: this.context.user.username
+        pic: this.context.user.id
       })
       .then(res => {
-        message.success("Task Finished!", 3);
+        // if the task's pic is not the user, tell him he becomes the PIC of the task
+        const messageSuccess =
+          this.task.pic.id !== this.context.user.id
+            ? "Task finished. You're now the PIC of the task."
+            : "Task finished.";
+
+        message.success(messageSuccess, 3);
         this.setState({
           visible: false
         });
@@ -61,29 +63,14 @@ class ViewTask extends React.Component {
   };
 
   render() {
-    const actionIcons = 
+    const actionIcons =
       this.context.user.role === "Scrum Master" || this.props.disabled
-        ? [
-            <Icon
-              type="eye"
-              key="eye"
-              onClick={this.viewDetail}
-            />
-          ]
+        ? [<Icon type="eye" key="eye" onClick={this.viewDetail} />]
         : [
-            <Icon
-              type="eye"
-              key="eye"
-              onClick={this.viewDetail}
-            />,
+            <Icon type="eye" key="eye" onClick={this.viewDetail} />,
 
-            <Icon
-              type="check"
-              key="check"
-              onClick={this.changeStatus}
-            />
-          ]
-    
+            <Icon type="check" key="check" onClick={this.changeStatus} />
+          ];
     return (
       <div className="card-outsider">
         <Card
@@ -103,7 +90,7 @@ class ViewTask extends React.Component {
           <p>Description: {this.task.description}</p>
           <p>Status: {this.task.status}</p>
           <p>Estimated Time: {this.task.estimated_time}</p>
-          <p>Person In Charge: {this.task.pic}</p>
+          <p>Person In Charge: {this.task.pic.username}</p>
         </Modal>
       </div>
     );

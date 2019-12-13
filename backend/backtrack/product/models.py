@@ -77,8 +77,8 @@ class PBI(models.Model):
         use overriden version of "delete".
         https://stackoverflow.com/questions/28896237/override-djangos-model-delete-method-for-bulk-deletion/28896384
         """
-        for pbi in PBI.objects.filter(priority__gt=self.priority):
-            pbi.priority += 1
+        for pbi in PBI.objects.filter(priority__gt=self.priority, project=self.project):
+            pbi.priority -= 1
             pbi.save()
 
         self.delete()
@@ -101,7 +101,6 @@ class PBI(models.Model):
         self.save()
 
     def move(self, direction):
-        print("p: ", self.priority)
         all_pbis = PBI.objects.filter(project=self.project)
 
         # Two corner cases

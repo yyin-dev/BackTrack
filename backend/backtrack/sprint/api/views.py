@@ -48,14 +48,22 @@ class addTask(APIView):
 class editTask(APIView):
     def post(self, request):
         task = Task.objects.get(id=request.data['id'])
-        task.name = request.data['name']
-        task.description = request.data['description']
-        task.status = request.data['status']
-        task.estimated_time = request.data['estimated_time']
-        pic = User.objects.get(username=request.data['pic'])
-        # task.pic = pic
-        # task.save()
 
+        # check whether user edits or changes status of the task
+        if ('name' in request.data):
+            # user is editing the task (the task must have status 'to do')
+            task.name = request.data['name']
+            task.description = request.data['description']
+            task.estimated_time = request.data['estimated_time']
+        else:
+            # user is changing the status of the task (to do -> in progress OR in progress -> done)
+            # any developer can change the status of any task.
+            # if he changes the status of task that does not belong to himself, he becomes the pic of that task.
+            task.status = request.data['status']
+            pic = User.objects.get(id=request.data['pic'])
+            task.pic = pic
+
+        task.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class deleteTask(APIView):
