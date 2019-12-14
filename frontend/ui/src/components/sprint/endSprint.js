@@ -40,28 +40,30 @@ class EndSprint extends React.Component {
       visible: true
     });
 
+    // PBI with no task             -> this.state.unfinished_pbis
     // PBI with unfinished task     -> this.state.unfinished_pbis
     // PBI with all tasks finished  -> this.state.finished_pbis
     var i, j;
     for (i = 0; i < this.props.pbis.length; ++i) {
-      for (j = 0; j < this.props.pbis[i].tasks.length; ++j) {
+      let unfinish = this.state.unfinished_pbis
+      let finish = this.state.finished_pbis
+
+      if (this.props.pbis[i].tasks.length === 0) {
+        unfinish.push(this.props.pbis[i]);
+      } else for (j = 0; j < this.props.pbis[i].tasks.length; ++j) {
         if (this.props.pbis[i].tasks[j].status !== "Done") {
-          let curr = this.state.unfinished_pbis
-          curr.push(this.props.pbis[i])
-          this.setState({
-            unfinished_pbis: curr
-          })
+          unfinish.push(this.props.pbis[i])
           break;
         }
 
         if (j === this.props.pbis[i].tasks.length - 1) {
-          let curr = this.state.finished_pbis
-          curr.push(this.props.pbis[i])
-          this.setState({
-            finished_pbis: curr
-          })
+          finish.push(this.props.pbis[i])
         }
       }
+      this.setState({
+        unfinished_pbis: unfinish,
+        finished_pbis: finish
+      })
     }
   };
 

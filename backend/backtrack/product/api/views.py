@@ -13,6 +13,7 @@ in Django REST framwork is similar to writing views in Django directly. In this
 way, we can move all urls matching and views to /api.
 """
 
+from django.db.models import F  
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
@@ -63,8 +64,7 @@ class ProjectById(APIView):
 class ProjectPBIS(APIView):
     def get(self, request, projectid):
         project = Project.objects.get(id=projectid)
-
-        pbis = project.get_pbis()
+        pbis = project.get_pbis().order_by(F('priority').asc(nulls_last=True))
         serialized = PBISerializerProduct(pbis, many=True).data
 
         return Response(data=serialized, status=status.HTTP_202_ACCEPTED)

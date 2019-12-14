@@ -24,7 +24,6 @@ class ProductBacklog extends React.Component {
       pagination: {},
       adding: false,
       pbiList: null, // null: not in project; []: in project but no PBIs.
-      priority_max: -1,
       isLoaded: false
     };
     this.fetch = this.fetch.bind(this);
@@ -66,7 +65,6 @@ class ProductBacklog extends React.Component {
             } else {
               // Fetch PBI list from backend
               let sorted = res.data;
-              sorted.sort((a, b) => (a.priority < b.priority ? -1 : 1));
 
               // Calculate accumulated story point for each PBI
               let acc = 0;
@@ -79,7 +77,6 @@ class ProductBacklog extends React.Component {
 
               this.setState({
                 pbiList: sorted,
-                priority_max: sorted[sorted.length - 1].priority
               });
             }
           })

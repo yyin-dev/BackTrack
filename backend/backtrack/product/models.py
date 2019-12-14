@@ -62,10 +62,10 @@ class PBI(models.Model):
 
     title = models.CharField(max_length=70)
     detail = models.CharField(max_length=500)
-    status = models.CharField(max_length=20) # "To Do", "In Progress", "Done"
+    status = models.CharField(max_length=20) # "To Do", "In Progress", "Done", "Unfinished"
     start_date = models.DateField()
     story_point = models.PositiveIntegerField(default=0)
-    priority = models.IntegerField(default=1)
+    priority = models.IntegerField(default=1, null=True)
 
     def __str__(self):
         return self.title
@@ -101,7 +101,7 @@ class PBI(models.Model):
         self.save()
 
     def move(self, direction):
-        all_pbis = PBI.objects.filter(project=self.project)
+        all_pbis = PBI.objects.filter(project=self.project).exclude(status="Done")
 
         # Two corner cases
         if direction == "up" and self.priority == 1:
@@ -134,6 +134,14 @@ class PBI(models.Model):
         self.title = new_title
         self.story_point = new_story_point
         self.status = new_status
+
+        # set priority to none after a pbi is done, and update priority for other pbis
+        if (new_status == "Done"):
+            for pbi in PBI.objects.filter(priority__gt=self.priority, project=self.project):
+                pbi.priority -= 1
+                pbi.save()
+
+            self.priority = None
         
         # newStatus == "Unfinished": unfinished task, set Sprint to None
         # newStatus == "Done"      : finished task, Sprint unchanged
